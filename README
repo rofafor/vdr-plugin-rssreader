@@ -1,0 +1,47 @@
+This is an RSS Reader for the Video Disk Recorder (VDR).
+
+Written by:                  R o l f . A h r e n b e r g @ s c i .f i
+
+Project's homepage:          http://www.saunalahti.fi/~rahrenbe/vdr/rssreader/
+
+Latest version available at:  http://www.saunalahti.fi/~rahrenbe/vdr/rssreader/
+
+See the file COPYING for license information.
+
+Requirements:
+
+The RSS Reader plugin requires EXPAT library for XML parsing and WGET
+application for downloading actual RSS streams.
+
+Description:
+
+The RSS Reader plugin provides simple OSD menu based user interface for
+reading user-defined RSS streams.
+
+The current code is heavily reusing the VOD plugin by Olivier Jacques.
+Huge thanks for the original author!
+
+Installation:
+
+cd /put/your/path/here/VDR/PLUGINS/src
+tar -xzf /put/your/path/here/vdr-rssreader-X.Y.Z.tgz
+ln -s rssreader-X.Y.Z rssreader
+cp rssreader/conf/rssreader.conf /path/to/vdrconf/plugins/
+cd /put/your/path/here/VDR
+make
+make plugins
+./vdr -P rssreader
+
+Configuration:
+
+RSS streams are defined in rssreader.conf located in VDR's configuration
+directory for plugins. Check the example configuration file under "conf"
+subdirectory for further information.
+
+Notes:
+
+- The plugin uses a temporary file "/tmp/rssreader.vdr" by default.
+  If you want to change it, you can compile the plugin as:
+  > make RSSREADER_TEMPFILE="/tmp/rssreader.vdr"
+
+- Dependencies to WGET application should be removed.
