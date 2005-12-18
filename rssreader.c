@@ -18,7 +18,7 @@
 #error "You don't exist! Go away! Upgrade yourself!"
 #endif
 
-static const char *VERSION        = "0.0.1";
+static const char *VERSION        = "0.0.2";
 static const char *DESCRIPTION    = "RSS Reader for OSD";
 static const char *MAINMENUENTRY  = "RSS Reader";
 

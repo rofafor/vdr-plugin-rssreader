@@ -148,6 +148,19 @@ void cItem::SetUTF8Title(const char *s)
      strncpy(title, tmp, sizeof(tmp));
 }
 
+void cItem::SetUTF8Link(const char *s)
+{
+  char tmp[MAXSHORTTEXTLEN];
+  memset(tmp, 0, sizeof(tmp));
+
+  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
+  debug("cItem::SetUTF8Link(): '%s'\n", tmp);
+  if (sizeof(tmp) > sizeof(link))
+     strncpy(link, tmp, sizeof(link));
+  else
+     strncpy(link, tmp, sizeof(tmp));
+}
+
 void cItem::SetUTF8Desc(const char *s)
 {
   char tmp[MAXLONGTEXTLEN];
@@ -175,6 +188,21 @@ void cItem::SetUTF8Target(const char *s)
 }
 
 // --- Expat callbacks --------------------------------------------------
+
+static int XMLCALL
+unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
+{
+  if (strcmp(encoding, "iso-8859-15") == 0) {
+     int i;
+     for (i = 0; i < 256; ++i)
+        info->map[i] = i;
+     info->data = NULL;
+     info->convert = NULL;
+     info->release = NULL;
+     return XML_STATUS_OK;
+  }
+  return XML_STATUS_ERROR;
+}
 
 static void XMLCALL
 start(void *data, const char *el, const char **attr)
@@ -230,6 +258,13 @@ end(void *data, const char *el)
      } else if (!strncmp(parent, "channel", 7)) {
         debug("rss_parser(): RSS title '%s'", data_string);
      }
+  } else if (!strncmp(el, "link", 4)) {
+     stripspaces(data_string);
+     if (!strncmp(parent, "item", 4)) {
+        item->SetUTF8Link(data_string);
+     } else if (!strncmp(parent, "channel", 7)) {
+        debug("rss_parser(): RSS link '%s'", data_string);
+     }
   } else if (!strncmp(el, "pubDate", 7)) {
      stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
@@ -274,6 +309,7 @@ int rss_parser(char * filename)
 
   XML_SetElementHandler(p, start, end);
   XML_SetCharacterDataHandler(p, data);
+  XML_SetUnknownEncodingHandler(p, unknownencoding, NULL);
 
   // Clear Items list to play
   Items.Clear();
@@ -295,9 +331,7 @@ int rss_parser(char * filename)
      }
      done = feof(fp);
      if (XML_Parse(p, buff, len, done) == XML_STATUS_ERROR) {
-        error("rss_parser(): Parse error at line %d:\n%s\n",
-                XML_GetCurrentLineNumber(p),
-                XML_ErrorString(XML_GetErrorCode(p)));
+        error("rss_parser(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
         return 0;
      }
 

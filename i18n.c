@@ -177,7 +177,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
  },
-  { "<no target available>",
+  { "<no link available>",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -185,7 +185,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "<kohde ei ole saatavilla>",
+    "<linkki ei ole saatavilla>",
     "", // TODO
     "", // TODO
     "", // TODO

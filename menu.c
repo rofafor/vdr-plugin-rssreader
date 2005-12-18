@@ -18,14 +18,14 @@
 
 // --- cMenuItem --------------------------------------------------------
 
-cMenuItem::cMenuItem(const char *Title, const char *Date, const char *Desc, const char *Target)
+cMenuItem::cMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link)
 :cOsdMenu(tr("RSS item"))
 {
   asprintf(&text, "\n%s\n\n%s\n\n%s\n\n%s",
            *Date ? strdup(Date) : tr("<no date available>"),
            *Title ? strdup(Title) : tr("<no title available>"),
            *Desc ? strdup(Desc) : tr("<no description available>"),
-           *Target ? strdup(Target) : tr("<no target available>"));
+           *Link ? strdup(Link) : tr("<no link available>"));
 }
 
 cMenuItem::~cMenuItem()
@@ -99,7 +99,7 @@ eOSState cItemsMenu::ProcessKey(eKeys Key)
 eOSState cItemsMenu::ShowDetails(void)
 {
   cItem *item = (cItem *)Items.Get(Current());
-  return AddSubMenu(new cMenuItem(item->GetTitle(), item->GetDate(), item->GetDesc(), item->GetTarget()));
+  return AddSubMenu(new cMenuItem(item->GetTitle(), item->GetDate(), item->GetDesc(), item->GetLink()));
 }
 
 // --- cStreamsMenu -----------------------------------------------------

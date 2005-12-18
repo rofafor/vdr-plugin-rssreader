@@ -4,3 +4,9 @@ VDR Plugin 'rssreader' Revision History
 2005-12-18: Version 0.0.1
 
 - Initial revision.
+
+2005-12-18: Version 0.0.2
+
+- Hotfix release.
+- Fixed charset encoding for iso-8859-15.
+- Showing "link" instead of "target" on the item menu.

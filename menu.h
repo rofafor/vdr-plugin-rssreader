@@ -19,7 +19,7 @@ class cMenuItem : public cOsdMenu {
 private:
   char *text;
 public:
-  cMenuItem(const char *Title, const char *Date, const char *Desc, const char *Target);
+  cMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link);
   virtual ~cMenuItem();
   virtual void Display(void);
   virtual eOSState ProcessKey(eKeys Key);
