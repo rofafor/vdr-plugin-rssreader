@@ -98,28 +98,28 @@ std::stack<struct XmlNode> nodestack;
 
 // --- cItem ------------------------------------------------------------
 
-cItem::cItem(const char *Title, const char *Desc, const char *Date, const char *Target)
+cItem::cItem(const char *Title, const char *Desc, const char *Date, const char *Link)
 {
   strncpy(date, Date, sizeof(date));
   strncpy(title, Title, sizeof(title));
+  strncpy(link, Link, sizeof(link));
   strncpy(desc, Desc, sizeof(desc));
-  strncpy(target, Target, sizeof(target));
 }
 
 cItem::cItem(void)
 {
   strcpy(date, "");
   strcpy(title, "");
+  strcpy(link, "");
   strcpy(desc, "");
-  strcpy(target, "");
 }
 
 void cItem::Clear(void)
 {
   strcpy(date, "");
   strcpy(title, "");
+  strcpy(link, "");
   strcpy(desc, "");
-  strcpy(target, "");
 }
 
 void cItem::SetUTF8Date(const char *s)                                                                                                       
@@ -174,19 +174,6 @@ void cItem::SetUTF8Desc(const char *s)
      strncpy(desc, tmp, sizeof(tmp));
 }
 
-void cItem::SetUTF8Target(const char *s)
-{
-  char tmp[MAXLONGTEXTLEN];
-  memset(tmp, 0, sizeof(tmp));
-
-  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Target(): '%s'\n", tmp);
-  if (sizeof(tmp) > sizeof(target))
-     strncpy(target, tmp, sizeof(target));
-  else
-     strncpy(target, tmp, sizeof(tmp));
-}
-
 // --- Expat callbacks --------------------------------------------------
 
 static int XMLCALL
@@ -218,13 +205,6 @@ start(void *data, const char *el, const char **attr)
         cItem *tmpitem = new cItem;
         item = tmpitem;
         item->Clear();
-     }
-  } else if (!strncmp(el, "enclosure", 9)) {
-     for (int i = 0; attr[i]; i += 2) {
-        if (!strncmp(attr[i], "url", 3)) {
-           debug("url='%s'", attr[i + 1]);
-           item->SetUTF8Target(attr[i + 1]);
-        }
      }
   }
   depth++;

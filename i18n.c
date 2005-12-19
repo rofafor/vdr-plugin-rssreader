@@ -10,7 +10,7 @@
 
 const tI18nPhrase Phrases[] = {
   { "RSS Reader",
-    "", // TODO
+    "RSS Reader",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -31,7 +31,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "RSS Reader for OSD",
-    "", // TODO
+    "RSS Reader für OSD",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -52,7 +52,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "Select RSS stream",
-    "", // TODO
+    "Auswahl RSS stream",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -73,7 +73,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "Select RSS item",
-    "", // TODO
+    "Auswahl RSS item",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -94,7 +94,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "RSS item",
-    "", // TODO
+    "RSS item",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -115,7 +115,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "<no date available>",
-    "", // TODO
+    "<kein Datum vorhanden>",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -136,7 +136,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "<no title available>",
-    "", // TODO
+    "<kein Titel vorhanden>",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -157,7 +157,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "<no description available>",
-    "", // TODO
+    "<keine Beschreibung vorhanden>",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -178,7 +178,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "<no link available>",
-    "", // TODO
+    "<kein link vorhanden>",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -199,7 +199,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
  },
   { "Can't parse RSS stream!",
-    "", // TODO
+    "Kann den RSS stream nicht parsen!",
     "", // TODO
     "", // TODO
     "", // TODO

@@ -33,7 +33,7 @@ bool cRssItem::Parse(const char *s)
         stripspace(strn0cpy(title, s, l + 1));
         if (!isempty(title)) {
            url = stripspace(strdup(skipspace(p + 1)));
-           return !isempty(url);
+           return true;
            }
         }
      }
@@ -44,10 +44,10 @@ bool cRssItem::Parse(const char *s)
 
 cRssItems RssItems;
 
-bool cRssItems::Load(const char *filename, bool dummy)
+bool cRssItems::Load(const char *filename)
 {
-  if (cConfig<cRssItem>::Load(filename, true)) {
+  if (cConfig<cRssItem>::Load(filename, true, true)) {
      return true;
-  }
+     }
   return false;
 }

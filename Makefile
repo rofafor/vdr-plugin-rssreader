@@ -56,7 +56,7 @@ DEFINES += -DDEBUG
 endif
 
 ifdef RSSREADER_TEMPFILE
-DEFINES += -DRSSTEMPFILE=RSSREADER_TEMPFILE
+DEFINES += -DRSSTEMPFILE='"$(RSSREADER_TEMPFILE)"'
 endif
 
 ### The object files (add further files here):

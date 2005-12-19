@@ -25,7 +25,7 @@ public:
 
 class cRssItems : public cConfig<cRssItem> {
 public:
-  virtual bool Load(const char *filename, bool dummy);
+  virtual bool Load(const char *filename);
 };
 
 extern cRssItems RssItems;

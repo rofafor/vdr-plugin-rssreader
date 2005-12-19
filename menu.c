@@ -68,6 +68,7 @@ eOSState cMenuItem::ProcessKey(eKeys Key)
        default:
             state = osContinue;
        }
+     state = osContinue;
      }
   return state;
 }
@@ -91,8 +92,9 @@ eOSState cItemsMenu::ProcessKey(eKeys Key)
             return ShowDetails();
        default:
             break;
+       }
+     state = osContinue;
      }
-  }
   return state;
 }
 
@@ -107,23 +109,29 @@ eOSState cItemsMenu::ShowDetails(void)
 cStreamsMenu::cStreamsMenu(void)
 :cOsdMenu(tr("Select RSS stream"))
 {
-  for (cRssItem *Item = RssItems.First(); Item; Item = RssItems.Next(Item))
-    Add(new cOsdItem(Item->Title()));
+  for (cRssItem *rssItem = RssItems.First(); rssItem; rssItem = RssItems.Next(rssItem)) {
+      cOsdItem *osdItem = new cOsdItem;
+      if (!*rssItem->Url())
+         osdItem->SetSelectable(false);
+      osdItem->SetText(rssItem->Title(), false);
+      Add(osdItem);
+    }
   Display();
 }
 
 eOSState cStreamsMenu::Select(void)
 {
-  cRssItem *i = (cRssItem *)RssItems.Get(Current());
-  if (i) {
-     debug("cStreamsMenu::Select(): downloading and parsing '%s'", i->Title());
-     if (rss_downloader(i->Url()) && rss_parser(RSSTEMPFILE)) {
+  cRssItem *rssItem = (cRssItem *)RssItems.Get(Current());
+  if (rssItem) {
+     debug("cStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
+     if (rss_downloader(rssItem->Url()) && rss_parser(RSSTEMPFILE)) {
         return AddSubMenu(new cItemsMenu);
-     } else {
+        }
+     else {
         Skins.Message(mtError, tr("Can't parse RSS stream!"));
         return osContinue;
+        }
      }
-  }
   return osEnd;
 }
 
@@ -136,7 +144,8 @@ eOSState cStreamsMenu::ProcessKey(eKeys Key)
             return Select();
        default:
             break;
+       }
+     state = osContinue;
      }
-  }
   return state;
 }

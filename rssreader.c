@@ -18,7 +18,7 @@
 #error "You don't exist! Go away! Upgrade yourself!"
 #endif
 
-static const char *VERSION        = "0.0.2";
+static const char *VERSION        = "0.0.3";
 static const char *DESCRIPTION    = "RSS Reader for OSD";
 static const char *MAINMENUENTRY  = "RSS Reader";
 
@@ -95,7 +95,7 @@ void cPluginRssReader::Housekeeping(void)
 cOsdObject *cPluginRssReader::MainMenuAction(void)
 {
   // Perform the action when selected from the main VDR menu.
-  if (!RssItems.Load(AddDirectory(ConfigDirectory(), "rssreader.conf"), false)) {
+  if (!RssItems.Load(AddDirectory(ConfigDirectory(), "rssreader.conf"))) {
     error("configuration file 'rssreader.conf' not found!");
   }
   return (new cStreamsMenu);

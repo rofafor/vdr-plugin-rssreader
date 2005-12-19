@@ -29,26 +29,22 @@ private:
   char title[MAXSHORTTEXTLEN];
   char link[MAXSHORTTEXTLEN];
   char desc[MAXLONGTEXTLEN];
-  char target[MAXLONGTEXTLEN];
 public:
-  cItem(const char *Title, const char *Desc, const char *Date, const char *Target);
+  cItem(const char *Title, const char *Desc, const char *Date, const char *Link);
   cItem();
   void Clear(void);
   char *GetTitle(void) { return title; }
   char *GetLink(void) { return link; }
   char *GetDesc(void) { return desc; }
   char *GetDate(void) { return date; }
-  char *GetTarget(void) { return target; }
   void SetDate(const char *s) { debug("SetDate(): '%s'\n", s); strncpy(date, s, MAXSHORTTEXTLEN); }
   void SetTitle(const char *s) { debug("SetTitle(): '%s'\n", s); strncpy(title, s, MAXSHORTTEXTLEN); }
   void SetLink(const char *s) { debug("SetLink(): '%s'\n", s); strncpy(link, s, MAXSHORTTEXTLEN); }
   void SetDesc(const char *s) { debug("SetDesc(): '%s'\n", s); strncpy(desc, s, MAXLONGTEXTLEN); }
-  void SetTarget(const char *s) { debug("SetTarget(): '%s'\n", s); strncpy(target, s, MAXLONGTEXTLEN); }
   void SetUTF8Date(const char *s);
   void SetUTF8Title(const char *s);
   void SetUTF8Link(const char *s);
   void SetUTF8Desc(const char *s);
-  void SetUTF8Target(const char *s);
 };
 
 // --- cItems -----------------------------------------------------------
