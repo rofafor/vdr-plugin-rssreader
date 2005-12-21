@@ -61,7 +61,7 @@ endif
 
 ### The object files (add further files here):
 
-OBJS = rssreader.o i18n.o item.o parser.o menu.o
+OBJS = rssreader.o i18n.o parser.o menu.o config.o
 
 ### Implicit rules:
 

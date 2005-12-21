@@ -10,36 +10,56 @@
 #define __RSSREADER_MENU_H
 
 #include <vdr/osdbase.h>
-#include <vdr/menuitems.h>
-#include <vdr/interface.h>
+#include <vdr/tools.h>
 
-// --- cMenuItem --------------------------------------------------------
+// --- cRssItem ---------------------------------------------------------
 
-class cMenuItem : public cOsdMenu {
+class cRssItem : public cListObject {
+private:
+  char *title;
+  char *url;
+public:
+  cRssItem(void);
+  virtual ~cRssItem();
+  bool Parse(const char *s);
+  const char *Title(void) { return title; }
+  const char *Url(void) { return url; }
+};
+
+class cRssItems : public cConfig<cRssItem> {
+public:
+  virtual bool Load(const char *filename);
+};
+
+extern cRssItems RssItems;
+
+// --- cRssMenuItem --------------------------------------------------------
+
+class cRssMenuItem : public cOsdMenu {
 private:
   char *text;
 public:
-  cMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link);
-  virtual ~cMenuItem();
+  cRssMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link);
+  virtual ~cRssMenuItem();
   virtual void Display(void);
   virtual eOSState ProcessKey(eKeys Key);
   };
 
-// --- cItemsMenu -------------------------------------------------------
+// --- cRssItemsMenu -------------------------------------------------------
 
-class cItemsMenu: public cOsdMenu {
+class cRssItemsMenu: public cOsdMenu {
 private:
   eOSState ShowDetails(void);
 public:
-  cItemsMenu(void);
+  cRssItemsMenu(void);
   virtual eOSState ProcessKey(eKeys Key);
 };
 
-// --- cStreamsMenu -----------------------------------------------------
+// --- cRssStreamsMenu -----------------------------------------------------
 
-class cStreamsMenu: public cOsdMenu {
+class cRssStreamsMenu: public cOsdMenu {
 public:
-  cStreamsMenu(void);
+  cRssStreamsMenu();
   virtual eOSState ProcessKey(eKeys Key);
   virtual eOSState Select(void);
 };

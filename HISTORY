@@ -19,3 +19,14 @@ VDR Plugin 'rssreader' Revision History
 - Added label support into rssreader.conf.
 - User inactivity doesn't close menu anymore.
 - Added german translation (Thanks to Siegfried Düngler).
+
+2005-12-21: Version 0.0.4
+
+- Completed german translation (Thanks to Walter Koch).
+- Added new RSS streams into "example/rssreader.conf".
+- Fixed RSS URLs with several '&' characters (Thanks to Matthias).
+- Added new setup options to hide mainmenu entry and to hide
+  non-existent elements.
+- Fixed RSS parsing engine.
+- Added '-f' command line option for RSSREADER_TEMPFILE.
+- Fixed OSD menu related crash bug.

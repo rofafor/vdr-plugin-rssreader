@@ -6,13 +6,14 @@
  * $Id$
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
 #include <stack> 
 #include <expat.h>
 #include <iconv.h>
+#include <vdr/config.h>
+#include <vdr/i18n.h>
+#include "config.h"
 #include "parser.h"
+#include "common.h"
 
 // --- static functions -------------------------------------------------
 
@@ -31,8 +32,9 @@ static int charsetconv(const char *buffer, int buf_len, const char *str, int str
            }
         iconv_close(ic);
         }
-     } else {
-       error("charsetconv(): charset is not valid");
+     }
+  else {
+     error("charsetconv(): charset is not valid");
      }
   return -1;
 }
@@ -43,15 +45,14 @@ static char *striphtml(char *s)
   c = s;
   r = s;
   while (*s != '\0') {
-     if (*s == '<') {
-        t++;
-     } else if (*s == '>') {
+    if (*s == '<')
+       t++;
+    else if (*s == '>')
        t--;
-     } else if (t < 1) {
+    else if (t < 1)
        *(c++) = *s;
-     }
-     s++;
-  }
+    s++;
+    }
   *c = '\0';
   return r;
 }
@@ -71,30 +72,9 @@ static char *stripspaces(char *str)
      strcat(str, ptr);
      strcat(str, " ");
      ptr = strtok(NULL, " \n\t\r\x3F");
-  }
+     }
   return str;
 }
-
-// --- Items ------------------------------------------------------------
-
-#define BUFFSIZE 8192
-
-cItems	Items;
-
-cItem   *item;
-int     depth;
-char    data_string[MAXLONGTEXTLEN];
-char    current_node[MAXSHORTTEXTLEN];
-char    attribute_1[MAXSHORTTEXTLEN];
-char    buff[BUFFSIZE];
-
-struct XmlNode
-{
-      char  nodename[MAXSHORTTEXTLEN];
-      int   depth;
-};
-
-std::stack<struct XmlNode> nodestack;
 
 // --- cItem ------------------------------------------------------------
 
@@ -122,17 +102,14 @@ void cItem::Clear(void)
   strcpy(desc, "");
 }
 
-void cItem::SetUTF8Date(const char *s)                                                                                                       
+void cItem::SetUTF8Date(const char *s)
 {
   char tmp[MAXSHORTTEXTLEN];
   memset(tmp, 0, sizeof(tmp));
 
-  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);                                                     
-  debug("cItem::SetUTF8Date(): Date: '%s'\n", tmp);                                                                                           
-  if (sizeof(tmp) > sizeof(date))                                                                                                            
-     strncpy(date, tmp, sizeof(date));                                                                                                      
-  else
-     strncpy(date, tmp, sizeof(tmp));                                                                                                        
+  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
+  debug("cItem::SetUTF8Date(): Date: '%s'", tmp);
+  strncpy(date, tmp, sizeof(tmp));
 }
 
 void cItem::SetUTF8Title(const char *s)
@@ -141,11 +118,8 @@ void cItem::SetUTF8Title(const char *s)
   memset(tmp, 0, sizeof(tmp));
 
   charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Title(): '%s'\n", tmp);
-  if (sizeof(tmp) > sizeof(title))
-     strncpy(title, tmp, sizeof(title));
-  else
-     strncpy(title, tmp, sizeof(tmp));
+  debug("cItem::SetUTF8Title(): '%s'", tmp);
+  strncpy(title, tmp, sizeof(tmp));
 }
 
 void cItem::SetUTF8Link(const char *s)
@@ -154,11 +128,8 @@ void cItem::SetUTF8Link(const char *s)
   memset(tmp, 0, sizeof(tmp));
 
   charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Link(): '%s'\n", tmp);
-  if (sizeof(tmp) > sizeof(link))
-     strncpy(link, tmp, sizeof(link));
-  else
-     strncpy(link, tmp, sizeof(tmp));
+  debug("cItem::SetUTF8Link(): '%s'", tmp);
+  strncpy(link, tmp, sizeof(tmp));
 }
 
 void cItem::SetUTF8Desc(const char *s)
@@ -167,14 +138,28 @@ void cItem::SetUTF8Desc(const char *s)
   memset(tmp, 0, sizeof(tmp));
 
   charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Desc(): '%s'\n", tmp);
-  if (sizeof(tmp) > sizeof(desc))
-     strncpy(desc, tmp, sizeof(desc));
-  else
-     strncpy(desc, tmp, sizeof(tmp));
+  debug("cItem::SetUTF8Desc(): '%s'", tmp);
+  strncpy(desc, tmp, sizeof(tmp));
 }
 
-// --- Expat callbacks --------------------------------------------------
+// --- Expat ------------------------------------------------------------
+
+#define BUFFSIZE 16384
+
+cItems  Items;
+
+cItem   *item;
+int     depth;
+char    data_string[MAXLONGTEXTLEN];
+char    buff[BUFFSIZE];
+
+struct XmlNode
+{
+      char  nodename[MAXSHORTTEXTLEN];
+      int   depth;
+};
+
+std::stack<struct XmlNode> nodestack;
 
 static int XMLCALL
 unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
@@ -187,7 +172,7 @@ unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
      info->convert = NULL;
      info->release = NULL;
      return XML_STATUS_OK;
-  }
+     }
   return XML_STATUS_ERROR;
 }
 
@@ -201,12 +186,10 @@ start(void *data, const char *el, const char **attr)
   nodestack.push(node);
 
   if (!strncmp(el, "item", 4)) {
-     if (depth == 2) {
-        cItem *tmpitem = new cItem;
-        item = tmpitem;
-        item->Clear();
+     cItem *tmpitem = new cItem;
+     item = tmpitem;
+     item->Clear();
      }
-  }
   depth++;
 }
 
@@ -218,55 +201,64 @@ end(void *data, const char *el)
   
   if (nodestack.size() > 1) {
      nodestack.pop();
-  } else {
+     } 
+  else {
      nodestack.pop();
      return;
-  }
+     }
   strncpy(parent, (nodestack.top()).nodename, MAXSHORTTEXTLEN);
   // No need to free the node
   
   depth--;
   if (!strncmp(el, "item", 4)) {
-     if (!strncmp(parent, "channel", 7)) {
-        // End of the current item
+     // End of the current item
+     if (*item->GetTitle())
         Items.Add(item);
      }
-  } else if (!strncmp(el, "title", 5)) {
+  else if (!strncmp(el, "title", 5)) {
      stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
+        debug("depth: %d", depth);
         item->SetUTF8Title(data_string);
-     } else if (!strncmp(parent, "channel", 7)) {
+        }
+     else if (!strncmp(parent, "channel", 7)) {
         debug("rss_parser(): RSS title '%s'", data_string);
+        }
      }
-  } else if (!strncmp(el, "link", 4)) {
+  else if (!strncmp(el, "link", 4)) {
      stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
         item->SetUTF8Link(data_string);
-     } else if (!strncmp(parent, "channel", 7)) {
+        }
+     else if (!strncmp(parent, "channel", 7)) {
         debug("rss_parser(): RSS link '%s'", data_string);
+        }
      }
-  } else if (!strncmp(el, "pubDate", 7)) {
+  else if (!strncmp(el, "pubDate", 7)) {
      stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
         item->SetUTF8Date(data_string);
-     } else if (!strncmp(parent, "channel", 7)) {
+        }
+     else if (!strncmp(parent, "channel", 7)) {
         debug("rss_parser(): RSS date '%s'", data_string);
-    }
-  } else if (!strncmp(el, "description", 11)) {
+        }
+     }
+  else if (!strncmp(el, "description", 11)) {
      if (!strncmp(parent, "item", 4)) {
         strncpy(txt, data_string, MAXLONGTEXTLEN);
         striphtml(txt);
         stripspaces(txt);
         item->SetUTF8Desc(txt);
-     } else if (!strncmp(parent, "channel", 7)) {
+        }
+     else if (!strncmp(parent, "channel", 7)) {
         debug("rss_parser(): RSS description '%s'", data_string);
+        }
      }
-  }
   strcpy(data_string, "");
 }
 
 static void
-data (void *user_data, const XML_Char * s, int len)
+data(void *user_data, const XML_Char *s, int len)
 {
   /* Only until the maximum size of the buffer */
   if (strlen(data_string) + len <= MAXLONGTEXTLEN)
@@ -282,10 +274,10 @@ int rss_parser(char * filename)
   depth = 0;
   // Setup expat
   XML_Parser p = XML_ParserCreate(NULL);
-  if (! p) {
+  if (!p) {
      error("rss_parser(): couldn't allocate memory for parser");
      return 0;
-  }
+     }
 
   XML_SetElementHandler(p, start, end);
   XML_SetCharacterDataHandler(p, data);
@@ -297,7 +289,7 @@ int rss_parser(char * filename)
   if ((fp = fopen(filename, "r")) == NULL) {
      error("rss_parser(): file does not exist");
      return 0;
-  }
+     }
 
   // Go through all items
   for (;;) {
@@ -308,35 +300,31 @@ int rss_parser(char * filename)
      if (ferror(fp)) {
         error("rss_parser(): Read error");
         return 0;
-     }
+        }
      done = feof(fp);
      if (XML_Parse(p, buff, len, done) == XML_STATUS_ERROR) {
         error("rss_parser(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
         return 0;
-     }
+        }
 
      if (done)
         break;
-  }
+     }
   return -1;
 }
 
 int rss_downloader(const char *str)
 {
   char *cmd;
-  int  len;
 
-  cmd = strdup("");
-  len = strlen(RSSGET) + strlen(str) + 3;
-  cmd = (char *)realloc(cmd, len);                                                           
-  sprintf(cmd, "%s %s", RSSGET, str);
-  debug("rss_downloader(): running '%s'", cmd);                                              
-  int r = system(cmd);                                                                       
-  if (r!=0) {
+  asprintf(&cmd, "%s %s '%s'", RSSGET, RssConfig.tempfile, str);
+  debug("rss_downloader(): running '%s'", cmd);
+  int r = system(cmd);
+  if (r != 0) {
      error("rss_downloader(): page download (via '%s') failed", cmd);
      free(cmd);
      return 0;
-  }
+     }
   free(cmd);
   debug("rss_downloader(): done (return code: %d)", r);
   return -1;

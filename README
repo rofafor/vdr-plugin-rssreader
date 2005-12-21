@@ -26,7 +26,7 @@ Installation:
 cd /put/your/path/here/VDR/PLUGINS/src
 tar -xzf /put/your/path/here/vdr-rssreader-X.Y.Z.tgz
 ln -s rssreader-X.Y.Z rssreader
-cp rssreader/conf/rssreader.conf /path/to/vdrconf/plugins/
+cp rssreader/example/rssreader.conf /path/to/vdrconf/plugins/
 cd /put/your/path/here/VDR
 make
 make plugins
@@ -35,7 +35,7 @@ make plugins
 Configuration:
 
 RSS streams are defined in rssreader.conf located in VDR's configuration
-directory for plugins. Check the example configuration file under "conf"
+directory for plugins. Check the configuration file under "example"
 subdirectory for further information.
 
 Notes:

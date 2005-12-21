@@ -10,7 +10,7 @@
 
 const tI18nPhrase Phrases[] = {
   { "RSS Reader",
-    "RSS Reader",
+    "RSS-Reader",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -29,9 +29,9 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "RSS Reader for OSD",
-    "RSS Reader für OSD",
+    "RSS-Reader für OSD",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -50,9 +50,9 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "Select RSS stream",
-    "Auswahl RSS stream",
+    "Auswahl RSS-Stream",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -71,9 +71,9 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "Select RSS item",
-    "Auswahl RSS item",
+    "Auswahl RSS-Artikel",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -92,9 +92,9 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "RSS item",
-    "RSS item",
+    "RSS-Artikel",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -113,7 +113,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "<no date available>",
     "<kein Datum vorhanden>",
     "", // TODO
@@ -134,7 +134,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "<no title available>",
     "<kein Titel vorhanden>",
     "", // TODO
@@ -155,7 +155,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "<no description available>",
     "<keine Beschreibung vorhanden>",
     "", // TODO
@@ -176,9 +176,9 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "<no link available>",
-    "<kein link vorhanden>",
+    "<kein Link vorhanden>",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -197,9 +197,9 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
+  },
   { "Can't parse RSS stream!",
-    "Kann den RSS stream nicht parsen!",
+    "Kann den RSS-Stream nicht parsen!",
     "", // TODO
     "", // TODO
     "", // TODO
@@ -218,6 +218,69 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
- },
- { NULL }
+  },
+  { "Loading RSS stream...",
+    "Lade RSS-Stream...",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "RSS-virtaa ladataan...",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+  },
+  { "Hide main menu entry",
+    "Hauptmenüeintrag verstecken",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "Piilota valinta päävalikosta",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+  },
+  { "Hide non-existent elements",
+    "Nur vorhandene Elemente zeigen",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "Piilota tyhjät elementit",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+  },
+  { NULL }
 };

@@ -6,42 +6,84 @@
  * $Id$
  */
  
-#include <vdr/plugin.h>
-#include <vdr/menu.h>
 #include <vdr/status.h>
-
-#include "menu.h"
 #include "i18n.h"
 #include "parser.h"
-#include "item.h"
+#include "config.h"
+#include "menu.h"
 #include "common.h"
 
-// --- cMenuItem --------------------------------------------------------
+cRssItems RssItems;
 
-cMenuItem::cMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link)
-:cOsdMenu(tr("RSS item"))
-{
-  asprintf(&text, "\n%s\n\n%s\n\n%s\n\n%s",
-           *Date ? strdup(Date) : tr("<no date available>"),
-           *Title ? strdup(Title) : tr("<no title available>"),
-           *Desc ? strdup(Desc) : tr("<no description available>"),
-           *Link ? strdup(Link) : tr("<no link available>"));
+// --- cRssItem ---------------------------------------------------------
+
+cRssItem::cRssItem(void)
+{ 
+  title = url = NULL;
 }
 
-cMenuItem::~cMenuItem()
+cRssItem::~cRssItem()
+{
+  free(title);
+  free(url);
+}
+
+bool cRssItem::Parse(const char *s)
+{
+  const char *p = strchr(s, ':');
+  if (p) {
+     int l = p - s;
+     if (l > 0) {
+        title = MALLOC(char, l + 1);
+        stripspace(strn0cpy(title, s, l + 1));
+        if (!isempty(title)) {
+           url = stripspace(strdup(skipspace(p + 1)));
+           return true;
+           }
+        }
+     }
+  return false;
+}
+
+// --- cRssItems --------------------------------------------------------
+
+bool cRssItems::Load(const char *filename)
+{
+  if (cConfig<cRssItem>::Load(filename, true)) {
+     return true;
+     }
+  return false;
+}
+
+// --- cRssMenuItem --------------------------------------------------------
+
+cRssMenuItem::cRssMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link)
+:cOsdMenu(tr("RSS item"))
+{
+  asprintf(&text, "\n%s%s%s%s%s%s%s",
+           *Date  ? strdup(Date)  : RssConfig.hideelem ? "" : tr("<no date available>"),
+           (*Date  || !RssConfig.hideelem) ? "\n\n" : "",
+           *Title ? strdup(Title) : RssConfig.hideelem ? "" : tr("<no title available>"),
+           (*Title || !RssConfig.hideelem) ? "\n\n" : "",
+           *Desc  ? strdup(Desc)  : RssConfig.hideelem ? "" : tr("<no description available>"),
+           (*Desc  || !RssConfig.hideelem) ? "\n\n" : "",
+           *Link  ? strdup(Link)  : RssConfig.hideelem ? "" : tr("<no link available>"));
+}
+
+cRssMenuItem::~cRssMenuItem()
 {
   free(text);
 }
 
-void cMenuItem::Display(void)
+void cRssMenuItem::Display(void)
 {
   cOsdMenu::Display();
-  debug("cMenuItem::Display(): '%s'\n", text);
+  debug("cRssMenuItem::Display(): '%s'\n", text);
   DisplayMenu()->SetText(text, true);
   cStatus::MsgOsdTextItem(text);
 }
 
-eOSState cMenuItem::ProcessKey(eKeys Key)
+eOSState cRssMenuItem::ProcessKey(eKeys Key)
 {
   switch (Key) {
     case kUp|k_Repeat:
@@ -73,17 +115,17 @@ eOSState cMenuItem::ProcessKey(eKeys Key)
   return state;
 }
 
-// --- cItemsMenu --------------------------------------------------------
+// --- cRssItemsMenu --------------------------------------------------------
 
-cItemsMenu::cItemsMenu(void)
+cRssItemsMenu::cRssItemsMenu(void)
 :cOsdMenu(tr("Select RSS item"))
 {
-  for (cItem *Item = Items.First(); Item; Item = Items.Next(Item))
-     Add(new cOsdItem(Item->GetTitle()));
+  for (cItem *rssItem = Items.First(); rssItem; rssItem = Items.Next(rssItem))
+     Add(new cOsdItem(rssItem->GetTitle()));
   Display();
 }
 
-eOSState cItemsMenu::ProcessKey(eKeys Key)
+eOSState cRssItemsMenu::ProcessKey(eKeys Key)
 {
   eOSState state = cOsdMenu::ProcessKey(Key);
   if (state == osUnknown) {
@@ -98,34 +140,36 @@ eOSState cItemsMenu::ProcessKey(eKeys Key)
   return state;
 }
 
-eOSState cItemsMenu::ShowDetails(void)
+eOSState cRssItemsMenu::ShowDetails(void)
 {
-  cItem *item = (cItem *)Items.Get(Current());
-  return AddSubMenu(new cMenuItem(item->GetTitle(), item->GetDate(), item->GetDesc(), item->GetLink()));
+  cItem *rssItem = (cItem *)Items.Get(Current());
+  return AddSubMenu(new cRssMenuItem(rssItem->GetTitle(), rssItem->GetDate(), rssItem->GetDesc(), rssItem->GetLink()));
 }
 
-// --- cStreamsMenu -----------------------------------------------------
+// --- cRssStreamsMenu -----------------------------------------------------
 
-cStreamsMenu::cStreamsMenu(void)
+cRssStreamsMenu::cRssStreamsMenu(void)
 :cOsdMenu(tr("Select RSS stream"))
 {
   for (cRssItem *rssItem = RssItems.First(); rssItem; rssItem = RssItems.Next(rssItem)) {
       cOsdItem *osdItem = new cOsdItem;
       if (!*rssItem->Url())
          osdItem->SetSelectable(false);
-      osdItem->SetText(rssItem->Title(), false);
+      osdItem->SetText(rssItem->Title());
+      debug("StreamsMenu: '%s' : '%s'", rssItem->Title(), rssItem->Url());
       Add(osdItem);
     }
   Display();
 }
 
-eOSState cStreamsMenu::Select(void)
+eOSState cRssStreamsMenu::Select(void)
 {
   cRssItem *rssItem = (cRssItem *)RssItems.Get(Current());
   if (rssItem) {
-     debug("cStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
-     if (rss_downloader(rssItem->Url()) && rss_parser(RSSTEMPFILE)) {
-        return AddSubMenu(new cItemsMenu);
+     debug("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
+     //Skins.Message(mtInfo, tr("Loading RSS stream...")); // this message generates annoying slowdown 
+     if (rss_downloader(rssItem->Url()) && rss_parser(RssConfig.tempfile)) {
+        return AddSubMenu(new cRssItemsMenu);
         }
      else {
         Skins.Message(mtError, tr("Can't parse RSS stream!"));
@@ -135,7 +179,7 @@ eOSState cStreamsMenu::Select(void)
   return osEnd;
 }
 
-eOSState cStreamsMenu::ProcessKey(eKeys Key)
+eOSState cRssStreamsMenu::ProcessKey(eKeys Key)
 {
   eOSState state = cOsdMenu::ProcessKey(Key);
   if (state == osUnknown) {

@@ -22,8 +22,8 @@
 #define RSSTEMPFILE "/tmp/rssreader.vdr"
 #endif
 
-// RSS stream download command
-#define RSSGET "wget -O " RSSTEMPFILE " >/dev/null 2>/dev/null"
+// RSS stream download command: "RSSGET RSSTEMPFILE RSSURL"
+#define RSSGET "wget -q -t 1 -T 30 -O"
 
 #endif // __RSSREADER_COMMON_H
 

@@ -9,8 +9,6 @@
 #ifndef __RSSREADER_PARSER_H
 #define __RSSREADER_PARSER_H
 
-#include <vdr/tools.h>
-#include <vdr/interface.h>
 #include "common.h"
 
 // --- public functions -------------------------------------------------
@@ -20,8 +18,8 @@ int rss_downloader(const char *str);
 
 // --- cItem ------------------------------------------------------------
 
-#define MAXLONGTEXTLEN  2048
-#define MAXSHORTTEXTLEN 256
+#define MAXLONGTEXTLEN  8192
+#define MAXSHORTTEXTLEN 1024
 
 class cItem : public cListObject {
 private:
