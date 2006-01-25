@@ -219,6 +219,27 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
   },
+  { "Can't download RSS stream!",
+    "Kann den RSS-Stream nicht laden!",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "RSS-virtaa ei pystytä vastaanottamaan!",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+  },
   { "Loading RSS stream...",
     "Lade RSS-Stream...",
     "", // TODO

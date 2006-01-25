@@ -11,15 +11,7 @@
 
 #include "common.h"
 
-// --- public functions -------------------------------------------------
-
-int rss_parser(char * filename);
-int rss_downloader(const char *str);
-
-// --- cItem ------------------------------------------------------------
-
-#define MAXLONGTEXTLEN  8192
-#define MAXSHORTTEXTLEN 1024
+// --- cItem(s) ---------------------------------------------------------
 
 class cItem : public cListObject {
 private:
@@ -45,14 +37,20 @@ public:
   void SetUTF8Desc(const char *s);
 };
 
-// --- cItems -----------------------------------------------------------
-
 class cItems : public cList<cItem> {
 private:
   cItem *current;
 };
 
-extern cItems Items;
+// --- cParser ----------------------------------------------------------
+
+class cParser {
+public:
+  cItems Items;
+  bool Parse(char *filename);
+  bool Download(const char *url);
+  };
+
+extern cParser Parser;
 
 #endif // __RSSREADER_PARSER_H
-

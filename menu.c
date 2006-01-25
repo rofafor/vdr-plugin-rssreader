@@ -13,6 +13,8 @@
 #include "menu.h"
 #include "common.h"
 
+// --- Globals ----------------------------------------------------------
+
 cRssItems RssItems;
 
 // --- cRssItem ---------------------------------------------------------
@@ -120,7 +122,7 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
 cRssItemsMenu::cRssItemsMenu(void)
 :cOsdMenu(tr("Select RSS item"))
 {
-  for (cItem *rssItem = Items.First(); rssItem; rssItem = Items.Next(rssItem))
+  for (cItem *rssItem = Parser.Items.First(); rssItem; rssItem = Parser.Items.Next(rssItem))
      Add(new cOsdItem(rssItem->GetTitle()));
   Display();
 }
@@ -142,7 +144,7 @@ eOSState cRssItemsMenu::ProcessKey(eKeys Key)
 
 eOSState cRssItemsMenu::ShowDetails(void)
 {
-  cItem *rssItem = (cItem *)Items.Get(Current());
+  cItem *rssItem = (cItem *)Parser.Items.Get(Current());
   return AddSubMenu(new cRssMenuItem(rssItem->GetTitle(), rssItem->GetDate(), rssItem->GetDesc(), rssItem->GetLink()));
 }
 
@@ -168,11 +170,17 @@ eOSState cRssStreamsMenu::Select(void)
   if (rssItem) {
      debug("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
      //Skins.Message(mtInfo, tr("Loading RSS stream...")); // this message generates annoying slowdown 
-     if (rss_downloader(rssItem->Url()) && rss_parser(RssConfig.tempfile)) {
-        return AddSubMenu(new cRssItemsMenu);
+     if (Parser.Download(rssItem->Url())) {
+        if (Parser.Parse(RssConfig.tempfile)) {
+           return AddSubMenu(new cRssItemsMenu);
+           }
+        else {
+           Skins.Message(mtError, tr("Can't parse RSS stream!"));
+           return osContinue;
+           }
         }
      else {
-        Skins.Message(mtError, tr("Can't parse RSS stream!"));
+        Skins.Message(mtError, tr("Can't download RSS stream!"));
         return osContinue;
         }
      }

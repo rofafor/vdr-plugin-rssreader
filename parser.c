@@ -6,77 +6,25 @@
  * $Id$
  */
 
-#include <stack> 
-#include <expat.h>
-#include <iconv.h>
+#include <stack>
 #include <vdr/config.h>
 #include <vdr/i18n.h>
-#include "config.h"
-#include "parser.h"
 #include "common.h"
+#include "config.h"
+#include "tools.h"
+#include "parser.h"
 
-// --- static functions -------------------------------------------------
+#include <expat.h>
+#define LIBEXPAT_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
+#if LIBEXPAT_VERSION(XML_MAJOR_VERSION, XML_MINOR_VERSION, XML_MICRO_VERSION) < LIBEXPAT_VERSION(1, 95, 8)
+#warning "Expat XML parser library 1.95.8 or newer required!"
+#endif
 
-static int charsetconv(const char *buffer, int buf_len, const char *str, int str_len, const char *from, const char *to)
-{
-  if (to && from) {
-     iconv_t ic = iconv_open(to, from);
-     if (ic >= 0) {
-        size_t inbytesleft = str_len;
-        size_t outbytesleft = buf_len;
-        char *out = (char*)buffer;
-        int ret;
-        if ((ret = iconv(ic, (char**)&str, &inbytesleft, &out, &outbytesleft)) >= 0) {
-           iconv_close(ic);
-           return buf_len - outbytesleft;
-           }
-        iconv_close(ic);
-        }
-     }
-  else {
-     error("charsetconv(): charset is not valid");
-     }
-  return -1;
-}
+// --- Globals ----------------------------------------------------------
 
-static char *striphtml(char *s)
-{
-  char *c, t = 0, *r;
-  c = s;
-  r = s;
-  while (*s != '\0') {
-    if (*s == '<')
-       t++;
-    else if (*s == '>')
-       t--;
-    else if (t < 1)
-       *(c++) = *s;
-    s++;
-    }
-  *c = '\0';
-  return r;
-}
+cParser Parser;
 
-static char *stripspaces(char *str)
-{
-  char tmp[MAXLONGTEXTLEN];
-  char *ptr;
-
-  if (str == NULL)
-     return str;
-
-  strncpy(tmp, str, MAXLONGTEXTLEN);
-  strcpy(str, "");
-  ptr = strtok(tmp, " \n\t\r\x3F");
-  while (ptr) {
-     strcat(str, ptr);
-     strcat(str, " ");
-     ptr = strtok(NULL, " \n\t\r\x3F");
-     }
-  return str;
-}
-
-// --- cItem ------------------------------------------------------------
+// --- cItem(s) ---------------------------------------------------------
 
 cItem::cItem(const char *Title, const char *Desc, const char *Date, const char *Link)
 {
@@ -142,27 +90,22 @@ void cItem::SetUTF8Desc(const char *s)
   strncpy(desc, tmp, sizeof(tmp));
 }
 
-// --- Expat ------------------------------------------------------------
+// --- Parse RSS  -------------------------------------------------------
 
-#define BUFFSIZE 16384
+#define XMLBUFSIZE 16384
 
-cItems  Items;
-
-cItem   *item;
-int     depth;
-char    data_string[MAXLONGTEXTLEN];
-char    buff[BUFFSIZE];
-
-struct XmlNode
-{
-      char  nodename[MAXSHORTTEXTLEN];
-      int   depth;
+struct XmlNode {
+  char nodename[MAXSHORTTEXTLEN];
+  int  depth;
 };
 
+cItem *item;
+int   depth;
+char  buff[XMLBUFSIZE];
+char  data_string[MAXLONGTEXTLEN];
 std::stack<struct XmlNode> nodestack;
 
-static int XMLCALL
-unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
+static int XMLCALL unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
 {
   if (strcmp(encoding, "iso-8859-15") == 0) {
      int i;
@@ -176,8 +119,7 @@ unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
   return XML_STATUS_ERROR;
 }
 
-static void XMLCALL
-start(void *data, const char *el, const char **attr)
+static void XMLCALL start(void *data, const char *el, const char **attr)
 {
   XmlNode node;
 
@@ -193,8 +135,7 @@ start(void *data, const char *el, const char **attr)
   depth++;
 }
 
-static void XMLCALL
-end(void *data, const char *el)
+static void XMLCALL end(void *data, const char *el)
 {
   char txt[MAXLONGTEXTLEN];
   char parent[MAXSHORTTEXTLEN];
@@ -213,7 +154,7 @@ end(void *data, const char *el)
   if (!strncmp(el, "item", 4)) {
      // End of the current item
      if (*item->GetTitle())
-        Items.Add(item);
+        Parser.Items.Add(item);
      }
   else if (!strncmp(el, "title", 5)) {
      stripspaces(data_string);
@@ -222,7 +163,7 @@ end(void *data, const char *el)
         item->SetUTF8Title(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("rss_parser(): RSS title '%s'", data_string);
+        debug("cParser::end(): RSS title '%s'", data_string);
         }
      }
   else if (!strncmp(el, "link", 4)) {
@@ -231,7 +172,7 @@ end(void *data, const char *el)
         item->SetUTF8Link(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("rss_parser(): RSS link '%s'", data_string);
+        debug("cParser::end(): RSS link '%s'", data_string);
         }
      }
   else if (!strncmp(el, "pubDate", 7)) {
@@ -240,7 +181,7 @@ end(void *data, const char *el)
         item->SetUTF8Date(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("rss_parser(): RSS date '%s'", data_string);
+        debug("cParser::end(): RSS date '%s'", data_string);
         }
      }
   else if (!strncmp(el, "description", 11)) {
@@ -251,23 +192,20 @@ end(void *data, const char *el)
         item->SetUTF8Desc(txt);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("rss_parser(): RSS description '%s'", data_string);
+        debug("cParser::end(): RSS description '%s'", data_string);
         }
      }
   strcpy(data_string, "");
 }
 
-static void
-data(void *user_data, const XML_Char *s, int len)
+static void data(void *user_data, const XML_Char *s, int len)
 {
   /* Only until the maximum size of the buffer */
   if (strlen(data_string) + len <= MAXLONGTEXTLEN)
      strncat(data_string, s, len);
 }
 
-// --- Parse RSS  -------------------------------------------------------
-
-int rss_parser(char * filename)
+bool cParser::Parse(char *filename)
 {
   FILE *fp;
 
@@ -275,8 +213,8 @@ int rss_parser(char * filename)
   // Setup expat
   XML_Parser p = XML_ParserCreate(NULL);
   if (!p) {
-     error("rss_parser(): couldn't allocate memory for parser");
-     return 0;
+     error("cParser::Parse(): couldn't allocate memory for parser");
+     return false;
      }
 
   XML_SetElementHandler(p, start, end);
@@ -287,8 +225,8 @@ int rss_parser(char * filename)
   Items.Clear();
   // Load the RSS
   if ((fp = fopen(filename, "r")) == NULL) {
-     error("rss_parser(): file does not exist");
-     return 0;
+     error("cParser::Parse(): file does not exist");
+     return false;
      }
 
   // Go through all items
@@ -296,37 +234,36 @@ int rss_parser(char * filename)
      int done;
      int len;
 
-     len = fread(buff, 1, BUFFSIZE, fp);
+     len = fread(buff, 1, XMLBUFSIZE, fp);
      if (ferror(fp)) {
-        error("rss_parser(): Read error");
-        return 0;
+        error("cParser::Parse(): Read error");
+        return false;
         }
      done = feof(fp);
      if (XML_Parse(p, buff, len, done) == XML_STATUS_ERROR) {
-        error("rss_parser(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
-        return 0;
+        error("cParser::Parse(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
+        return false;
         }
 
      if (done)
         break;
      }
-  return -1;
+  return true;
 }
 
-int rss_downloader(const char *str)
+bool cParser::Download(const char *url)
 {
   char *cmd;
 
-  asprintf(&cmd, "%s %s '%s'", RSSGET, RssConfig.tempfile, str);
-  debug("rss_downloader(): running '%s'", cmd);
+  asprintf(&cmd, "%s %s '%s'", RSSGET, RssConfig.tempfile, url);
+  debug("cParser::Download(): running '%s'", cmd);
   int r = system(cmd);
   if (r != 0) {
-     error("rss_downloader(): page download (via '%s') failed", cmd);
+     error("cParser::Download(): page download (via '%s') failed (return code: %d)", cmd, r);
      free(cmd);
-     return 0;
+     return false;
      }
   free(cmd);
-  debug("rss_downloader(): done (return code: %d)", r);
-  return -1;
+  debug("cParser::Download(): done (return code: %d)", r);
+  return true;
 }
-

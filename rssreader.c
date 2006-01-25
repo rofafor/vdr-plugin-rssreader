@@ -15,11 +15,11 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(VDRVERSNUM) && VDRVERSNUM < 10337
+#if defined(VDRVERSNUM) && VDRVERSNUM < 10340
 #error "You don't exist! Go away! Upgrade yourself!"
 #endif
 
-static const char *VERSION        = "0.0.4";
+static const char *VERSION        = "0.1.0";
 static const char *DESCRIPTION    = "RSS Reader for OSD";
 static const char *MAINMENUENTRY  = "RSS Reader";
 

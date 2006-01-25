@@ -10,8 +10,8 @@ See the file COPYING for license information.
 
 Requirements:
 
-The RSS Reader plugin requires EXPAT library for XML parsing and WGET
-application for downloading actual RSS streams.
+- Expat XML Parser library version 1.95.8 or newer (http://expat.sourceforge.net/)
+- GNU Wget application (http://www.gnu.org/software/wget/wget.html)
 
 Description:
 
@@ -41,7 +41,8 @@ subdirectory for further information.
 Notes:
 
 - The plugin uses a temporary file "/tmp/rssreader.vdr" by default.
-  If you want to change it, you can compile the plugin as:
+  If you want to change it, you can
+  1) use the -f <RSSTEMPFILE> commandline switch
+  or
+  2) compile the plugin as:
   > make RSSREADER_TEMPFILE="/tmp/rssreader.vdr"
-
-- Dependencies to WGET application should be removed.
