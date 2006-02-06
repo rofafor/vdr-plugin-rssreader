@@ -11,7 +11,7 @@ See the file COPYING for license information.
 Requirements:
 
 - Expat XML Parser library version 1.95.8 or newer (http://expat.sourceforge.net/)
-- GNU Wget application (http://www.gnu.org/software/wget/wget.html)
+- CURL library 7.15.1 or newer (http://curl.haxx.se/)
 
 Description:
 
@@ -40,9 +40,4 @@ subdirectory for further information.
 
 Notes:
 
-- The plugin uses a temporary file "/tmp/rssreader.vdr" by default.
-  If you want to change it, you can
-  1) use the -f <RSSTEMPFILE> commandline switch
-  or
-  2) compile the plugin as:
-  > make RSSREADER_TEMPFILE="/tmp/rssreader.vdr"
+- No news is good news.

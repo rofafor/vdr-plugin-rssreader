@@ -15,7 +15,8 @@ public:
   cRssReaderConfig(void);
   int hidemenu;
   int hideelem;
-  char *tempfile;
+  int useproxy;
+  char httpproxy[256];
 };
 
 extern cRssReaderConfig RssConfig;

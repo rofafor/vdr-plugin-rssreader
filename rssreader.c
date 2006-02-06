@@ -15,11 +15,11 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(VDRVERSNUM) && VDRVERSNUM < 10340
+#if defined(VDRVERSNUM) && VDRVERSNUM < 10342
 #error "You don't exist! Go away! Upgrade yourself!"
 #endif
 
-static const char *VERSION        = "0.1.0";
+static const char *VERSION        = "0.1.1";
 static const char *DESCRIPTION    = "RSS Reader for OSD";
 static const char *MAINMENUENTRY  = "RSS Reader";
 
@@ -50,7 +50,9 @@ class cPluginRssReaderSetup : public cMenuSetupPage
 {
 private:
   cRssReaderConfig data;
+  virtual void Setup(void);
 protected:
+  virtual eOSState ProcessKey(eKeys Key);
   virtual void Store(void);
 public:
   cPluginRssReaderSetup(void);
@@ -71,25 +73,12 @@ cPluginRssReader::~cPluginRssReader()
 const char *cPluginRssReader::CommandLineHelp(void)
 {
   // Return a string that describes all known command line options.
-  return "  -f <RSSTEMPFILE>, --file=<RSSTEMPFILE>  Define a temporary file for RSS Reader (default: " RSSTEMPFILE ")\n";
+  return NULL;
 }
 
 bool cPluginRssReader::ProcessArgs(int argc, char *argv[])
 {
   // Implement command line argument processing here if applicable.
-  static struct option long_options[] = {
-       { "file",      required_argument, NULL, 'f' },
-       { NULL }
-     };
-
-  int c;
-  while ((c = getopt_long(argc, argv, "f:", long_options, NULL)) != -1) {
-        switch (c) {
-          case 'f': RssConfig.tempfile = optarg;
-                    break;
-          default:  return false;
-          }
-        }
   return true;
 }
 
@@ -127,14 +116,16 @@ cOsdObject *cPluginRssReader::MainMenuAction(void)
 cMenuSetupPage *cPluginRssReader::SetupMenu(void)
 {
   // Return a setup menu in case the plugin supports one.
-  return new cPluginRssReaderSetup;
+  return new cPluginRssReaderSetup();
 }
 
 bool cPluginRssReader::SetupParse(const char *Name, const char *Value)
 {
   // Parse your own setup parameters and store their values.
-  if      (!strcasecmp(Name, "HideMenu")) RssConfig.hidemenu = atoi(Value);
-  else if (!strcasecmp(Name, "HideElem")) RssConfig.hideelem = atoi(Value);
+  if      (!strcasecmp(Name, "HideMenu"))  RssConfig.hidemenu = atoi(Value);
+  else if (!strcasecmp(Name, "HideElem"))  RssConfig.hideelem = atoi(Value);
+  else if (!strcasecmp(Name, "UseProxy"))  RssConfig.useproxy = atoi(Value);
+  else if (!strcasecmp(Name, "HttpProxy")) strn0cpy(RssConfig.httpproxy, Value, sizeof(RssConfig.httpproxy));
   else return false;
 
   return true;
@@ -161,16 +152,42 @@ cString cPluginRssReader::SVDRPCommand(const char *Command, const char *Option, 
 cPluginRssReaderSetup::cPluginRssReaderSetup(void)
 {
   data = RssConfig;
-  
-  Add(new cMenuEditBoolItem(tr("Hide main menu entry"), &data.hidemenu, tr("no"), tr("yes")));
+  Setup();
+}
+
+void cPluginRssReaderSetup::Setup(void)
+{
+  int current = Current();
+
+  Clear();
+
+  Add(new cMenuEditBoolItem(tr("Hide main menu entry"),       &data.hidemenu, tr("no"), tr("yes")));
   Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem, tr("no"), tr("yes")));
+  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"),      &data.useproxy, tr("no"), tr("yes")));
+  if (data.useproxy)
+     Add(new cMenuEditStrItem( tr("HTTP proxy server"),       data.httpproxy, sizeof(data.httpproxy), tr(FileNameChars)));
+
+  SetCurrent(Get(current));
+  Display();
+}
+
+eOSState cPluginRssReaderSetup::ProcessKey(eKeys Key)
+{
+  int olduseproxy = data.useproxy;
+  eOSState state = cMenuSetupPage::ProcessKey(Key);
+  if (Key != kNone && (data.useproxy != olduseproxy)) {
+     Setup();
+     }
+  return state;
 }
 
 void cPluginRssReaderSetup::Store(void)
 {
   RssConfig = data;
-  SetupStore("HideMenu", RssConfig.hidemenu);
-  SetupStore("HideElem", RssConfig.hideelem);
+  SetupStore("HideMenu",  RssConfig.hidemenu);
+  SetupStore("HideElem",  RssConfig.hideelem);
+  SetupStore("UseProxy",  RssConfig.useproxy);
+  SetupStore("HttpProxy", RssConfig.httpproxy);
 }
 
 VDRPLUGINCREATOR(cPluginRssReader); // Don't touch this!

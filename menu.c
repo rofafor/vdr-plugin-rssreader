@@ -17,7 +17,7 @@
 
 cRssItems RssItems;
 
-// --- cRssItem ---------------------------------------------------------
+// --- cRssItem(s) ------------------------------------------------------
 
 cRssItem::cRssItem(void)
 { 
@@ -47,8 +47,6 @@ bool cRssItem::Parse(const char *s)
   return false;
 }
 
-// --- cRssItems --------------------------------------------------------
-
 bool cRssItems::Load(const char *filename)
 {
   if (cConfig<cRssItem>::Load(filename, true)) {
@@ -59,17 +57,17 @@ bool cRssItems::Load(const char *filename)
 
 // --- cRssMenuItem --------------------------------------------------------
 
-cRssMenuItem::cRssMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link)
+cRssMenuItem::cRssMenuItem(const char *Date, const char *Title, const char *Link, const char *Description)
 :cOsdMenu(tr("RSS item"))
 {
   asprintf(&text, "\n%s%s%s%s%s%s%s",
-           *Date  ? strdup(Date)  : RssConfig.hideelem ? "" : tr("<no date available>"),
-           (*Date  || !RssConfig.hideelem) ? "\n\n" : "",
-           *Title ? strdup(Title) : RssConfig.hideelem ? "" : tr("<no title available>"),
-           (*Title || !RssConfig.hideelem) ? "\n\n" : "",
-           *Desc  ? strdup(Desc)  : RssConfig.hideelem ? "" : tr("<no description available>"),
-           (*Desc  || !RssConfig.hideelem) ? "\n\n" : "",
-           *Link  ? strdup(Link)  : RssConfig.hideelem ? "" : tr("<no link available>"));
+           *Date         ? strdup(Date)          : RssConfig.hideelem ? "" : tr("<no date available>"),
+           (*Date        || !RssConfig.hideelem) ? "\n\n" : "",
+           *Title        ? strdup(Title)         : RssConfig.hideelem ? "" : tr("<no title available>"),
+           (*Title       || !RssConfig.hideelem) ? "\n\n" : "",
+           *Description  ? strdup(Description)   : RssConfig.hideelem ? "" : tr("<no description available>"),
+           (*Description || !RssConfig.hideelem) ? "\n\n" : "",
+           *Link         ? strdup(Link)          : RssConfig.hideelem ? "" : tr("<no link available>"));
 }
 
 cRssMenuItem::~cRssMenuItem()
@@ -119,7 +117,7 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
 
 // --- cRssItemsMenu --------------------------------------------------------
 
-cRssItemsMenu::cRssItemsMenu(void)
+cRssItemsMenu::cRssItemsMenu()
 :cOsdMenu(tr("Select RSS item"))
 {
   for (cItem *rssItem = Parser.Items.First(); rssItem; rssItem = Parser.Items.Next(rssItem))
@@ -145,12 +143,12 @@ eOSState cRssItemsMenu::ProcessKey(eKeys Key)
 eOSState cRssItemsMenu::ShowDetails(void)
 {
   cItem *rssItem = (cItem *)Parser.Items.Get(Current());
-  return AddSubMenu(new cRssMenuItem(rssItem->GetTitle(), rssItem->GetDate(), rssItem->GetDesc(), rssItem->GetLink()));
+  return AddSubMenu(new cRssMenuItem(rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
 }
 
 // --- cRssStreamsMenu -----------------------------------------------------
 
-cRssStreamsMenu::cRssStreamsMenu(void)
+cRssStreamsMenu::cRssStreamsMenu()
 :cOsdMenu(tr("Select RSS stream"))
 {
   for (cRssItem *rssItem = RssItems.First(); rssItem; rssItem = RssItems.Next(rssItem)) {
@@ -169,20 +167,22 @@ eOSState cRssStreamsMenu::Select(void)
   cRssItem *rssItem = (cRssItem *)RssItems.Get(Current());
   if (rssItem) {
      debug("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
-     //Skins.Message(mtInfo, tr("Loading RSS stream...")); // this message generates annoying slowdown 
-     if (Parser.Download(rssItem->Url())) {
-        if (Parser.Parse(RssConfig.tempfile)) {
-           return AddSubMenu(new cRssItemsMenu);
-           }
-        else {
-           Skins.Message(mtError, tr("Can't parse RSS stream!"));
-           return osContinue;
-           }
-        }
-     else {
-        Skins.Message(mtError, tr("Can't download RSS stream!"));
-        return osContinue;
-        }
+     // the following message generates an annoying slowdown 
+     //Skins.Message(mtInfo, tr("Loading RSS stream..."));
+     switch (Parser.DownloadAndParse(rssItem->Url())) {
+       case (cParser::RSS_PARSING_OK):
+            return AddSubMenu(new cRssItemsMenu);
+       case (cParser::RSS_PARSING_ERROR):
+            Skins.Message(mtError, tr("Can't parse RSS stream!"));
+            return osContinue;
+       case (cParser::RSS_DOWNLOAD_ERROR):
+            Skins.Message(mtError, tr("Can't download RSS stream!"));
+            return osContinue;
+       case (cParser::RSS_UNKNOWN_ERROR):
+       default:
+            Skins.Message(mtError, tr("Unknown error!"));
+            return osContinue;
+       }
      }
   return osEnd;
 }

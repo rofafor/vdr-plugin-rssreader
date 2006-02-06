@@ -29,6 +29,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
   },
   { "RSS Reader for OSD",
     "RSS-Reader für OSD",
@@ -39,6 +40,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "RSS-lukija kuvaruutunäytölle",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO
@@ -71,6 +73,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
   },
   { "Select RSS item",
     "Auswahl RSS-Artikel",
@@ -81,6 +84,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "Valitse RSS-artikkeli",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO
@@ -113,6 +117,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
   },
   { "<no date available>",
     "<kein Datum vorhanden>",
@@ -123,6 +128,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "<päivämäärä ei ole saatavilla>",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO
@@ -155,6 +161,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
   },
   { "<no description available>",
     "<keine Beschreibung vorhanden>",
@@ -165,6 +172,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "<kuvaus ei ole saatavilla>",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO
@@ -197,6 +205,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
   },
   { "Can't parse RSS stream!",
     "Kann den RSS-Stream nicht parsen!",
@@ -207,6 +216,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "RSS-virtaa ei pystytä tulkkaamaan!",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO
@@ -239,6 +249,29 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
+  },
+  { "Unknown error!",
+    "Unbekannt Fehler!",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "Tuntematon virhe!",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
   },
   { "Loading RSS stream...",
     "Lade RSS-Stream...",
@@ -249,6 +282,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "RSS-virtaa ladataan...",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO
@@ -281,6 +315,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
+    "", // TODO
   },
   { "Hide non-existent elements",
     "Nur vorhandene Elemente zeigen",
@@ -291,6 +326,51 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "Piilota tyhjät elementit",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+  },
+  { "Use HTTP proxy server",
+    "HTTP Proxy benutzen",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "Käytä HTTP-välityspalvelinta",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+  },
+  { "HTTP proxy server",
+    "HTTP Proxy Name",
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "", // TODO
+    "HTTP-välityspalvelimen osoite",
+    "", // TODO
     "", // TODO
     "", // TODO
     "", // TODO

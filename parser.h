@@ -11,30 +11,30 @@
 
 #include "common.h"
 
+// --- Defines ----------------------------------------------------------
+
+#define SHORT_TEXT_LEN 1024
+#define LONG_TEXT_LEN  8192
+
 // --- cItem(s) ---------------------------------------------------------
 
 class cItem : public cListObject {
 private:
-  char date[MAXSHORTTEXTLEN];
-  char title[MAXSHORTTEXTLEN];
-  char link[MAXSHORTTEXTLEN];
-  char desc[MAXLONGTEXTLEN];
+  char date[SHORT_TEXT_LEN];
+  char title[SHORT_TEXT_LEN];
+  char link[SHORT_TEXT_LEN];
+  char description[LONG_TEXT_LEN];
 public:
-  cItem(const char *Title, const char *Desc, const char *Date, const char *Link);
   cItem();
   void Clear(void);
+  char *GetDate(void) { return date; }
   char *GetTitle(void) { return title; }
   char *GetLink(void) { return link; }
-  char *GetDesc(void) { return desc; }
-  char *GetDate(void) { return date; }
-  void SetDate(const char *s) { debug("SetDate(): '%s'\n", s); strncpy(date, s, MAXSHORTTEXTLEN); }
-  void SetTitle(const char *s) { debug("SetTitle(): '%s'\n", s); strncpy(title, s, MAXSHORTTEXTLEN); }
-  void SetLink(const char *s) { debug("SetLink(): '%s'\n", s); strncpy(link, s, MAXSHORTTEXTLEN); }
-  void SetDesc(const char *s) { debug("SetDesc(): '%s'\n", s); strncpy(desc, s, MAXLONGTEXTLEN); }
-  void SetUTF8Date(const char *s);
-  void SetUTF8Title(const char *s);
-  void SetUTF8Link(const char *s);
-  void SetUTF8Desc(const char *s);
+  char *GetDescription(void)  { return description; }
+  void SetDate(const char *str);
+  void SetTitle(const char *str);
+  void SetLink(const char *str);
+  void SetDescription(const char *str);
 };
 
 class cItems : public cList<cItem> {
@@ -44,11 +44,25 @@ private:
 
 // --- cParser ----------------------------------------------------------
 
+struct MemoryStruct {
+  char   *memory;
+  size_t size;
+};
+
 class cParser {
+private:
+  struct MemoryStruct data;
 public:
+  enum {
+    RSS_PARSING_OK     =  0,
+    RSS_UNKNOWN_ERROR  = -1,
+    RSS_DOWNLOAD_ERROR = -2,
+    RSS_PARSING_ERROR  = -3
+  } eRssError;
+  cParser();
+  ~cParser();
+  int DownloadAndParse(const char *url);
   cItems Items;
-  bool Parse(char *filename);
-  bool Download(const char *url);
   };
 
 extern cParser Parser;

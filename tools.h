@@ -9,9 +9,12 @@
 #ifndef __RSSREADER_TOOLS_H
 #define __RSSREADER_TOOLS_H
 
-int charsetconv(const char *buffer, int buf_len, const char *str, int str_len, const char *from, const char *to);
-char *striphtml(char *s);
-char *stripspaces(char *str);
+#include <vdr/tools.h>
+
+int   charsetconv(const char *buffer, int buf_len, const char *str, int str_len, const char *from, const char *to);
+char *htmlcharconv(char *str);
+char *striphtml(char *str);
+void *myrealloc(void *ptr, size_t size);
 
 #endif // __RSSREADER_TOOLS_H
 

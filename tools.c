@@ -6,9 +6,61 @@
  * $Id$
  */
 
+#include <stdlib.h>
 #include <iconv.h>
-#include <vdr/tools.h>
+#include "tools.h"
 #include "common.h"
+
+// --- Static -----------------------------------------------------------
+
+struct conv_table {
+  char *from;
+  char *to;
+  };
+
+static conv_table html_to_iso_table[] =
+{
+  // 'to' field must be smaller than 'from'
+  {"&#228;",   "ä"},
+  {"&auml;",   "ä"},
+  {"&#196;",   "Ä"},
+  {"&Auml;",   "Ä"},
+  {"&#246;",   "ö"},
+  {"&ouml;",   "ö"},
+  {"&#214;",   "Ö"},
+  {"&Ouml;",   "Ö"},
+  {"&#229;",   "å"},
+  {"&åuml;",   "å"},
+  {"&#197;",   "Å"},
+  {"&Åuml;",   "Å"},
+  {"&#220;",   "Ü"},
+  {"&Uuml;",   "Ü"},
+  {"&#252;",   "ü"},
+  {"&uuml;",   "ü"},
+  {"&#223;",   "ß"},
+  {"&szlig;",  "ß"},
+  {"&#8211;",  "-"},
+  {"&ndash;",  "-"},
+  {"&#38;",    "&"},
+  {"&amp;",    "&"},
+  {"&#180;",   "'"},
+  {"&acute;",  "'"},
+  {"&#231;",   "ç"},
+  {"&ccedil;", "ç"},
+  {"&#233;",   "é"},
+  {"&eacute;", "é"},
+  {"&#226;",   "â"},
+  {"&acirc;",  "â"},
+  {"&#8364;",  "¤"},
+  {"&euro;",   "¤"},
+  {"&#8220;",  "\""},
+  {"&#8221;",  "\""},
+  {"&#8222;",  "\""},
+  {"&nbsp;",   " "},
+  {"&lt;",     "<"},
+  {"&gt;",     ">"},
+  {"\n\n",     "\n"}, // let's also strip multiple linefeeds
+};
 
 // --- General functions ------------------------------------------------
 
@@ -34,40 +86,52 @@ int charsetconv(const char *buffer, int buf_len, const char *str, int str_len, c
   return -1;
 }
 
-char *striphtml(char *s)
+char *htmlcharconv(char *str)
 {
-  char *c, t = 0, *r;
-  c = s;
-  r = s;
-  while (*s != '\0') {
-    if (*s == '<')
-       t++;
-    else if (*s == '>')
-       t--;
-    else if (t < 1)
-       *(c++) = *s;
-    s++;
-    }
-  *c = '\0';
-  return r;
-}
-
-char *stripspaces(char *str)
-{
-  char tmp[MAXLONGTEXTLEN];
-  char *ptr;
-
-  if (str == NULL)
-     return str;
-
-  strncpy(tmp, str, MAXLONGTEXTLEN);
-  strcpy(str, "");
-  ptr = strtok(tmp, " \n\t\r\x3F");
-  while (ptr) {
-     strcat(str, ptr);
-     strcat(str, " ");
-     ptr = strtok(NULL, " \n\t\r\x3F");
+  for (unsigned int i = 0; i < (sizeof(html_to_iso_table) / sizeof(html_to_iso_table[0])); ++i) {
+     char *ptr = strstr(str, html_to_iso_table[i].from);
+     while (ptr) {
+        int of = ptr - str;
+        int l  = strlen(str);
+        int l1 = strlen(html_to_iso_table[i].from);
+        int l2 = strlen(html_to_iso_table[i].to);
+        if (l2 > l1) {
+           error("htmlcharconv(): cannot reallocate string");
+           return str;
+           }
+        if (l2 != l1)
+           memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
+        strncpy(str + of, html_to_iso_table[i].to, l2);
+        ptr = strstr(str, html_to_iso_table[i].from);
+        }
      }
   return str;
 }
 
+char *striphtml(char *str)
+{
+  char *c, t = 0, *r;
+  c = str;
+  r = str;
+  while (*str != '\0') {
+     if (*str == '<')
+        t++;
+     else if (*str == '>')
+        t--;
+     else if (t < 1)
+        *(c++) = *str;
+     str++;
+     }
+  *c = '\0';
+  return r;
+}
+
+void *myrealloc(void *ptr, size_t size)
+{
+  /* There might be a realloc() out there that doesn't like reallocing
+     NULL pointers, so we take care of it here */
+  if (ptr)
+     return realloc(ptr, size);
+  else
+     return malloc(size);
+}

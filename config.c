@@ -6,12 +6,14 @@
  * $Id$
  */
 
+#include "tools.h"
 #include "config.h"
 #include "common.h"
 
 cRssReaderConfig RssConfig;
 
 cRssReaderConfig::cRssReaderConfig(void)
-: hidemenu(0), hideelem(0), tempfile(RSSTEMPFILE)
+: hidemenu(0), hideelem(0), useproxy(0)
 {
+  strn0cpy(httpproxy, "127.0.0.1:8000", sizeof(httpproxy));
 }

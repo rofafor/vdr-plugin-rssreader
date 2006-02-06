@@ -17,17 +17,8 @@
 #define error(x...) esyslog("RSSReader: " x);
 #endif
 
-// Temporary file used by RSSGET
-#ifndef RSSTEMPFILE
-#define RSSTEMPFILE "/tmp/rssreader.vdr"
-#endif
-
-// RSS stream download command: "RSSGET RSSTEMPFILE RSSURL"
-#define RSSGET "wget -q -t 1 -T 30 -O"
-
-// Predefined buffer sizes
-#define MAXLONGTEXTLEN  8192
-#define MAXSHORTTEXTLEN 1024
+// User agent string for servers
+#define RSSREADER_USERAGENT "libcurl-agent/1.0"
 
 #endif // __RSSREADER_COMMON_H
 

@@ -37,3 +37,11 @@ VDR Plugin 'rssreader' Revision History
 - Fixed typos in "example/rssreader.conf" (Thanks to Thilo Wunderlich).
 - Added pragma warning, if libexpat is non-existent or incompatible version.
 - Some internal cleanups.
+
+2006-02-06: Version 0.1.1
+
+- Updated for vdr-1.3.42.
+- Changed wget to libcurl so there's no need to define a temporary file anymore.
+- Added new setup options for HTTP proxy.
+- Improved RSS formatting.
+- Updated "example/rssreader.conf".

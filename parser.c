@@ -7,6 +7,9 @@
  */
 
 #include <stack>
+#include <curl/curl.h>
+#include <curl/types.h>
+#include <curl/easy.h>
 #include <vdr/config.h>
 #include <vdr/i18n.h>
 #include "common.h"
@@ -26,86 +29,84 @@ cParser Parser;
 
 // --- cItem(s) ---------------------------------------------------------
 
-cItem::cItem(const char *Title, const char *Desc, const char *Date, const char *Link)
-{
-  strncpy(date, Date, sizeof(date));
-  strncpy(title, Title, sizeof(title));
-  strncpy(link, Link, sizeof(link));
-  strncpy(desc, Desc, sizeof(desc));
-}
-
-cItem::cItem(void)
+cItem::cItem()
 {
   strcpy(date, "");
   strcpy(title, "");
   strcpy(link, "");
-  strcpy(desc, "");
+  strcpy(description, "");
 }
+
 
 void cItem::Clear(void)
 {
   strcpy(date, "");
   strcpy(title, "");
   strcpy(link, "");
-  strcpy(desc, "");
+  strcpy(description, "");
 }
 
-void cItem::SetUTF8Date(const char *s)
+void cItem::SetDate(const char *str)
 {
-  char tmp[MAXSHORTTEXTLEN];
+  char tmp[SHORT_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
 
-  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Date(): Date: '%s'", tmp);
-  strncpy(date, tmp, sizeof(tmp));
+  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
+  compactspace(tmp);
+  debug("cItem::SetDate(): Date: '%s'", tmp);
+  strn0cpy(date, tmp, sizeof(tmp));
 }
 
-void cItem::SetUTF8Title(const char *s)
+void cItem::SetTitle(const char *str)
 {
-  char tmp[MAXSHORTTEXTLEN];
+  char tmp[SHORT_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
 
-  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Title(): '%s'", tmp);
-  strncpy(title, tmp, sizeof(tmp));
+  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
+  compactspace(tmp);
+  striphtml(tmp);
+  htmlcharconv(tmp);
+  debug("cItem::SetTitle(): '%s'", tmp);
+  strn0cpy(title, tmp, sizeof(tmp));
 }
 
-void cItem::SetUTF8Link(const char *s)
+void cItem::SetLink(const char *str)
 {
-  char tmp[MAXSHORTTEXTLEN];
+  char tmp[SHORT_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
 
-  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Link(): '%s'", tmp);
-  strncpy(link, tmp, sizeof(tmp));
+  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
+  compactspace(tmp);
+  debug("cItem::SetLink(): '%s'", tmp);
+  strn0cpy(link, tmp, sizeof(tmp));
 }
 
-void cItem::SetUTF8Desc(const char *s)
+void cItem::SetDescription(const char *str)
 {
-  char tmp[MAXLONGTEXTLEN];
+  char tmp[LONG_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
 
-  charsetconv(tmp, sizeof(tmp), s, strlen(s), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  debug("cItem::SetUTF8Desc(): '%s'", tmp);
-  strncpy(desc, tmp, sizeof(tmp));
+  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
+  compactspace(tmp);
+  striphtml(tmp);
+  htmlcharconv(tmp);
+  debug("cItem::SetDescription(): '%s'", tmp);
+  strn0cpy(description, tmp, sizeof(tmp));
 }
 
 // --- Parse RSS  -------------------------------------------------------
 
-#define XMLBUFSIZE 16384
-
 struct XmlNode {
-  char nodename[MAXSHORTTEXTLEN];
+  char nodename[SHORT_TEXT_LEN];
   int  depth;
 };
 
-cItem *item;
-int   depth;
-char  buff[XMLBUFSIZE];
-char  data_string[MAXLONGTEXTLEN];
+cItem *item = NULL;
+int depth = 0;
+char data_string[LONG_TEXT_LEN];
 std::stack<struct XmlNode> nodestack;
 
-static int XMLCALL unknownencoding(void *data,const XML_Char *encoding, XML_Encoding *info)
+static int XMLCALL UnknownEncodingHandler(void *data,const XML_Char *encoding, XML_Encoding *info)
 {
   if (strcmp(encoding, "iso-8859-15") == 0) {
      int i;
@@ -119,11 +120,11 @@ static int XMLCALL unknownencoding(void *data,const XML_Char *encoding, XML_Enco
   return XML_STATUS_ERROR;
 }
 
-static void XMLCALL start(void *data, const char *el, const char **attr)
+static void XMLCALL StartHandler(void *data, const char *el, const char **attr)
 {
   XmlNode node;
 
-  strncpy(node.nodename, el, MAXSHORTTEXTLEN);
+  strn0cpy(node.nodename, el, sizeof(node.nodename));
   node.depth = depth;
   nodestack.push(node);
 
@@ -135,10 +136,9 @@ static void XMLCALL start(void *data, const char *el, const char **attr)
   depth++;
 }
 
-static void XMLCALL end(void *data, const char *el)
+static void XMLCALL EndHandler(void *data, const char *el)
 {
-  char txt[MAXLONGTEXTLEN];
-  char parent[MAXSHORTTEXTLEN];
+  char parent[SHORT_TEXT_LEN];
   
   if (nodestack.size() > 1) {
      nodestack.pop();
@@ -147,7 +147,7 @@ static void XMLCALL end(void *data, const char *el)
      nodestack.pop();
      return;
      }
-  strncpy(parent, (nodestack.top()).nodename, MAXSHORTTEXTLEN);
+  strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
   // No need to free the node
   
   depth--;
@@ -157,113 +157,194 @@ static void XMLCALL end(void *data, const char *el)
         Parser.Items.Add(item);
      }
   else if (!strncmp(el, "title", 5)) {
-     stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
-        debug("depth: %d", depth);
-        item->SetUTF8Title(data_string);
+        item->SetTitle(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("cParser::end(): RSS title '%s'", data_string);
+        debug("cParser::EndHandler(): RSS title '%s'", data_string);
         }
      }
   else if (!strncmp(el, "link", 4)) {
-     stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
-        item->SetUTF8Link(data_string);
+        item->SetLink(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("cParser::end(): RSS link '%s'", data_string);
+        debug("cParser::EndHandler(): RSS link '%s'", data_string);
         }
      }
   else if (!strncmp(el, "pubDate", 7)) {
-     stripspaces(data_string);
      if (!strncmp(parent, "item", 4)) {
-        item->SetUTF8Date(data_string);
+        item->SetDate(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("cParser::end(): RSS date '%s'", data_string);
+        debug("cParser::EndHandler(): RSS date '%s'", data_string);
         }
      }
   else if (!strncmp(el, "description", 11)) {
      if (!strncmp(parent, "item", 4)) {
-        strncpy(txt, data_string, MAXLONGTEXTLEN);
-        striphtml(txt);
-        stripspaces(txt);
-        item->SetUTF8Desc(txt);
+        item->SetDescription(data_string);
         }
      else if (!strncmp(parent, "channel", 7)) {
-        debug("cParser::end(): RSS description '%s'", data_string);
+        debug("cParser::EndHandler(): RSS description '%s'", data_string);
+        }
+     }
+  else if (!strncmp(el, "content:encoded", 15)) {
+     if (!strncmp(parent, "item", 4)) {
+        item->SetDescription(data_string); // overdrive description with content:encoded !
+        }
+     else if (!strncmp(parent, "channel", 7)) {
+        debug("cParser::EndHandler(): RSS content '%s'", data_string);
         }
      }
   strcpy(data_string, "");
 }
 
-static void data(void *user_data, const XML_Char *s, int len)
+static void DataHandler(void *user_data, const XML_Char *s, int len)
 {
   /* Only until the maximum size of the buffer */
-  if (strlen(data_string) + len <= MAXLONGTEXTLEN)
+  if (strlen(data_string) + len <= LONG_TEXT_LEN)
      strncat(data_string, s, len);
 }
 
-bool cParser::Parse(char *filename)
+static size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
 {
-  FILE *fp;
+  size_t realsize = size * nmemb;
+  struct MemoryStruct *mem = (struct MemoryStruct *)data;
 
-  depth = 0;
-  // Setup expat
-  XML_Parser p = XML_ParserCreate(NULL);
-  if (!p) {
-     error("cParser::Parse(): couldn't allocate memory for parser");
-     return false;
+  mem->memory = (char *)myrealloc(mem->memory, mem->size + realsize + 1);
+  if (mem->memory) {
+     memcpy(&(mem->memory[mem->size]), ptr, realsize);
+     mem->size += realsize;
+     mem->memory[mem->size] = 0;
      }
+  return realsize;
+}
 
-  XML_SetElementHandler(p, start, end);
-  XML_SetCharacterDataHandler(p, data);
-  XML_SetUnknownEncodingHandler(p, unknownencoding, NULL);
+cParser::cParser()
+{
+  data.memory = NULL;
+  data.size = 0;
+}
 
-  // Clear Items list to play
+cParser::~cParser()
+{
+  if (data.memory) {
+     free(data.memory);
+     data.memory = NULL;
+     data.size = 0;
+     }
+}
+
+int cParser::DownloadAndParse(const char *url)
+{
+  CURL *curl_handle;
+
+  // Clear Items list and initialize depth
   Items.Clear();
-  // Load the RSS
-  if ((fp = fopen(filename, "r")) == NULL) {
-     error("cParser::Parse(): file does not exist");
-     return false;
+  depth = 0;
+  if (data.memory)
+     free(data.memory);
+  data.memory = NULL;
+  data.size = 0;
+
+  // Init the curl session
+  curl_global_init(CURL_GLOBAL_ALL);
+  curl_handle = curl_easy_init();
+
+  // Specify URL to get
+  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+
+  // Specify HTTP proxy: my.proxy.com:80
+  if (RssConfig.useproxy) {
+     curl_easy_setopt(curl_handle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+     curl_easy_setopt(curl_handle, CURLOPT_PROXY, RssConfig.httpproxy);
      }
 
-  // Go through all items
-  for (;;) {
-     int done;
-     int len;
+  // Send all data to this function
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 
-     len = fread(buff, 1, XMLBUFSIZE, fp);
-     if (ferror(fp)) {
-        error("cParser::Parse(): Read error");
-        return false;
-        }
-     done = feof(fp);
-     if (XML_Parse(p, buff, len, done) == XML_STATUS_ERROR) {
-        error("cParser::Parse(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
-        return false;
-        }
+  // Set maximum file size to get (bytes)
+  curl_easy_setopt(curl_handle, CURLOPT_MAXFILESIZE, 1048576);
 
-     if (done)
-        break;
+  // No progress meter
+  curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1);
+
+  // No signaling
+  curl_easy_setopt(curl_handle, CURLOPT_NOSIGNAL, 1);
+
+  // Set timeout to 30 seconds
+  curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, 30);
+
+  // Pass our 'data' struct to the callback function
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&data);
+
+  // Some servers don't like requests that are made without a user-agent field
+  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, RSSREADER_USERAGENT);
+
+  // Get it!
+  if (curl_easy_perform(curl_handle) != 0) {
+     // Cleanup curl stuff
+     curl_easy_cleanup(curl_handle);
+     // Free allocated memory
+     if (data.memory) {
+        free(data.memory);
+        data.memory = NULL;
+        data.size = 0;
+        }
+     error("cParser::DownloadAndParse(): couldn't download the stream");
+     return (RSS_DOWNLOAD_ERROR);
      }
-  return true;
+
+  if (data.size) {
+#ifdef DEBUG
+     // Only for debug dump
+     FILE *fp = fopen("/tmp/rssreader.vdr", "w");
+     if (fp) {
+        fwrite(data.memory, 1, data.size, fp);
+        fclose(fp);
+        }
+#endif
+     // Setup expat
+     XML_Parser p = XML_ParserCreate(NULL);
+     if (!p) {
+        // Cleanup curl stuff
+        curl_easy_cleanup(curl_handle);
+        // Free allocated memory
+        if (data.memory) {
+           free(data.memory);
+           data.memory = NULL;
+           data.size = 0;
+           }
+        error("cParser::DownloadAndParse(): couldn't allocate memory for parser");
+        return (RSS_UNKNOWN_ERROR);
+        }
+     XML_SetElementHandler(p, StartHandler, EndHandler);
+     XML_SetCharacterDataHandler(p, DataHandler);
+     XML_SetUnknownEncodingHandler(p, UnknownEncodingHandler, NULL);
+
+     if (XML_Parse(p, data.memory, data.size, 1) == XML_STATUS_ERROR) {
+        // Cleanup curl stuff
+        curl_easy_cleanup(curl_handle);
+        // Free allocated memory
+        if (data.memory) {
+           free(data.memory);
+           data.memory = NULL;
+           data.size = 0;
+           }
+        error("cParser::DownloadAndParse(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
+        return (RSS_PARSING_ERROR);
+        }
+     }
+
+  // Cleanup curl stuff
+  curl_easy_cleanup(curl_handle);
+  // Free allocated memory
+  if (data.memory) {
+     free(data.memory);
+     data.memory = NULL;
+     data.size = 0;
+     }
+
+  return (RSS_PARSING_OK);
 }
 
-bool cParser::Download(const char *url)
-{
-  char *cmd;
-
-  asprintf(&cmd, "%s %s '%s'", RSSGET, RssConfig.tempfile, url);
-  debug("cParser::Download(): running '%s'", cmd);
-  int r = system(cmd);
-  if (r != 0) {
-     error("cParser::Download(): page download (via '%s') failed (return code: %d)", cmd, r);
-     free(cmd);
-     return false;
-     }
-  free(cmd);
-  debug("cParser::Download(): done (return code: %d)", r);
-  return true;
-}

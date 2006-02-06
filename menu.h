@@ -12,7 +12,7 @@
 #include <vdr/osdbase.h>
 #include <vdr/tools.h>
 
-// --- cRssItem ---------------------------------------------------------
+// --- cRssItem(s) ------------------------------------------------------
 
 class cRssItem : public cListObject {
 private:
@@ -39,7 +39,7 @@ class cRssMenuItem : public cOsdMenu {
 private:
   char *text;
 public:
-  cRssMenuItem(const char *Title, const char *Date, const char *Desc, const char *Link);
+  cRssMenuItem(const char *Date, const char *Title, const char *Link, const char *Description);
   virtual ~cRssMenuItem();
   virtual void Display(void);
   virtual eOSState ProcessKey(eKeys Key);

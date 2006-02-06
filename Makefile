@@ -30,7 +30,7 @@ TMPDIR = /tmp
 
 ### Libraries
 
-LIBS = -lexpat
+LIBS = -lexpat -lcurl
 
 ### Allow user defined options to overwrite defaults:
 
@@ -53,10 +53,6 @@ DEFINES += -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"'
 
 ifdef RSSREADER_DEBUG
 DEFINES += -DDEBUG
-endif
-
-ifdef RSSREADER_TEMPFILE
-DEFINES += -DRSSTEMPFILE='"$(RSSREADER_TEMPFILE)"'
 endif
 
 ### The object files (add further files here):
@@ -84,6 +80,9 @@ all: libvdr-$(PLUGIN).so
 libvdr-$(PLUGIN).so: $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared $(OBJS) $(LIBS) -o $@
 	@cp $@ $(LIBDIR)/$@.$(VDRVERSION)
+ifndef RSSREADER_DEBUG
+	@strip $(LIBDIR)/$@.$(VDRVERSION)
+endif
 
 dist: clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)
