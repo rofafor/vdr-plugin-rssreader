@@ -79,7 +79,7 @@ void cRssMenuItem::Display(void)
 {
   cOsdMenu::Display();
   debug("cRssMenuItem::Display(): '%s'\n", text);
-  DisplayMenu()->SetText(text, true);
+  DisplayMenu()->SetText(text, false);
   cStatus::MsgOsdTextItem(text);
 }
 

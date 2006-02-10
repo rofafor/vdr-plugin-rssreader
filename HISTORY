@@ -45,3 +45,8 @@ VDR Plugin 'rssreader' Revision History
 - Added new setup options for HTTP proxy.
 - Improved RSS formatting.
 - Updated "example/rssreader.conf".
+
+2006-02-10: Version 0.1.2
+
+- The RSS item menu doesn't use the fixed font anymore.
+- Updated HTML entities conversion table.
