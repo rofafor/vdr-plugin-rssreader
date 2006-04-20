@@ -15,13 +15,13 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(VDRVERSNUM) && VDRVERSNUM < 10342
-#error "You don't exist! Go away! Upgrade yourself!"
+#if defined(APIVERSNUM) && APIVERSNUM < 10347
+#error "VDR API version 10347 or greater is required!"
 #endif
 
-static const char *VERSION        = "0.1.2";
-static const char *DESCRIPTION    = "RSS Reader for OSD";
-static const char *MAINMENUENTRY  = "RSS Reader";
+static const char VERSION[]       = "0.2.0";
+static const char DESCRIPTION[]   = "RSS Reader for OSD";
+static const char MAINMENUENTRY[] = "RSS Reader";
 
 class cPluginRssReader : public cPlugin {
 private:
@@ -37,6 +37,8 @@ public:
   virtual bool Start(void);
   virtual void Stop(void);
   virtual void Housekeeping(void);
+  virtual void MainThreadHook(void) {}
+  virtual cString Active(void) { return NULL; }
   virtual const char *MainMenuEntry(void) { return (RssConfig.hidemenu ? NULL : tr(MAINMENUENTRY)); }
   virtual cOsdObject *MainMenuAction(void);
   virtual cMenuSetupPage *SetupMenu(void);

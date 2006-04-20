@@ -14,7 +14,7 @@ PLUGIN = rssreader
 
 ### The version number of this plugin (taken from the main source file):
 
-VERSION = $(shell grep 'static const char \*VERSION *=' $(PLUGIN).c | awk '{ print $$6 }' | sed -e 's/[";]//g')
+VERSION = $(shell grep 'static const char VERSION\[\] *=' $(PLUGIN).c | awk '{ print $$6 }' | sed -e 's/[";]//g')
 
 ### The C++ compiler and options:
 
@@ -23,7 +23,6 @@ CXXFLAGS ?= -fPIC -g -O2 -Wall -Woverloaded-virtual
 
 ### The directory environment:
 
-DVBDIR = ../../../../DVB
 VDRDIR = ../../..
 LIBDIR = ../../lib
 TMPDIR = /tmp
@@ -36,9 +35,9 @@ LIBS = -lexpat -lcurl
 
 -include $(VDRDIR)/Make.config
 
-### The version number of VDR (taken from VDR's "config.h"):
+### The version number of VDR's plugin API (taken from VDR's "config.h"):
 
-VDRVERSION = $(shell grep 'define VDRVERSION ' $(VDRDIR)/config.h | awk '{ print $$3 }' | sed -e 's/"//g')
+APIVERSION = $(shell grep 'define APIVERSION ' $(VDRDIR)/config.h | awk '{ print $$3 }' | sed -e 's/"//g')
 
 ### The name of the distribution archive:
 
@@ -47,7 +46,7 @@ PACKAGE = vdr-$(ARCHIVE)
 
 ### Includes and Defines (add further entries here):
 
-INCLUDES += -I$(VDRDIR)/include -I$(DVBDIR)/include
+INCLUDES += -I$(VDRDIR)/include
 
 DEFINES += -D_GNU_SOURCE -DPLUGIN_NAME_I18N='"$(PLUGIN)"'
 
@@ -79,10 +78,10 @@ all: libvdr-$(PLUGIN).so
 
 libvdr-$(PLUGIN).so: $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared $(OBJS) $(LIBS) -o $@
-	@cp $@ $(LIBDIR)/$@.$(VDRVERSION)
 ifndef RSSREADER_DEBUG
-	@strip $(LIBDIR)/$@.$(VDRVERSION)
+	@strip $@
 endif
+	@cp $@ $(LIBDIR)/$@.$(APIVERSION)
 
 dist: clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)
