@@ -19,7 +19,7 @@
 #error "VDR API version 10347 or greater is required!"
 #endif
 
-static const char VERSION[]       = "0.2.0";
+static const char VERSION[]       = "0.3.0";
 static const char DESCRIPTION[]   = "RSS Reader for OSD";
 static const char MAINMENUENTRY[] = "RSS Reader";
 
