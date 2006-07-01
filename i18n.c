@@ -15,7 +15,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Lecteur de flux RSS",
     "", // TODO
     "RSS-lukija",
     "", // TODO
@@ -37,7 +37,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Lecteur RSS pour OSD",
     "", // TODO
     "RSS-lukija kuvaruutunäytölle",
     "", // TODO
@@ -59,7 +59,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Choix des flux RSS",
     "", // TODO
     "Valitse RSS-virta",
     "", // TODO
@@ -81,7 +81,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Choix de article RSS",
     "", // TODO
     "Valitse RSS-artikkeli",
     "", // TODO
@@ -103,7 +103,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Article RSS", 
     "", // TODO
     "RSS-artikkeli",
     "", // TODO
@@ -125,7 +125,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "<pas de date disponible>",
     "", // TODO
     "<päivämäärä ei ole saatavilla>",
     "", // TODO
@@ -147,7 +147,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "<pas de titre disponible>",
     "", // TODO
     "<otsikko ei ole saatavilla>",
     "", // TODO
@@ -169,7 +169,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "<pas de déscriptif disponible>",
     "", // TODO
     "<kuvaus ei ole saatavilla>",
     "", // TODO
@@ -191,7 +191,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "<pas de lien disponible>",
     "", // TODO
     "<linkki ei ole saatavilla>",
     "", // TODO
@@ -213,7 +213,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Impossible d'analyser le flux RSS!",
     "", // TODO
     "RSS-virtaa ei pystytä tulkkaamaan!",
     "", // TODO
@@ -235,7 +235,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Impossible de charger le flux!", 
     "", // TODO
     "RSS-virtaa ei pystytä vastaanottamaan!",
     "", // TODO
@@ -257,7 +257,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Erreur inconnue",
     "", // TODO
     "Tuntematon virhe!",
     "", // TODO
@@ -279,7 +279,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Chargement du flux RSS...",
     "", // TODO
     "RSS-virtaa ladataan...",
     "", // TODO
@@ -301,7 +301,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Cacher le menu",
     "", // TODO
     "Piilota valinta päävalikosta",
     "", // TODO
@@ -323,7 +323,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "N'afficher que les éléments existants",
     "", // TODO
     "Piilota tyhjät elementit",
     "", // TODO
@@ -345,7 +345,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Utiliser le Proxy HTTP",
     "", // TODO
     "Käytä HTTP-välityspalvelinta",
     "", // TODO
@@ -367,7 +367,7 @@ const tI18nPhrase Phrases[] = {
     "", // TODO
     "", // TODO
     "", // TODO
-    "", // TODO
+    "Nom du proxy HTTP",
     "", // TODO
     "HTTP-välityspalvelimen osoite",
     "", // TODO
