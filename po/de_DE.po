@@ -1,0 +1,88 @@
+# VDR plugin language source file.
+# Copyright (C) 2007 Klaus Schmidinger <kls@cadsoft.de>
+# This file is distributed under the same license as the VDR package.
+# Siegfried Düngler
+# Walter Koch
+msgid ""
+msgstr ""
+"Project-Id-Version: VDR 1.5.7\n"
+"Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
+"POT-Creation-Date: 2007-08-14 19:37+0300\n"
+"PO-Revision-Date: 2007-08-12 21:33+0300\n"
+"Last-Translator: Walter Koch\n"
+"Language-Team: <vdr@linuxtv.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: menu.c:60
+msgid "RSS item"
+msgstr "RSS-Artikel"
+
+#: menu.c:63
+msgid "<no date available>"
+msgstr "<kein Datum vorhanden>"
+
+#: menu.c:65
+msgid "<no title available>"
+msgstr "<kein Titel vorhanden>"
+
+#: menu.c:67
+msgid "<no description available>"
+msgstr "<keine Beschreibung vorhanden>"
+
+#: menu.c:69
+msgid "<no link available>"
+msgstr "<kein Link vorhanden>"
+
+#: menu.c:120
+msgid "Select RSS item"
+msgstr "Auswahl RSS-Artikel"
+
+#: menu.c:151
+msgid "Select RSS stream"
+msgstr "Auswahl RSS-Stream"
+
+#: menu.c:175
+msgid "Can't parse RSS stream!"
+msgstr "Kann den RSS-Stream nicht parsen!"
+
+#: menu.c:178
+msgid "Can't download RSS stream!"
+msgstr "Kann den RSS-Stream nicht laden!"
+
+#: menu.c:182
+msgid "Unknown error!"
+msgstr "Unbekannt Fehler!"
+
+#: rssreader.c:20
+msgid "RSS Reader for OSD"
+msgstr "RSS-Reader für OSD"
+
+#: rssreader.c:21
+msgid "RSS Reader"
+msgstr "RSS-Reader"
+
+#: rssreader.c:162
+msgid "Hide main menu entry"
+msgstr "Hauptmenüeintrag verstecken"
+
+#: rssreader.c:162 rssreader.c:163 rssreader.c:164
+msgid "no"
+msgstr "nein"
+
+#: rssreader.c:162 rssreader.c:163 rssreader.c:164
+msgid "yes"
+msgstr "ja"
+
+#: rssreader.c:163
+msgid "Hide non-existent elements"
+msgstr "Nur vorhandene Elemente zeigen"
+
+#: rssreader.c:164
+msgid "Use HTTP proxy server"
+msgstr "HTTP Proxy benutzen"
+
+#: rssreader.c:166
+msgid "HTTP proxy server"
+msgstr "HTTP Proxy Name"

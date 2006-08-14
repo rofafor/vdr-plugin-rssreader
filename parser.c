@@ -11,7 +11,6 @@
 #include <curl/types.h>
 #include <curl/easy.h>
 #include <vdr/config.h>
-#include <vdr/i18n.h>
 #include "common.h"
 #include "config.h"
 #include "tools.h"
@@ -30,6 +29,7 @@ cParser Parser;
 // --- cItem(s) ---------------------------------------------------------
 
 cItem::cItem()
+: conv("UTF-8", cCharSetConv::SystemCharacterTable())
 {
   strcpy(date, "");
   strcpy(title, "");
@@ -48,50 +48,32 @@ void cItem::Clear(void)
 
 void cItem::SetDate(const char *str)
 {
-  char tmp[SHORT_TEXT_LEN];
-  memset(tmp, 0, sizeof(tmp));
-
-  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  compactspace(tmp);
-  debug("cItem::SetDate(): Date: '%s'", tmp);
-  strn0cpy(date, tmp, sizeof(tmp));
+  Utf8Strn0Cpy(date, str, sizeof(date));
+  compactspace(date);
+  Utf8Strn0Cpy(date, conv.Convert(date), sizeof(date));
 }
 
 void cItem::SetTitle(const char *str)
 {
-  char tmp[SHORT_TEXT_LEN];
-  memset(tmp, 0, sizeof(tmp));
-
-  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  compactspace(tmp);
-  striphtml(tmp);
-  htmlcharconv(tmp);
-  debug("cItem::SetTitle(): '%s'", tmp);
-  strn0cpy(title, tmp, sizeof(tmp));
+  Utf8Strn0Cpy(title, str, sizeof(title));
+  compactspace(title);
+  striphtml(title);
+  Utf8Strn0Cpy(title, conv.Convert(title), sizeof(title));
 }
 
 void cItem::SetLink(const char *str)
 {
-  char tmp[SHORT_TEXT_LEN];
-  memset(tmp, 0, sizeof(tmp));
-
-  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  compactspace(tmp);
-  debug("cItem::SetLink(): '%s'", tmp);
-  strn0cpy(link, tmp, sizeof(tmp));
+  Utf8Strn0Cpy(link, str, sizeof(link));
+  compactspace(link);
+  Utf8Strn0Cpy(link, conv.Convert(link), sizeof(link));
 }
 
 void cItem::SetDescription(const char *str)
 {
-  char tmp[LONG_TEXT_LEN];
-  memset(tmp, 0, sizeof(tmp));
-
-  charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
-  compactspace(tmp);
-  striphtml(tmp);
-  htmlcharconv(tmp);
-  debug("cItem::SetDescription(): '%s'", tmp);
-  strn0cpy(description, tmp, sizeof(tmp));
+  Utf8Strn0Cpy(description, str, sizeof(description));
+  compactspace(description);
+  striphtml(description);
+  Utf8Strn0Cpy(description, conv.Convert(description), sizeof(description));
 }
 
 // --- Parse RSS  -------------------------------------------------------

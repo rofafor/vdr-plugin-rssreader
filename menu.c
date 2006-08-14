@@ -7,7 +7,6 @@
  */
  
 #include <vdr/status.h>
-#include "i18n.h"
 #include "parser.h"
 #include "config.h"
 #include "menu.h"

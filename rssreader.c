@@ -1,7 +1,5 @@
 /*
- * rss.c: A plugin for the Video Disk Recorder
- *
- * See the README file for copyright information and how to reach the author.
+ * rssreader.c: A plugin for the Video Disk Recorder
  *
  * $Id$
  */
@@ -10,18 +8,17 @@
 #include <vdr/config.h>
 #include <vdr/plugin.h>
 
-#include "i18n.h"
 #include "menu.h"
 #include "config.h"
 #include "common.h"
 
-#if defined(APIVERSNUM) && APIVERSNUM < 10400
-#error "VDR-1.4.0 API version or greater is required!"
+#if defined(APIVERSNUM) && APIVERSNUM < 10507
+#error "VDR-1.5.7 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.0.1";
-static const char DESCRIPTION[]   = "RSS Reader for OSD";
-static const char MAINMENUENTRY[] = "RSS Reader";
+static const char VERSION[]       = "1.1.0";
+static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
+static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
 class cPluginRssReader : public cPlugin {
 private:
@@ -87,7 +84,6 @@ bool cPluginRssReader::ProcessArgs(int argc, char *argv[])
 bool cPluginRssReader::Initialize(void)
 {
   // Initialize any background activities the plugin shall perform.
-  RegisterI18n(Phrases);
   return true;
 }
 

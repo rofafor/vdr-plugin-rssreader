@@ -6,40 +6,35 @@
  * $Id$
  */
 
-#include <stdlib.h>
-#include <iconv.h>
 #include "tools.h"
 #include "common.h"
 
 // --- Static -----------------------------------------------------------
 
-struct conv_table {
+static struct conv_table {
   char *from;
   char *to;
-  };
-
-static conv_table html_to_iso_table[] =
+} html_conversion_table[] =
 {
   // 'to' field must be smaller than 'from'
-  {"&#228;",   "ä"},
-  {"&auml;",   "ä"},
-  {"&#196;",   "Ä"},
-  {"&Auml;",   "Ä"},
-  {"&#246;",   "ö"},
-  {"&ouml;",   "ö"},
-  {"&#214;",   "Ö"},
-  {"&Ouml;",   "Ö"},
-  {"&#229;",   "å"},
-  {"&åuml;",   "å"},
-  {"&#197;",   "Å"},
-  {"&Åuml;",   "Å"},
-  {"&#220;",   "Ü"},
-  {"&Uuml;",   "Ü"},
-  {"&#252;",   "ü"},
-  {"&uuml;",   "ü"},
-  {"&#223;",   "ß"},
-  {"&szlig;",  "ß"},
-  {"&#234;",   "ê"},
+  {"&#228;",   "\xc3\xa4"},
+  {"&auml;",   "\xc3\xa4"},
+  {"&#196;",   "\xc3\x84"},
+  {"&Auml;",   "\xc3\x84"},
+  {"&#246;",   "\xc3\xb6"},
+  {"&ouml;",   "\xc3\xb6"},
+  {"&#214;",   "\xc3\x96"},
+  {"&Ouml;",   "\xc3\x96"},
+  {"&#229;",   "\xc3\xa5"},
+  {"&#197;",   "\xc3\x85"},
+  {"&#220;",   "\xc3\x9c"},
+  {"&Uuml;",   "\xc3\x9c"},
+  {"&#252;",   "\xc3\xbc"},
+  {"&uuml;",   "\xc3\xbc"},
+  {"&#223;",   "\xc3\x9f"},
+  {"&szlig;",  "\xc3\x9f"},
+  {"&#234;",   "\xc3\xaa"},
+  {"&#176;",   "\xc2\xb0"},
   {"&#8211;",  "-"},
   {"&ndash;",  "-"},
   {"&#38;",    "&"},
@@ -54,14 +49,14 @@ static conv_table html_to_iso_table[] =
   {"&acute;",  "'"},
   {"&#8216;",  "'"},
   {"&#8217;",  "'"},
-  {"&#231;",   "ç"},
-  {"&ccedil;", "ç"},
-  {"&#233;",   "é"},
-  {"&eacute;", "é"},
-  {"&#226;",   "â"},
-  {"&acirc;",  "â"},
-  {"&#8364;",  "¤"},
-  {"&euro;",   "¤"},
+  {"&#231;",   "\xc3\xa7"},
+  {"&ccedil;", "\xc3\xa7"},
+  {"&#233;",   "\xc3\xa9"},
+  {"&eacute;", "\xc3\xa9"},
+  {"&#226;",   "\xc3\xa2"},
+  {"&acirc;",  "\xc3\xa2"},
+  {"&#8364;",  "\xe2\x82\xac"},
+  {"&euro;",   "\xe2\x82\xac"},
   {"&quot;",   "\""},
   {"&#8220;",  "\""},
   {"&#8221;",  "\""},
@@ -73,68 +68,52 @@ static conv_table html_to_iso_table[] =
   {"\n\n",     "\n"}, // let's also strip multiple linefeeds
 };
 
+static char *htmlcharconv(char *str)
+{
+  if (str) {
+     for (unsigned int i = 0; i < (sizeof(html_conversion_table) / sizeof(html_conversion_table[0])); ++i) {
+        char *ptr = strstr(str, html_conversion_table[i].from);
+        while (ptr) {
+           int of = ptr - str;
+           int l  = strlen(str);
+           int l1 = strlen(html_conversion_table[i].from);
+           int l2 = strlen(html_conversion_table[i].to);
+           if (l2 > l1) {
+              error("htmlcharconv(): cannot reallocate string");
+              return str;
+              }
+           if (l2 != l1)
+              memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
+           strncpy(str + of, html_conversion_table[i].to, l2);
+           ptr = strstr(str, html_conversion_table[i].from);
+           }
+        }
+     return str;
+     }
+  return NULL;
+}
+
 // --- General functions ------------------------------------------------
-
-int charsetconv(const char *buffer, int buf_len, const char *str, int str_len, const char *from, const char *to)
-{
-  if (to && from) {
-     iconv_t ic = iconv_open(to, from);
-     if (ic >= 0) {
-        size_t inbytesleft = str_len;
-        size_t outbytesleft = buf_len;
-        char *out = (char*)buffer;
-        int ret;
-        if ((ret = iconv(ic, (char**)&str, &inbytesleft, &out, &outbytesleft)) >= 0) {
-           iconv_close(ic);
-           return buf_len - outbytesleft;
-           }
-        iconv_close(ic);
-        }
-     }
-  else {
-     error("charsetconv(): charset is not valid");
-     }
-  return -1;
-}
-
-char *htmlcharconv(char *str)
-{
-  for (unsigned int i = 0; i < (sizeof(html_to_iso_table) / sizeof(html_to_iso_table[0])); ++i) {
-     char *ptr = strstr(str, html_to_iso_table[i].from);
-     while (ptr) {
-        int of = ptr - str;
-        int l  = strlen(str);
-        int l1 = strlen(html_to_iso_table[i].from);
-        int l2 = strlen(html_to_iso_table[i].to);
-        if (l2 > l1) {
-           error("htmlcharconv(): cannot reallocate string");
-           return str;
-           }
-        if (l2 != l1)
-           memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
-        strncpy(str + of, html_to_iso_table[i].to, l2);
-        ptr = strstr(str, html_to_iso_table[i].from);
-        }
-     }
-  return str;
-}
 
 char *striphtml(char *str)
 {
-  char *c, t = 0, *r;
-  c = str;
-  r = str;
-  while (*str != '\0') {
-     if (*str == '<')
-        t++;
-     else if (*str == '>')
-        t--;
-     else if (t < 1)
-        *(c++) = *str;
-     str++;
+  if (str) {
+     char *c, t = 0, *r;
+     c = str;
+     r = str;
+     while (*str != '\0') {
+       if (*str == '<')
+          t++;
+       else if (*str == '>')
+          t--;
+       else if (t < 1)
+          *(c++) = *str;
+       str++;
+       }
+     *c = '\0';
+     return htmlcharconv(r);
      }
-  *c = '\0';
-  return r;
+  return NULL;
 }
 
 void *myrealloc(void *ptr, size_t size)
