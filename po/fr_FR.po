@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: VDR 1.5.7\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
-"POT-Creation-Date: 2007-08-14 19:37+0300\n"
+"POT-Creation-Date: 2007-08-28 23:51+0300\n"
 "PO-Revision-Date: 2007-08-12 21:33+0300\n"
 "Last-Translator: Patrice Staudt\n"
 "Language-Team: <vdr@linuxtv.org>\n"
@@ -14,74 +14,50 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: menu.c:60
 msgid "RSS item"
 msgstr "Article RSS"
 
-#: menu.c:63
 msgid "<no date available>"
 msgstr "<pas de date disponible>"
 
-#: menu.c:65
 msgid "<no title available>"
 msgstr "<pas de titre disponible>"
 
-#: menu.c:67
 msgid "<no description available>"
 msgstr "<pas de déscriptif disponible>"
 
-#: menu.c:69
 msgid "<no link available>"
 msgstr "<pas de lien disponible>"
 
-#: menu.c:120
 msgid "Select RSS item"
 msgstr "Choix de article RSS"
 
-#: menu.c:151
 msgid "Select RSS stream"
 msgstr "Choix des flux RSS"
 
-#: menu.c:175
 msgid "Can't parse RSS stream!"
 msgstr "Impossible d'analyser le flux RSS!"
 
-#: menu.c:178
 msgid "Can't download RSS stream!"
 msgstr "Impossible de charger le flux!"
 
-#: menu.c:182
 msgid "Unknown error!"
 msgstr "Erreur inconnue"
 
-#: rssreader.c:20
 msgid "RSS Reader for OSD"
 msgstr "Lecteur RSS pour OSD"
 
-#: rssreader.c:21
 msgid "RSS Reader"
 msgstr "Lecteur de flux RSS"
 
-#: rssreader.c:162
 msgid "Hide main menu entry"
 msgstr "Cacher le menu"
 
-#: rssreader.c:162 rssreader.c:163 rssreader.c:164
-msgid "no"
-msgstr "non"
-
-#: rssreader.c:162 rssreader.c:163 rssreader.c:164
-msgid "yes"
-msgstr "oui"
-
-#: rssreader.c:163
 msgid "Hide non-existent elements"
 msgstr "N'afficher que les éléments existants"
 
-#: rssreader.c:164
 msgid "Use HTTP proxy server"
 msgstr "Utiliser le Proxy HTTP"
 
-#: rssreader.c:166
 msgid "HTTP proxy server"
 msgstr "Nom du proxy HTTP"

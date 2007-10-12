@@ -72,6 +72,10 @@ VDR Plugin 'rssreader' Revision History
 - Added French translation (Thanks to Patrice Staudt).
 - Updated "example/rssreader.conf".
 
+2007-10-12: Version 1.0.2
+
+- Backported from 1.1.2.
+
 2007-08-14: Version 1.1.0
 
 - Updated for vdr-1.5.7.
@@ -79,3 +83,8 @@ VDR Plugin 'rssreader' Revision History
 2007-08-19: Version 1.1.1
 
 - Updated for vdr-1.5.8.
+
+2007-10-12: Version 1.1.2
+
+- Cleaned up translations.
+- Improved html tag stripping.

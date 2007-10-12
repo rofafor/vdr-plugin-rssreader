@@ -313,7 +313,7 @@ int cParser::DownloadAndParse(const char *url)
            data.memory = NULL;
            data.size = 0;
            }
-        error("cParser::DownloadAndParse(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
+        error("cParser::DownloadAndParse(): Parse error at line %ld:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
         return (RSS_PARSING_ERROR);
         }
      }

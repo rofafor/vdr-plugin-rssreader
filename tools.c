@@ -11,10 +11,20 @@
 
 // --- Static -----------------------------------------------------------
 
-static struct conv_table {
+#define ELEMENTS(x) (sizeof(x) / sizeof(x[0]))
+
+struct conv_table {
   char *from;
   char *to;
-} html_conversion_table[] =
+};
+
+static struct conv_table pre_conv_table[] =
+{
+  // 'to' field must be smaller than 'from'
+  {"<br />",   "\n"}
+};
+
+static struct conv_table post_conv_table[] =
 {
   // 'to' field must be smaller than 'from'
   {"&#228;",   "\xc3\xa4"},
@@ -68,24 +78,24 @@ static struct conv_table {
   {"\n\n",     "\n"}, // let's also strip multiple linefeeds
 };
 
-static char *htmlcharconv(char *str)
+static char *htmlcharconv(char *str, struct conv_table *conv, unsigned int elem)
 {
-  if (str) {
-     for (unsigned int i = 0; i < (sizeof(html_conversion_table) / sizeof(html_conversion_table[0])); ++i) {
-        char *ptr = strstr(str, html_conversion_table[i].from);
+  if (str && conv) {
+     for (unsigned int i = 0; i < elem; ++i) {
+        char *ptr = strstr(str, conv[i].from);
         while (ptr) {
            int of = ptr - str;
            int l  = strlen(str);
-           int l1 = strlen(html_conversion_table[i].from);
-           int l2 = strlen(html_conversion_table[i].to);
+           int l1 = strlen(conv[i].from);
+           int l2 = strlen(conv[i].to);
            if (l2 > l1) {
               error("htmlcharconv(): cannot reallocate string");
               return str;
               }
            if (l2 != l1)
               memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
-           strncpy(str + of, html_conversion_table[i].to, l2);
-           ptr = strstr(str, html_conversion_table[i].from);
+           strncpy(str + of, conv[i].to, l2);
+           ptr = strstr(str, conv[i].from);
            }
         }
      return str;
@@ -99,6 +109,7 @@ char *striphtml(char *str)
 {
   if (str) {
      char *c, t = 0, *r;
+     str = htmlcharconv(str, pre_conv_table, ELEMENTS(pre_conv_table));
      c = str;
      r = str;
      while (*str != '\0') {
@@ -111,7 +122,7 @@ char *striphtml(char *str)
        str++;
        }
      *c = '\0';
-     return htmlcharconv(r);
+     return htmlcharconv(r, post_conv_table, ELEMENTS(post_conv_table));
      }
   return NULL;
 }

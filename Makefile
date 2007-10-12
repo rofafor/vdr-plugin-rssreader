@@ -4,7 +4,7 @@
 # $Id$
 
 # Debugging on/off 
-# RSSREADER_DEBUG = 1
+#RSSREADER_DEBUG = 1
 
 # Strip debug symbols?  Set eg. to /bin/true if not
 STRIP = strip
@@ -92,12 +92,12 @@ I18Npot   = $(PODIR)/$(PLUGIN).pot
 	msgfmt -c -o $@ $<
 
 $(I18Npot): $(wildcard *.c)
-	xgettext -C -cTRANSLATORS --no-wrap -F -k -ktr -ktrNOOP --msgid-bugs-address='Rolf Ahrenberg' -o $@ $(wildcard *.c)
+	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address='Rolf Ahrenberg' -o $@ $(wildcard *.c)
 
 $(I18Npo): $(I18Npot)
-	msgmerge -U --no-wrap -F --backup=none -q $@ $<
+	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
 
-i18n: $(I18Nmo)
+i18n: $(I18Npot) $(I18Nmo)
 	@mkdir -p $(LOCALEDIR)
 	for i in $(I18Ndirs); do\
 	    mkdir -p $(LOCALEDIR)/$$i/LC_MESSAGES;\
@@ -111,7 +111,7 @@ libvdr-$(PLUGIN).so: $(OBJS)
 ifndef RSSREADER_DEBUG
 	@$(STRIP) $@
 endif
-	@cp $@ $(LIBDIR)/$@.$(APIVERSION)
+	@cp --remove-destination $@ $(LIBDIR)/$@.$(APIVERSION)
 
 dist: clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)

@@ -16,7 +16,7 @@
 #error "VDR-1.5.8 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.1.1";
+static const char VERSION[]       = "1.1.2";
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
@@ -159,9 +159,9 @@ void cPluginRssReaderSetup::Setup(void)
 
   Clear();
 
-  Add(new cMenuEditBoolItem(tr("Hide main menu entry"),       &data.hidemenu, tr("no"), tr("yes")));
-  Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem, tr("no"), tr("yes")));
-  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"),      &data.useproxy, tr("no"), tr("yes")));
+  Add(new cMenuEditBoolItem(tr("Hide main menu entry"),       &data.hidemenu));
+  Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem));
+  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"),      &data.useproxy));
   if (data.useproxy)
      Add(new cMenuEditStrItem( tr("HTTP proxy server"),       data.httpproxy, sizeof(data.httpproxy), tr(FileNameChars)));
 
