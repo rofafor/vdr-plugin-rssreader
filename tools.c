@@ -13,12 +13,20 @@
 
 // --- Static -----------------------------------------------------------
 
+#define ELEMENTS(x) (sizeof(x) / sizeof(x[0]))
+
 struct conv_table {
   char *from;
   char *to;
-  };
+};
 
-static conv_table html_to_iso_table[] =
+static struct conv_table pre_conv_table[] =
+{
+  // 'to' field must be smaller than 'from'
+  {"<br />",   "\n"}
+};
+
+static struct conv_table post_conv_table[] =
 {
   // 'to' field must be smaller than 'from'
   {"&#228;",   "ä"},
@@ -73,6 +81,31 @@ static conv_table html_to_iso_table[] =
   {"\n\n",     "\n"}, // let's also strip multiple linefeeds
 };
 
+static char *htmlcharconv(char *str, struct conv_table *conv, unsigned int elem)
+{
+  if (str && conv) {
+     for (unsigned int i = 0; i < elem; ++i) {
+        char *ptr = strstr(str, conv[i].from);
+        while (ptr) {
+           int of = ptr - str;
+           int l  = strlen(str);
+           int l1 = strlen(conv[i].from);
+           int l2 = strlen(conv[i].to);
+           if (l2 > l1) {
+              error("htmlcharconv(): cannot reallocate string");
+              return str;
+              }
+           if (l2 != l1)
+              memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
+           strncpy(str + of, conv[i].to, l2);
+           ptr = strstr(str, conv[i].from);
+           }
+        }
+     return str;
+     }
+  return NULL;
+}
+
 // --- General functions ------------------------------------------------
 
 int charsetconv(const char *buffer, int buf_len, const char *str, int str_len, const char *from, const char *to)
@@ -91,50 +124,31 @@ int charsetconv(const char *buffer, int buf_len, const char *str, int str_len, c
         iconv_close(ic);
         }
      }
-  else {
+  else
      error("charsetconv(): charset is not valid");
-     }
   return -1;
-}
-
-char *htmlcharconv(char *str)
-{
-  for (unsigned int i = 0; i < (sizeof(html_to_iso_table) / sizeof(html_to_iso_table[0])); ++i) {
-     char *ptr = strstr(str, html_to_iso_table[i].from);
-     while (ptr) {
-        int of = ptr - str;
-        int l  = strlen(str);
-        int l1 = strlen(html_to_iso_table[i].from);
-        int l2 = strlen(html_to_iso_table[i].to);
-        if (l2 > l1) {
-           error("htmlcharconv(): cannot reallocate string");
-           return str;
-           }
-        if (l2 != l1)
-           memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
-        strncpy(str + of, html_to_iso_table[i].to, l2);
-        ptr = strstr(str, html_to_iso_table[i].from);
-        }
-     }
-  return str;
 }
 
 char *striphtml(char *str)
 {
-  char *c, t = 0, *r;
-  c = str;
-  r = str;
-  while (*str != '\0') {
-     if (*str == '<')
-        t++;
-     else if (*str == '>')
-        t--;
-     else if (t < 1)
-        *(c++) = *str;
-     str++;
+  if (str) {
+     char *c, t = 0, *r;
+     str = htmlcharconv(str, pre_conv_table, ELEMENTS(pre_conv_table));
+     c = str;
+     r = str;
+     while (*str != '\0') {
+       if (*str == '<')
+          t++;
+       else if (*str == '>')
+          t--;
+       else if (t < 1)
+          *(c++) = *str;
+       str++;
+       }
+     *c = '\0';
+     return htmlcharconv(r, post_conv_table, ELEMENTS(post_conv_table));
      }
-  *c = '\0';
-  return r;
+  return NULL;
 }
 
 void *myrealloc(void *ptr, size_t size)

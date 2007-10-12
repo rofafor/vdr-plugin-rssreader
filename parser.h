@@ -13,8 +13,8 @@
 
 // --- Defines ----------------------------------------------------------
 
-#define SHORT_TEXT_LEN 1024
-#define LONG_TEXT_LEN  8192
+#define SHORT_TEXT_LEN 2048
+#define LONG_TEXT_LEN  16384
 
 // --- cItem(s) ---------------------------------------------------------
 

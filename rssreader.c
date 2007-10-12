@@ -1,7 +1,5 @@
 /*
- * rss.c: A plugin for the Video Disk Recorder
- *
- * See the README file for copyright information and how to reach the author.
+ * rssreader.c: A plugin for the Video Disk Recorder
  *
  * $Id$
  */
@@ -19,7 +17,7 @@
 #error "VDR-1.4.0 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.0.1";
+static const char VERSION[]       = "1.0.2";
 static const char DESCRIPTION[]   = "RSS Reader for OSD";
 static const char MAINMENUENTRY[] = "RSS Reader";
 
@@ -163,9 +161,9 @@ void cPluginRssReaderSetup::Setup(void)
 
   Clear();
 
-  Add(new cMenuEditBoolItem(tr("Hide main menu entry"),       &data.hidemenu, tr("no"), tr("yes")));
-  Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem, tr("no"), tr("yes")));
-  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"),      &data.useproxy, tr("no"), tr("yes")));
+  Add(new cMenuEditBoolItem(tr("Hide main menu entry"),       &data.hidemenu));
+  Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem));
+  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"),      &data.useproxy));
   if (data.useproxy)
      Add(new cMenuEditStrItem( tr("HTTP proxy server"),       data.httpproxy, sizeof(data.httpproxy), tr(FileNameChars)));
 

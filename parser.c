@@ -50,7 +50,6 @@ void cItem::SetDate(const char *str)
 {
   char tmp[SHORT_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
-
   charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
   compactspace(tmp);
   debug("cItem::SetDate(): Date: '%s'", tmp);
@@ -61,11 +60,9 @@ void cItem::SetTitle(const char *str)
 {
   char tmp[SHORT_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
-
   charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
   compactspace(tmp);
   striphtml(tmp);
-  htmlcharconv(tmp);
   debug("cItem::SetTitle(): '%s'", tmp);
   strn0cpy(title, tmp, sizeof(tmp));
 }
@@ -74,7 +71,6 @@ void cItem::SetLink(const char *str)
 {
   char tmp[SHORT_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
-
   charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
   compactspace(tmp);
   debug("cItem::SetLink(): '%s'", tmp);
@@ -85,11 +81,9 @@ void cItem::SetDescription(const char *str)
 {
   char tmp[LONG_TEXT_LEN];
   memset(tmp, 0, sizeof(tmp));
-
   charsetconv(tmp, sizeof(tmp), str, strlen(str), "UTF8", I18nCharSets()[Setup.OSDLanguage]);
   compactspace(tmp);
   striphtml(tmp);
-  htmlcharconv(tmp);
   debug("cItem::SetDescription(): '%s'", tmp);
   strn0cpy(description, tmp, sizeof(tmp));
 }
@@ -331,7 +325,7 @@ int cParser::DownloadAndParse(const char *url)
            data.memory = NULL;
            data.size = 0;
            }
-        error("cParser::DownloadAndParse(): Parse error at line %d:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
+        error("cParser::DownloadAndParse(): Parse error at line %ld:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
         return (RSS_PARSING_ERROR);
         }
      }
