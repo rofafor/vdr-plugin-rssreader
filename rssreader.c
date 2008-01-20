@@ -7,6 +7,7 @@
 #include <getopt.h>
 #include <vdr/config.h>
 #include <vdr/plugin.h>
+#include <vdr/menu.h>
 
 #include "menu.h"
 #include "config.h"
@@ -16,7 +17,7 @@
 #error "VDR-1.5.8 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.1.2";
+static const char VERSION[]       = "1.1.3";
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
@@ -49,7 +50,8 @@ class cPluginRssReaderSetup : public cMenuSetupPage
 {
 private:
   cRssReaderConfig data;
-  virtual void Setup(void);
+  cVector<const char*> help;
+  void Setup(void);
 protected:
   virtual eOSState ProcessKey(eKeys Key);
   virtual void Store(void);
@@ -158,12 +160,21 @@ void cPluginRssReaderSetup::Setup(void)
   int current = Current();
 
   Clear();
+  help.Clear();
 
-  Add(new cMenuEditBoolItem(tr("Hide main menu entry"),       &data.hidemenu));
+  Add(new cMenuEditBoolItem(tr("Hide main menu entry"), &data.hidemenu));
+  help.Append(tr("Define whether the main manu entry is hidden."));
+
   Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem));
-  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"),      &data.useproxy));
-  if (data.useproxy)
-     Add(new cMenuEditStrItem( tr("HTTP proxy server"),       data.httpproxy, sizeof(data.httpproxy), tr(FileNameChars)));
+  help.Append(tr("Define whether all non-existent RSS stream elements are hidden."));
+
+  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"), &data.useproxy));
+  help.Append(tr("Define whether a HTTP proxy server is used."));
+
+  if (data.useproxy) {
+     Add(new cMenuEditStrItem( tr("HTTP proxy server"), data.httpproxy, sizeof(data.httpproxy), tr(FileNameChars)));
+     help.Append(tr("Define an address and port of the HTTP proxy server:\n\n\"proxy.domain.com:8000\""));
+     }
 
   SetCurrent(Get(current));
   Display();
@@ -173,9 +184,13 @@ eOSState cPluginRssReaderSetup::ProcessKey(eKeys Key)
 {
   int olduseproxy = data.useproxy;
   eOSState state = cMenuSetupPage::ProcessKey(Key);
-  if (Key != kNone && (data.useproxy != olduseproxy)) {
+
+  if (Key != kNone && (data.useproxy != olduseproxy))
      Setup();
-     }
+
+  if ((Key == kInfo) && (state == osUnknown) && (Current() < help.Size()))
+     return AddSubMenu(new cMenuText(cString::sprintf("%s - %s '%s'", tr("Help"), trVDR("Plugin"), PLUGIN_NAME_I18N), help[Current()]));
+
   return state;
 }
 

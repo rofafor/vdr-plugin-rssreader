@@ -1,77 +1,76 @@
 # VDR plugin language source file.
 # Copyright (C) 2007 Rolf Ahrenberg
 # This file is distributed under the same license as the rssreader package.
-# Siegfried Düngler
-# Walter Koch
+# Gringo <vdr-italian@tiscali.it>, 2007
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: rssreader 1.1.3\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
 "POT-Creation-Date: 2008-01-20 01:50+0200\n"
-"PO-Revision-Date: 2007-08-12 21:33+0300\n"
-"Last-Translator: Walter Koch\n"
+"PO-Revision-Date: 2007-12-26 20:19+0100\n"
+"Last-Translator: Gringo <vdr-italian@tiscali.it>\n"
 "Language-Team: <vdr@linuxtv.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "RSS item"
-msgstr "RSS-Artikel"
+msgstr "Articolo RSS"
 
 msgid "<no date available>"
-msgstr "<kein Datum vorhanden>"
+msgstr "<nessun dato disponibile>"
 
 msgid "<no title available>"
-msgstr "<kein Titel vorhanden>"
+msgstr "<nessun titolo disponibile>"
 
 msgid "<no description available>"
-msgstr "<keine Beschreibung vorhanden>"
+msgstr "<nessuna descrizione disponibile>"
 
 msgid "<no link available>"
-msgstr "<kein Link vorhanden>"
+msgstr "<nessun link disponibile>"
 
 msgid "Select RSS item"
-msgstr "Auswahl RSS-Artikel"
+msgstr "Seleziona articolo RSS"
 
 msgid "Select RSS stream"
-msgstr "Auswahl RSS-Stream"
+msgstr "Seleziona feed RSS"
 
 msgid "Can't parse RSS stream!"
-msgstr "Kann den RSS-Stream nicht parsen!"
+msgstr "Impossibile analizzare feed RSS!"
 
 msgid "Can't download RSS stream!"
-msgstr "Kann den RSS-Stream nicht laden!"
+msgstr "Impossibile scaricare feed RSS!"
 
 msgid "Unknown error!"
-msgstr "Unbekannt Fehler!"
+msgstr "Errore sconosciuto!"
 
 msgid "RSS Reader for OSD"
-msgstr "RSS-Reader für OSD"
+msgstr "Lettore RSS per OSD"
 
 msgid "RSS Reader"
-msgstr "RSS-Reader"
+msgstr "Lettore RSS"
 
 msgid "Hide main menu entry"
-msgstr "Hauptmenüeintrag verstecken"
+msgstr "Nascondi voce nel menu principale"
 
 msgid "Define whether the main manu entry is hidden."
 msgstr ""
 
 msgid "Hide non-existent elements"
-msgstr "Nur vorhandene Elemente zeigen"
+msgstr "Nascondi elementi non esistenti"
 
 msgid "Define whether all non-existent RSS stream elements are hidden."
 msgstr ""
 
 msgid "Use HTTP proxy server"
-msgstr "HTTP Proxy benutzen"
+msgstr "Utilizza server proxy HTTP"
 
 msgid "Define whether a HTTP proxy server is used."
 msgstr ""
 
 msgid "HTTP proxy server"
-msgstr "HTTP Proxy Name"
+msgstr "Nome proxy HTTP"
 
 msgid ""
 "Define an address and port of the HTTP proxy server:\n"
@@ -80,4 +79,4 @@ msgid ""
 msgstr ""
 
 msgid "Help"
-msgstr "Hilfe"
+msgstr "Aiuto"
