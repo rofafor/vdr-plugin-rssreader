@@ -3,7 +3,6 @@
  *
  * See the README file for copyright information and how to reach the author.
  *
- * $Id$
  */
 
 #include "i18n.h"
@@ -12,7 +11,7 @@ const tI18nPhrase Phrases[] = {
   { "RSS Reader",
     "RSS-Reader",
     "", // TODO
-    "", // TODO
+    "Lettore RSS",
     "", // TODO
     "", // TODO
     "Lecteur de flux RSS",
@@ -34,7 +33,7 @@ const tI18nPhrase Phrases[] = {
   { "RSS Reader for OSD",
     "RSS-Reader für OSD",
     "", // TODO
-    "", // TODO
+    "Lettore RSS per OSD",
     "", // TODO
     "", // TODO
     "Lecteur RSS pour OSD",
@@ -56,7 +55,7 @@ const tI18nPhrase Phrases[] = {
   { "Select RSS stream",
     "Auswahl RSS-Stream",
     "", // TODO
-    "", // TODO
+    "Seleziona feed RSS",
     "", // TODO
     "", // TODO
     "Choix des flux RSS",
@@ -78,7 +77,7 @@ const tI18nPhrase Phrases[] = {
   { "Select RSS item",
     "Auswahl RSS-Artikel",
     "", // TODO
-    "", // TODO
+    "Seleziona articolo RSS",
     "", // TODO
     "", // TODO
     "Choix de article RSS",
@@ -100,7 +99,7 @@ const tI18nPhrase Phrases[] = {
   { "RSS item",
     "RSS-Artikel",
     "", // TODO
-    "", // TODO
+    "Articolo RSS",
     "", // TODO
     "", // TODO
     "Article RSS", 
@@ -122,7 +121,7 @@ const tI18nPhrase Phrases[] = {
   { "<no date available>",
     "<kein Datum vorhanden>",
     "", // TODO
-    "", // TODO
+    "<nessun dato disponibile>",
     "", // TODO
     "", // TODO
     "<pas de date disponible>",
@@ -144,7 +143,7 @@ const tI18nPhrase Phrases[] = {
   { "<no title available>",
     "<kein Titel vorhanden>",
     "", // TODO
-    "", // TODO
+    "<nessun titolo disponibile>",
     "", // TODO
     "", // TODO
     "<pas de titre disponible>",
@@ -166,7 +165,7 @@ const tI18nPhrase Phrases[] = {
   { "<no description available>",
     "<keine Beschreibung vorhanden>",
     "", // TODO
-    "", // TODO
+    "<nessuna descrizione disponibile>",
     "", // TODO
     "", // TODO
     "<pas de déscriptif disponible>",
@@ -188,7 +187,7 @@ const tI18nPhrase Phrases[] = {
   { "<no link available>",
     "<kein Link vorhanden>",
     "", // TODO
-    "", // TODO
+    "<nessun link disponibile>",
     "", // TODO
     "", // TODO
     "<pas de lien disponible>",
@@ -210,7 +209,7 @@ const tI18nPhrase Phrases[] = {
   { "Can't parse RSS stream!",
     "Kann den RSS-Stream nicht parsen!",
     "", // TODO
-    "", // TODO
+    "Impossibile analizzare feed RSS!",
     "", // TODO
     "", // TODO
     "Impossible d'analyser le flux RSS!",
@@ -232,7 +231,7 @@ const tI18nPhrase Phrases[] = {
   { "Can't download RSS stream!",
     "Kann den RSS-Stream nicht laden!",
     "", // TODO
-    "", // TODO
+    "Impossibile scaricare feed RSS!",
     "", // TODO
     "", // TODO
     "Impossible de charger le flux!", 
@@ -254,7 +253,7 @@ const tI18nPhrase Phrases[] = {
   { "Unknown error!",
     "Unbekannt Fehler!",
     "", // TODO
-    "", // TODO
+    "Errore sconosciuto!",
     "", // TODO
     "", // TODO
     "Erreur inconnue",
@@ -276,7 +275,7 @@ const tI18nPhrase Phrases[] = {
   { "Loading RSS stream...",
     "Lade RSS-Stream...",
     "", // TODO
-    "", // TODO
+    "Caricamento feed RSS...",
     "", // TODO
     "", // TODO
     "Chargement du flux RSS...",
@@ -298,7 +297,7 @@ const tI18nPhrase Phrases[] = {
   { "Hide main menu entry",
     "Hauptmenüeintrag verstecken",
     "", // TODO
-    "", // TODO
+    "Nascondi voce nel menu principale",
     "", // TODO
     "", // TODO
     "Cacher le menu",
@@ -320,7 +319,7 @@ const tI18nPhrase Phrases[] = {
   { "Hide non-existent elements",
     "Nur vorhandene Elemente zeigen",
     "", // TODO
-    "", // TODO
+    "Nascondi elementi non esistenti",
     "", // TODO
     "", // TODO
     "N'afficher que les éléments existants",
@@ -342,7 +341,7 @@ const tI18nPhrase Phrases[] = {
   { "Use HTTP proxy server",
     "HTTP Proxy benutzen",
     "", // TODO
-    "", // TODO
+    "Utilizza server proxy HTTP",
     "", // TODO
     "", // TODO
     "Utiliser le Proxy HTTP",
@@ -364,7 +363,7 @@ const tI18nPhrase Phrases[] = {
   { "HTTP proxy server",
     "HTTP Proxy Name",
     "", // TODO
-    "", // TODO
+    "Nome proxy HTTP",
     "", // TODO
     "", // TODO
     "Nom du proxy HTTP",

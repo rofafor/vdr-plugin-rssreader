@@ -17,7 +17,7 @@
 #error "VDR-1.4.0 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.0.2";
+static const char VERSION[]       = "1.0.3";
 static const char DESCRIPTION[]   = "RSS Reader for OSD";
 static const char MAINMENUENTRY[] = "RSS Reader";
 

@@ -1,5 +1,5 @@
 #
-# Makefile for a Video Disk Recorder RSS Reader plugin
+# Makefile for a Video Disk Recorder plugin
 #
 # $Id$
 
@@ -12,6 +12,8 @@ STRIP = strip
 # The official name of this plugin.
 # This name will be used in the '-P...' option of VDR to load the plugin.
 # By default the main source file also carries this name.
+# IMPORTANT: the presence of this macro is important for the Make.config
+# file. So it must be defined, even if it is not used here!
 #
 PLUGIN = rssreader
 
@@ -22,7 +24,7 @@ VERSION = $(shell grep 'static const char VERSION\[\] *=' $(PLUGIN).c | awk '{ p
 ### The C++ compiler and options:
 
 CXX      ?= g++
-CXXFLAGS ?= -fPIC -g -O2 -Wall -Woverloaded-virtual
+CXXFLAGS ?= -fPIC -g -O2 -Wall -Woverloaded-virtual -Wno-parentheses
 
 ### The directory environment:
 
@@ -57,6 +59,9 @@ ifdef RSSREADER_DEBUG
 DEFINES += -DDEBUG
 endif
 
+.PHONY: all all-redirect
+all-redirect: all
+
 ### The object files (add further files here):
 
 OBJS = rssreader.o i18n.o parser.o menu.o config.o tools.o
@@ -70,7 +75,7 @@ all: libvdr-$(PLUGIN).so
 %.o: %.c
 	$(CXX) $(CXXFLAGS) -c $(DEFINES) $(INCLUDES) $<
 
-# Dependencies:
+### Dependencies:
 
 MAKEDEP = $(CXX) -MM -MG
 DEPFILE = .dependencies
@@ -86,7 +91,7 @@ libvdr-$(PLUGIN).so: $(OBJS)
 ifndef RSSREADER_DEBUG
 	@$(STRIP) $@
 endif
-	@cp $@ $(LIBDIR)/$@.$(APIVERSION)
+	@cp --remove-destination $@ $(LIBDIR)/$@.$(APIVERSION)
 
 dist: clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)
