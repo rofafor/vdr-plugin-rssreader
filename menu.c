@@ -59,7 +59,7 @@ bool cRssItems::Load(const char *filename)
 cRssMenuItem::cRssMenuItem(const char *Date, const char *Title, const char *Link, const char *Description)
 :cOsdMenu(tr("RSS item"))
 {
-  asprintf(&text, "\n%s%s%s%s%s%s%s",
+  text = cString::sprintf("\n%s%s%s%s%s%s%s",
            *Date         ? strdup(Date)          : RssConfig.hideelem ? "" : tr("<no date available>"),
            (*Date        || !RssConfig.hideelem) ? "\n\n" : "",
            *Title        ? strdup(Title)         : RssConfig.hideelem ? "" : tr("<no title available>"),
@@ -71,13 +71,12 @@ cRssMenuItem::cRssMenuItem(const char *Date, const char *Title, const char *Link
 
 cRssMenuItem::~cRssMenuItem()
 {
-  free(text);
 }
 
 void cRssMenuItem::Display(void)
 {
   cOsdMenu::Display();
-  debug("cRssMenuItem::Display(): '%s'\n", text);
+  debug("cRssMenuItem::Display(): '%s'\n", *text);
   DisplayMenu()->SetText(text, false);
   cStatus::MsgOsdTextItem(text);
 }

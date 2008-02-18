@@ -17,7 +17,7 @@
 #error "VDR-1.5.8 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.1.3";
+static const char VERSION[]       = "1.1.4";
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
