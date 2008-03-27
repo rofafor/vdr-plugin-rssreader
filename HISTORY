@@ -106,3 +106,9 @@ VDR Plugin 'rssreader' Revision History
 
 - Replaced asprintf with cString.
 - Updated "example/rssreader.conf".
+
+2008-03-27: Version 1.6.0
+
+- Updated for vdr-1.6.0.
+- Updated French translation (Thanks to Michaël Nival).
+- Updated Italian translation (Thanks to Gringo).

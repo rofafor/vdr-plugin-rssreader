@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: rssreader 1.1.4\n"
+"Project-Id-Version: rssreader 1.6.0\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
 "POT-Creation-Date: 2008-01-20 01:50+0200\n"
-"PO-Revision-Date: 2007-12-26 20:19+0100\n"
+"PO-Revision-Date: 2008-02-22 01:41+0100\n"
 "Last-Translator: Gringo <vdr-italian@tiscali.it>\n"
 "Language-Team: <vdr@linuxtv.org>\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgid "RSS item"
 msgstr "Articolo RSS"
 
 msgid "<no date available>"
-msgstr "<nessun dato disponibile>"
+msgstr "<nessuna data disponibile>"
 
 msgid "<no title available>"
 msgstr "<nessun titolo disponibile>"
@@ -28,7 +28,7 @@ msgid "<no description available>"
 msgstr "<nessuna descrizione disponibile>"
 
 msgid "<no link available>"
-msgstr "<nessun link disponibile>"
+msgstr "<nessun collegamento disponibile>"
 
 msgid "Select RSS item"
 msgstr "Seleziona articolo RSS"
@@ -55,19 +55,19 @@ msgid "Hide main menu entry"
 msgstr "Nascondi voce nel menu principale"
 
 msgid "Define whether the main manu entry is hidden."
-msgstr ""
+msgstr "Definisce se la voce del menu principale è nascosta."
 
 msgid "Hide non-existent elements"
 msgstr "Nascondi elementi non esistenti"
 
 msgid "Define whether all non-existent RSS stream elements are hidden."
-msgstr ""
+msgstr "Definisce se tutti gli elementi di feed RSS non esistenti sono nascosti."
 
 msgid "Use HTTP proxy server"
 msgstr "Utilizza server proxy HTTP"
 
 msgid "Define whether a HTTP proxy server is used."
-msgstr ""
+msgstr "Definisce se viene usato un server proxy HTTP."
 
 msgid "HTTP proxy server"
 msgstr "Nome proxy HTTP"
@@ -77,6 +77,9 @@ msgid ""
 "\n"
 "\"proxy.domain.com:8000\""
 msgstr ""
+"Definisce un indirizzo e porta del server proxy HTTP:\n"
+"\n"
+"\"proxy.dominio.com:8000\""
 
 msgid "Help"
 msgstr "Aiuto"

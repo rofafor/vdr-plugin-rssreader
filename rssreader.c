@@ -13,11 +13,11 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(APIVERSNUM) && APIVERSNUM < 10508
-#error "VDR-1.5.8 API version or greater is required!"
+#if defined(APIVERSNUM) && APIVERSNUM < 10600
+#error "VDR-1.6.0 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.1.4";
+static const char VERSION[]       = "1.6.0";
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
