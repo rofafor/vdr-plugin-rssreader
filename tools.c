@@ -136,3 +136,24 @@ void *myrealloc(void *ptr, size_t size)
   else
      return malloc(size);
 }
+
+bool isimage(const char *text)
+{
+  if (endswith(text, ".jpg") || endswith(text, ".gif") || endswith(text, ".png"))
+     return true; 
+  return false;
+}
+
+bool isvideo(const char *text)
+{
+  if (endswith(text, ".mp3") || endswith(text, ".wav") || endswith(text, ".ogg"))
+     return true;
+  return false;
+}
+
+bool ismusic(const char *text)
+{
+  if (endswith(text, ".mpg") || endswith(text, ".avi"))
+     return true;
+  return false;
+}

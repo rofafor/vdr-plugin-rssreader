@@ -78,7 +78,7 @@ VDR Plugin 'rssreader' Revision History
 
 2008-01-20: Version 1.0.3
 
-- Added Italian translation (Thanks to Gringo).
+- Added Italian translation (Thanks to Diego Pierotto).
 - Updated "example/rssreader.conf".
 - Added '-Wno-parentheses' to the compiler options.
 
@@ -97,7 +97,7 @@ VDR Plugin 'rssreader' Revision History
 
 2008-01-20: Version 1.1.3
 
-- Added Italian translation (Thanks to Gringo).
+- Added Italian translation (Thanks to Diego Pierotto).
 - Updated "example/rssreader.conf".
 - Added '-Wno-parentheses' to the compiler options.
 - Mapped 'kInfo' as help key in setup menu.
@@ -111,4 +111,11 @@ VDR Plugin 'rssreader' Revision History
 
 - Updated for vdr-1.6.0.
 - Updated French translation (Thanks to Michaël Nival).
-- Updated Italian translation (Thanks to Gringo).
+- Updated Italian translation (Thanks to Diego Pierotto).
+
+2008-06-20: Version 1.6.1
+
+- Updated and relocated rssreader.conf to under
+  /vdrconf/rssreader directory.
+- Updated Italian translation (Thanks to Diego Pierotto).
+- Added preliminary support for xineliboutput.

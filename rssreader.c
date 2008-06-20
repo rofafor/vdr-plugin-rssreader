@@ -17,7 +17,7 @@
 #error "VDR-1.6.0 API version or greater is required!"
 #endif
 
-static const char VERSION[]       = "1.6.0";
+static const char VERSION[]       = "1.6.1";
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
@@ -92,7 +92,7 @@ bool cPluginRssReader::Initialize(void)
 bool cPluginRssReader::Start(void)
 {
   // Start any background activities the plugin shall perform.
-  if (!RssItems.Load(AddDirectory(ConfigDirectory(), "rssreader.conf")))
+  if (!RssItems.Load(AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), "rssreader.conf")))
      error("configuration file 'rssreader.conf' not found!");
   return true;
 }

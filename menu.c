@@ -6,10 +6,12 @@
  * $Id$
  */
  
+#include <vdr/plugin.h>
 #include <vdr/status.h>
 #include "parser.h"
 #include "config.h"
 #include "menu.h"
+#include "tools.h"
 #include "common.h"
 
 // --- Globals ----------------------------------------------------------
@@ -67,6 +69,16 @@ cRssMenuItem::cRssMenuItem(const char *Date, const char *Title, const char *Link
            *Description  ? strdup(Description)   : RssConfig.hideelem ? "" : tr("<no description available>"),
            (*Description || !RssConfig.hideelem) ? "\n\n" : "",
            *Link         ? strdup(Link)          : RssConfig.hideelem ? "" : tr("<no link available>"));
+  link = cString(Link);
+  if (isimage(*link))
+     type = TYPE_IMAGE;
+  else if (ismusic(*link))
+     type = TYPE_MUSIC;
+  else if (isvideo(*link))
+     type = TYPE_VIDEO;
+  else
+     type = TYPE_NONE;
+  SetHelp((type != TYPE_NONE) ? tr("Show") : NULL, NULL, NULL, NULL);
 }
 
 cRssMenuItem::~cRssMenuItem()
@@ -105,6 +117,21 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
      switch (Key) {
        case kOk:
             return osBack;
+       case kRed:
+            switch (type) {
+               case TYPE_IMAGE:
+                    cPluginManager::CallFirstService("ImagePlayer-1.0", (void *)*link);
+                    break;
+               case TYPE_MUSIC:
+                    cPluginManager::CallFirstService("MusicPlayer-1.0", (void *)*link);
+                    break;
+               case TYPE_VIDEO:
+                    cPluginManager::CallFirstService("MediaPlayer-1.0", (void *)*link);
+                    break;
+               case TYPE_NONE:
+               default:
+                    break;
+              }
        default:
             state = osContinue;
        }

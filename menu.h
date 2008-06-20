@@ -37,7 +37,15 @@ extern cRssItems RssItems;
 
 class cRssMenuItem : public cOsdMenu {
 private:
+  enum {
+    TYPE_NONE,
+    TYPE_IMAGE,
+    TYPE_VIDEO,
+    TYPE_MUSIC
+  };
+  int type;
   cString text;
+  cString link;
 public:
   cRssMenuItem(const char *Date, const char *Title, const char *Link, const char *Description);
   virtual ~cRssMenuItem();

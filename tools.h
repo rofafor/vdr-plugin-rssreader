@@ -13,6 +13,9 @@
 
 char *striphtml(char *str);
 void *myrealloc(void *ptr, size_t size);
+bool isimage(const char *text);
+bool isvideo(const char *text);
+bool ismusic(const char *text);
 
 #endif // __RSSREADER_TOOLS_H
 

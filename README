@@ -31,8 +31,8 @@ Installation:
 cd /put/your/path/here/VDR/PLUGINS/src
 tar -xzf /put/your/path/here/vdr-rssreader-X.Y.Z.tgz
 ln -s rssreader-X.Y.Z rssreader
-cp rssreader/example/rssreader.conf /path/to/vdrconf/plugins/
 cd /put/your/path/here/VDR
+cp -R PLUGINS/src/rssreader/rssreader /path/to/vdrconf/plugins/
 make
 make plugins
 ./vdr -P rssreader
