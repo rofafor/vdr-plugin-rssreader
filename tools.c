@@ -146,14 +146,14 @@ bool isimage(const char *text)
 
 bool isvideo(const char *text)
 {
-  if (endswith(text, ".mp3") || endswith(text, ".wav") || endswith(text, ".ogg"))
+  if (endswith(text, ".mpg") || endswith(text, ".avi") ||  endswith(text, ".ts"))
      return true;
   return false;
 }
 
 bool ismusic(const char *text)
 {
-  if (endswith(text, ".mpg") || endswith(text, ".avi"))
+  if (endswith(text, ".mp3") || endswith(text, ".wav") || endswith(text, ".ogg"))
      return true;
   return false;
 }

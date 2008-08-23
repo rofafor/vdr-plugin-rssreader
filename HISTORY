@@ -18,7 +18,7 @@ VDR Plugin 'rssreader' Revision History
   (Thanks to Ronny Kornexl for reporting this one)
 - Added label support into rssreader.conf.
 - User inactivity doesn't close menu anymore.
-- Added German translation (Thanks to Siegfried Düngler).
+- Added German translation (Thanks to Siegfried DÃ¼ngler).
 
 2005-12-21: Version 0.0.4
 
@@ -59,7 +59,7 @@ VDR Plugin 'rssreader' Revision History
 
 2006-04-23: Version 0.3.0
 
-- Added STRIP option for Makefile (Thanks to Ville Skyttä).
+- Added STRIP option for Makefile (Thanks to Ville SkyttÃ¤).
 - Modified APIVERSION code in Makefile.
 
 2006-04-30: Version 1.0.0
@@ -110,7 +110,7 @@ VDR Plugin 'rssreader' Revision History
 2008-03-27: Version 1.6.0
 
 - Updated for vdr-1.6.0.
-- Updated French translation (Thanks to Michaël Nival).
+- Updated French translation (Thanks to MichaÃ«l Nival).
 - Updated Italian translation (Thanks to Diego Pierotto).
 
 2008-06-20: Version 1.6.1
@@ -119,3 +119,8 @@ VDR Plugin 'rssreader' Revision History
   /vdrconf/rssreader directory.
 - Updated Italian translation (Thanks to Diego Pierotto).
 - Added preliminary support for xineliboutput.
+
+2008-xx-xx: Version 1.6.2
+
+- Added an alternate method to navigate with color buttons.
+- Converted HISTORY and fi_FI.po to UTF-8.

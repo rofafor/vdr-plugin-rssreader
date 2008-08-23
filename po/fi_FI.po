@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rssreader 1.6.0\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
-"POT-Creation-Date: 2008-05-09 23:54+0300\n"
+"POT-Creation-Date: 2008-07-09 09:45+0300\n"
 "PO-Revision-Date: 2007-08-12 18:35+0300\n"
 "Last-Translator: Rolf Ahrenberg\n"
 "Language-Team: <vdr@linuxtv.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "RSS item"
 msgstr "RSS-artikkeli"
 
 msgid "<no date available>"
-msgstr "<p‰iv‰m‰‰r‰ ei ole saatavilla>"
+msgstr "<p√§iv√§m√§√§r√§ ei ole saatavilla>"
 
 msgid "<no title available>"
 msgstr "<otsikko ei ole saatavilla>"
@@ -30,9 +30,6 @@ msgstr "<kuvaus ei ole saatavilla>"
 msgid "<no link available>"
 msgstr "<linkki ei ole saatavilla>"
 
-msgid "Show"
-msgstr "N‰yt‰"
-
 msgid "Select RSS item"
 msgstr "Valitse RSS-artikkeli"
 
@@ -40,47 +37,47 @@ msgid "Select RSS stream"
 msgstr "Valitse RSS-virta"
 
 msgid "Can't parse RSS stream!"
-msgstr "RSS-virtaa ei pystyt‰ tulkkaamaan!"
+msgstr "RSS-virtaa ei pystyt√§ tulkkaamaan!"
 
 msgid "Can't download RSS stream!"
-msgstr "RSS-virtaa ei pystyt‰ vastaanottamaan!"
+msgstr "RSS-virtaa ei pystyt√§ vastaanottamaan!"
 
 msgid "Unknown error!"
 msgstr "Tuntematon virhe!"
 
 msgid "RSS Reader for OSD"
-msgstr "RSS-lukija kuvaruutun‰ytˆlle"
+msgstr "RSS-lukija kuvaruutun√§yt√∂lle"
 
 msgid "RSS Reader"
 msgstr "RSS-lukija"
 
 msgid "Hide main menu entry"
-msgstr "Piilota valinta p‰‰valikosta"
+msgstr "Piilota valinta p√§√§valikosta"
 
 msgid "Define whether the main manu entry is hidden."
-msgstr "M‰‰rittele, n‰ytet‰‰nkˆ laajennoksen valinta p‰‰valikossa."
+msgstr "M√§√§rittele, n√§ytet√§√§nk√∂ laajennoksen valinta p√§√§valikossa."
 
 msgid "Hide non-existent elements"
-msgstr "Piilota tyhj‰t elementit"
+msgstr "Piilota tyhj√§t elementit"
 
 msgid "Define whether all non-existent RSS stream elements are hidden."
-msgstr "M‰‰rittele, n‰ytet‰‰nkˆ RSS-l‰hetteen tyhj‰t elementit."
+msgstr "M√§√§rittele, n√§ytet√§√§nk√∂ RSS-l√§hetteen tyhj√§t elementit."
 
 msgid "Use HTTP proxy server"
-msgstr "K‰yt‰ HTTP-v‰lityspalvelinta"
+msgstr "K√§yt√§ HTTP-v√§lityspalvelinta"
 
 msgid "Define whether a HTTP proxy server is used."
-msgstr "M‰‰rittele, k‰ytet‰‰nkˆ HTTP-v‰lityspalvelinta."
+msgstr "M√§√§rittele, k√§ytet√§√§nk√∂ HTTP-v√§lityspalvelinta."
 
 msgid "HTTP proxy server"
-msgstr "HTTP-v‰lityspalvelimen osoite"
+msgstr "HTTP-v√§lityspalvelimen osoite"
 
 msgid ""
 "Define an address and port of the HTTP proxy server:\n"
 "\n"
 "\"proxy.domain.com:8000\""
 msgstr ""
-"M‰‰rittele k‰ytett‰v‰n HTTP-v‰lityspalvelimen osoite ja portti:\n"
+"M√§√§rittele k√§ytett√§v√§n HTTP-v√§lityspalvelimen osoite ja portti:\n"
 "\n"
 "\"proxy.domain.com:8000\""
 

@@ -78,7 +78,7 @@ cRssMenuItem::cRssMenuItem(const char *Date, const char *Title, const char *Link
      type = TYPE_VIDEO;
   else
      type = TYPE_NONE;
-  SetHelp((type != TYPE_NONE) ? tr("Show") : NULL, NULL, NULL, NULL);
+  SetHelp(NULL, "<<", (type != TYPE_NONE) ? ">>" : NULL, NULL);
 }
 
 cRssMenuItem::~cRssMenuItem()
@@ -115,9 +115,10 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
 
   if (state == osUnknown) {
      switch (Key) {
+       case kGreen:
        case kOk:
             return osBack;
-       case kRed:
+       case kYellow:
             switch (type) {
                case TYPE_IMAGE:
                     cPluginManager::CallFirstService("ImagePlayer-1.0", (void *)*link);
@@ -147,6 +148,7 @@ cRssItemsMenu::cRssItemsMenu()
 {
   for (cItem *rssItem = Parser.Items.First(); rssItem; rssItem = Parser.Items.Next(rssItem))
      Add(new cOsdItem(rssItem->GetTitle()));
+  SetHelp(NULL, "<<", ">>", NULL);
   Display();
 }
 
@@ -155,6 +157,9 @@ eOSState cRssItemsMenu::ProcessKey(eKeys Key)
   eOSState state = cOsdMenu::ProcessKey(Key);
   if (state == osUnknown) {
      switch (Key) {
+       case kGreen:
+            return osBack;
+       case kYellow:
        case kOk:
             return ShowDetails();
        default:
@@ -184,6 +189,7 @@ cRssStreamsMenu::cRssStreamsMenu()
       debug("StreamsMenu: '%s' : '%s'", rssItem->Title(), rssItem->Url());
       Add(osdItem);
     }
+  SetHelp(NULL, "<<", ">>", NULL);
   Display();
 }
 
@@ -217,6 +223,9 @@ eOSState cRssStreamsMenu::ProcessKey(eKeys Key)
   eOSState state = cOsdMenu::ProcessKey(Key);
   if (state == osUnknown) {
      switch (Key) {
+       case kGreen:
+            return osBack;
+       case kYellow:
        case kOk:
             return Select();
        default:
