@@ -14,8 +14,8 @@
 #define ELEMENTS(x) (sizeof(x) / sizeof(x[0]))
 
 struct conv_table {
-  char *from;
-  char *to;
+  const char *from;
+  const char *to;
 };
 
 static struct conv_table pre_conv_table[] =
