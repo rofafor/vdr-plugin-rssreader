@@ -1,7 +1,6 @@
 /*
  * rssreader.c: A plugin for the Video Disk Recorder
  *
- * $Id$
  */
 
 #include <getopt.h>

@@ -1,5 +1,5 @@
 #
-# Makefile for a Video Disk Recorder RSS Reader plugin
+# Makefile for RSS Reader plugin
 #
 # $Id$
 
