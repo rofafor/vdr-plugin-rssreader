@@ -125,3 +125,7 @@ VDR Plugin 'rssreader' Revision History
 - Converted HISTORY and fi_FI.po to UTF-8.
 - Added an alternate method to navigate with color buttons.
 - Fixed detection of video and music file extensions.
+
+2009-xx-xx: Version 1.6.3
+
+- Cleaned up compilation warnings.
