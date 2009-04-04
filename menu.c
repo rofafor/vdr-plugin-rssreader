@@ -172,7 +172,10 @@ eOSState cRssItemsMenu::ProcessKey(eKeys Key)
 eOSState cRssItemsMenu::ShowDetails(void)
 {
   cItem *rssItem = (cItem *)Parser.Items.Get(Current());
-  return AddSubMenu(new cRssMenuItem(rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
+  if (rssItem) {
+     return AddSubMenu(new cRssMenuItem(rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
+     }
+  return osContinue;
 }
 
 // --- cRssStreamsMenu -----------------------------------------------------
