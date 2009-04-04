@@ -91,7 +91,7 @@ std::stack<struct XmlNode> nodestack;
 // ftp://ftp.unicode.org/Public/MAPPINGS/
 
 // ISO-8859-15
-static int MapLatin15[0x80] = {
+static int MapLatin9[0x80] = {
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
@@ -155,7 +155,7 @@ static int XMLCALL UnknownEncodingHandler(void *data, const XML_Char *encoding, 
   int *map = NULL;
 
   if (strcmp(encoding, "iso-8859-15") == 0) {
-     map = MapLatin15;
+     map = MapLatin9;
      }
   if (strcmp(encoding, "iso-8859-2") == 0) {
      map = MapLatin2;
