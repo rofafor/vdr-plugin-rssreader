@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: rssreader 1.6.0\n"
+"Project-Id-Version: rssreader 1.6.3\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
-"POT-Creation-Date: 2008-07-09 09:45+0300\n"
+"POT-Creation-Date: 2009-04-04 22:48+0300\n"
 "PO-Revision-Date: 2008-03-30 17:02+0100\n"
 "Last-Translator: Diego Pierotto <vdr-italian@tiscali.it>\n"
 "Language-Team:  <vdr@linuxtv.org>\n"
@@ -51,6 +51,9 @@ msgstr "Lettore RSS per OSD"
 msgid "RSS Reader"
 msgstr "Lettore RSS"
 
+msgid "Button$Load"
+msgstr ""
+
 msgid "Hide main menu entry"
 msgstr "Nascondi voce menu principale"
 
@@ -80,6 +83,9 @@ msgstr ""
 "Definisci un indirizzo e una porta del server proxy HTTP:\n"
 "\n"
 "\"proxy.dominio.com:8000\""
+
+msgid "Loading configuration file..."
+msgstr ""
 
 msgid "Help"
 msgstr "Aiuto"

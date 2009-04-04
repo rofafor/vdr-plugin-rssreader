@@ -15,4 +15,5 @@ cRssReaderConfig::cRssReaderConfig(void)
 : hidemenu(0), hideelem(0), useproxy(0)
 {
   strn0cpy(httpproxy, "127.0.0.1:8000", sizeof(httpproxy));
+  strn0cpy(configfile, "/etc/vdr/plugins/rssreader/" RSSREADER_CONF, sizeof(configfile));
 }

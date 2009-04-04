@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: rssreader 1.6.0\n"
+"Project-Id-Version: rssreader 1.6.3\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
-"POT-Creation-Date: 2008-07-09 09:45+0300\n"
+"POT-Creation-Date: 2009-04-04 22:48+0300\n"
 "PO-Revision-Date: 2007-08-12 18:35+0300\n"
 "Last-Translator: Rolf Ahrenberg\n"
 "Language-Team: <vdr@linuxtv.org>\n"
@@ -51,6 +51,9 @@ msgstr "RSS-lukija kuvaruutunäytölle"
 msgid "RSS Reader"
 msgstr "RSS-lukija"
 
+msgid "Button$Load"
+msgstr "Lataa"
+
 msgid "Hide main menu entry"
 msgstr "Piilota valinta päävalikosta"
 
@@ -80,6 +83,9 @@ msgstr ""
 "Määrittele käytettävän HTTP-välityspalvelimen osoite ja portti:\n"
 "\n"
 "\"proxy.domain.com:8000\""
+
+msgid "Loading configuration file..."
+msgstr "Ladataan asetustiedostoa..."
 
 msgid "Help"
 msgstr "Opaste"

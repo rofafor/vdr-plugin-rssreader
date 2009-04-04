@@ -85,14 +85,15 @@ bool cPluginRssReader::ProcessArgs(int argc, char *argv[])
 bool cPluginRssReader::Initialize(void)
 {
   // Initialize any background activities the plugin shall perform.
+  strn0cpy(RssConfig.configfile, AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), RSSREADER_CONF), sizeof(RssConfig.configfile));
   return true;
 }
 
 bool cPluginRssReader::Start(void)
 {
   // Start any background activities the plugin shall perform.
-  if (!RssItems.Load(AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), "rssreader.conf")))
-     error("configuration file 'rssreader.conf' not found!");
+  if (!RssItems.Load(RssConfig.configfile))
+     error("configuration file '" RSSREADER_CONF "' not found!");
   return true;
 }
 
@@ -138,13 +139,22 @@ bool cPluginRssReader::Service(const char *Id, void *Data)
 
 const char **cPluginRssReader::SVDRPHelpPages(void)
 {
-  // Return help text for SVDRP commands this plugin implements
-  return NULL;
+  static const char *HelpPages[] = {
+    "LOAD\n"
+    "    Load RSS feed configuration file."
+    };
+  return HelpPages;
 }
 
 cString cPluginRssReader::SVDRPCommand(const char *Command, const char *Option, int &ReplyCode)
 {
-  // Process SVDRP commands this plugin implements
+  if (strcasecmp(Command, "LOAD") == 0) {
+     if (!RssItems.Load(RssConfig.configfile)) {
+        ReplyCode = 550; // Requested action not taken
+        return cString("Configuration file not found!");
+        }
+     return cString("Configuration file loaded");
+     }
   return NULL;
 }
 
@@ -152,6 +162,7 @@ cPluginRssReaderSetup::cPluginRssReaderSetup(void)
 {
   data = RssConfig;
   Setup();
+  SetHelp(tr("Button$Load"), NULL, NULL, NULL);
 }
 
 void cPluginRssReaderSetup::Setup(void)
@@ -187,8 +198,22 @@ eOSState cPluginRssReaderSetup::ProcessKey(eKeys Key)
   if (Key != kNone && (data.useproxy != olduseproxy))
      Setup();
 
-  if ((Key == kInfo) && (state == osUnknown) && (Current() < help.Size()))
-     return AddSubMenu(new cMenuText(cString::sprintf("%s - %s '%s'", tr("Help"), trVDR("Plugin"), PLUGIN_NAME_I18N), help[Current()]));
+  if (state == osUnknown) {
+     switch (Key) {
+       case kRed:
+            Skins.Message(mtInfo, tr("Loading configuration file..."));
+            RssItems.Load(RssConfig.configfile);
+            Skins.Message(mtInfo, NULL);
+            state = osContinue;
+            break;
+       case kInfo:
+            if (Current() < help.Size())
+               return AddSubMenu(new cMenuText(cString::sprintf("%s - %s '%s'", tr("Help"), trVDR("Plugin"), PLUGIN_NAME_I18N), help[Current()]));
+            break;
+       default:
+            break;
+       }
+     }
 
   return state;
 }

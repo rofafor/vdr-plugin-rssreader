@@ -19,5 +19,8 @@
 // User agent string for servers
 #define RSSREADER_USERAGENT "libcurl-agent/1.0"
 
+// Configuration file
+#define RSSREADER_CONF      "rssreader.conf"
+
 #endif // __RSSREADER_COMMON_H
 

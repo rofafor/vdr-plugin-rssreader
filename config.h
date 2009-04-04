@@ -16,6 +16,7 @@ public:
   int hideelem;
   int useproxy;
   char httpproxy[256];
+  char configfile[256];
 };
 
 extern cRssReaderConfig RssConfig;
