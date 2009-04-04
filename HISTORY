@@ -129,3 +129,6 @@ VDR Plugin 'rssreader' Revision History
 2009-xx-xx: Version 1.6.3
 
 - Cleaned up compilation warnings.
+- Fixed RSS parsing.
+- Added correct character set conversion tables for
+  ISO-8859-2, ISO-8859-15 and CP1250.
