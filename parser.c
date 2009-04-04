@@ -180,6 +180,46 @@ static int XMLCALL UnknownEncodingHandler(void *data, const XML_Char *encoding, 
   return XML_STATUS_ERROR;
 }
 
+static inline bool IsItemTag(const char *tag)
+{
+  if (!strncmp(tag, "item", 4) || !strncmp(tag, "entry", 5)) {
+     return true;
+     }
+  return false;
+}
+
+static inline bool IsTitleTag(const char *tag)
+{
+  if (!strncmp(tag, "title", 5)) {
+     return true;
+     }
+  return false;
+}
+
+static inline bool IsLinkTag(const char *tag)
+{
+  if (!strncmp(tag, "link", 4)) {
+     return true;
+     }
+  return false;
+}
+
+static inline bool IsDateTag(const char *tag)
+{
+  if (!strncmp(tag, "pub", 3)) {
+     return true;
+     }
+  return false;
+}
+
+static inline bool IsDescriptionTag(const char *tag)
+{
+  if (!strncmp(tag, "description", 11) || !strncmp(tag, "content", 7)) {
+     return true;
+     }
+  return false;
+}
+
 static void XMLCALL StartHandler(void *data, const char *el, const char **attr)
 {
   XmlNode node;
@@ -188,7 +228,7 @@ static void XMLCALL StartHandler(void *data, const char *el, const char **attr)
   node.depth = depth;
   nodestack.push(node);
 
-  if (!strncmp(el, "item", 4) || !strncmp(el, "entry", 5)) {
+  if (IsItemTag(el)) {
      cItem *tmpitem = new cItem;
      item = tmpitem;
      item->Clear();
@@ -200,48 +240,33 @@ static void XMLCALL EndHandler(void *data, const char *el)
 {
   char parent[SHORT_TEXT_LEN];
   
-  if (nodestack.size() > 1) {
-     nodestack.pop();
-     } 
-  else {
-     nodestack.pop();
-     return;
-     }
-  strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
-  // No need to free the node
-  
-  depth--;
-  if (!strncmp(el, "item", 4) || !strncmp(el, "entry", 5)) {
-     // End of the current item
-     if (*item->GetTitle())
-        Parser.Items.Add(item);
-     }
-  else if (!strncmp(el, "title", 5)) {
-     if (!strncmp(parent, "item", 4) || !strncmp(parent, "entry", 5)) {
+  nodestack.pop();
+  if (nodestack.size() > 0) {
+     strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
+     // No need to free the node
+     if (IsItemTag(el) && item && *item->GetTitle()) {
+        Parser.Items.Add(item); // End of the current item
+        }
+     else if (IsTitleTag(el) && IsItemTag(parent)) {
         item->SetTitle(data_string);
         }
-     }
-  else if (!strncmp(el, "link", 4)) {
-     if (!strncmp(parent, "item", 4) || !strncmp(parent, "entry", 5)) {
+     else if (IsLinkTag(el) && IsItemTag(parent)) {
         item->SetLink(data_string);
         }
-     }
-  else if (!strncmp(el, "pub", 3)) {
-     if (!strncmp(parent, "item", 4) || !strncmp(parent, "entry", 5)) {
+     else if (IsDateTag(el) && IsItemTag(parent)) {
         item->SetDate(data_string);
         }
-     }
-  else if (!strncmp(el, "description", 11) || !strncmp(el, "content", 7)) {
-     if (!strncmp(parent, "item", 4) || !strncmp(parent, "entry", 5)) {
+     else if (IsDescriptionTag(el) && IsItemTag(parent)) {
         item->SetDescription(data_string);
         }
+     strcpy(data_string, "");
      }
-  strcpy(data_string, "");
+  depth--;
 }
 
 static void DataHandler(void *user_data, const XML_Char *s, int len)
 {
-  /* Only until the maximum size of the buffer */
+  // Only until the maximum size of the buffer
   if (strlen(data_string) + len <= LONG_TEXT_LEN)
      strncat(data_string, s, len);
 }

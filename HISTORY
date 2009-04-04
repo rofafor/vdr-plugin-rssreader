@@ -126,10 +126,12 @@ VDR Plugin 'rssreader' Revision History
 - Added an alternate method to navigate with color buttons.
 - Fixed detection of video and music file extensions.
 
-2009-xx-xx: Version 1.6.3
+2009-04-05: Version 1.6.3
 
 - Cleaned up compilation warnings.
 - Fixed a crash bug when pressing OK in an empty menu.
 - Fixed RSS parsing.
 - Added correct character set conversion tables for
   ISO-8859-2, ISO-8859-15 and CP1250.
+- Updated "example/rssreader.conf".
+
