@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rssreader 1.6.3\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
-"POT-Creation-Date: 2009-04-04 22:48+0300\n"
+"POT-Creation-Date: 2009-04-05 02:37+0300\n"
 "PO-Revision-Date: 2008-02-20 18:17+0100\n"
 "Last-Translator: NIVAL Michaël <mnival@club-internet.fr>\n"
 "Language-Team:  <vdr@linuxtv.org>\n"
@@ -36,6 +36,9 @@ msgstr "Choix des articles RSS"
 msgid "Select RSS stream"
 msgstr "Choix des flux RSS"
 
+msgid "Button$Load"
+msgstr ""
+
 msgid "Can't parse RSS stream!"
 msgstr "Impossible d'analyser le flux RSS!"
 
@@ -45,14 +48,14 @@ msgstr "Impossible de charger le flux!"
 msgid "Unknown error!"
 msgstr "Erreur inconnue!"
 
+msgid "Loading configuration file..."
+msgstr ""
+
 msgid "RSS Reader for OSD"
 msgstr "Lecteur RSS pour OSD"
 
 msgid "RSS Reader"
 msgstr "Lecteur de flux RSS"
-
-msgid "Button$Load"
-msgstr ""
 
 msgid "Hide main menu entry"
 msgstr "Masquer le menu"
@@ -83,9 +86,6 @@ msgstr ""
 "Définit l'adresse et le port du serveur proxy HTTP :\n"
 "\n"
 "\"proxy.domain.com:8000\""
-
-msgid "Loading configuration file..."
-msgstr ""
 
 msgid "Help"
 msgstr "Aide"

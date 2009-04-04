@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: rssreader 1.6.3\n"
 "Report-Msgid-Bugs-To: Rolf Ahrenberg\n"
-"POT-Creation-Date: 2009-04-04 22:48+0300\n"
+"POT-Creation-Date: 2009-04-05 02:37+0300\n"
 "PO-Revision-Date: 2007-08-12 21:33+0300\n"
 "Last-Translator: Walter Koch\n"
 "Language-Team: <vdr@linuxtv.org>\n"
@@ -37,6 +37,9 @@ msgstr "Auswahl RSS-Artikel"
 msgid "Select RSS stream"
 msgstr "Auswahl RSS-Stream"
 
+msgid "Button$Load"
+msgstr ""
+
 msgid "Can't parse RSS stream!"
 msgstr "Kann den RSS-Stream nicht parsen!"
 
@@ -46,14 +49,14 @@ msgstr "Kann den RSS-Stream nicht laden!"
 msgid "Unknown error!"
 msgstr "Unbekannt Fehler!"
 
+msgid "Loading configuration file..."
+msgstr ""
+
 msgid "RSS Reader for OSD"
 msgstr "RSS-Reader für OSD"
 
 msgid "RSS Reader"
 msgstr "RSS-Reader"
-
-msgid "Button$Load"
-msgstr ""
 
 msgid "Hide main menu entry"
 msgstr "Hauptmenüeintrag verstecken"
@@ -80,9 +83,6 @@ msgid ""
 "Define an address and port of the HTTP proxy server:\n"
 "\n"
 "\"proxy.domain.com:8000\""
-msgstr ""
-
-msgid "Loading configuration file..."
 msgstr ""
 
 msgid "Help"

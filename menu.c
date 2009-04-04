@@ -197,7 +197,7 @@ cRssStreamsMenu::cRssStreamsMenu()
 :cOsdMenu(tr("Select RSS stream"))
 {
   Setup();
-  SetHelp(NULL, "<<", ">>", NULL);
+  SetHelp(tr("Button$Load"), "<<", ">>", NULL);
 }
 
 void cRssStreamsMenu::Setup(void)
@@ -252,6 +252,12 @@ eOSState cRssStreamsMenu::ProcessKey(eKeys Key)
 
   if (state == osUnknown) {
      switch (Key) {
+       case kRed:
+            Skins.Message(mtInfo, tr("Loading configuration file..."));
+            RssItems.Load(RssConfig.configfile);
+            Setup();
+            Skins.Message(mtInfo, NULL);
+            break;
        case kGreen:
             return osBack;
        case kYellow:
