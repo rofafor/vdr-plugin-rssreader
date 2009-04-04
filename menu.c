@@ -19,7 +19,7 @@ cRssItems RssItems;
 
 // --- cRssItem(s) ------------------------------------------------------
 
-cRssItem::cRssItem(void)
+cRssItem::cRssItem()
 { 
   title = url = NULL;
 }
@@ -47,12 +47,25 @@ bool cRssItem::Parse(const char *s)
   return false;
 }
 
+cRssItems::cRssItems()
+:  updated(false)
+{
+}
+
 bool cRssItems::Load(const char *filename)
 {
   if (cConfig<cRssItem>::Load(filename, true)) {
+     updated = true;
      return true;
      }
   return false;
+}
+
+bool cRssItems::Updated()
+{
+  bool result = updated;
+  updated = false;
+  return result;
 }
 
 // --- cRssMenuItem --------------------------------------------------------
@@ -183,6 +196,15 @@ eOSState cRssItemsMenu::ShowDetails(void)
 cRssStreamsMenu::cRssStreamsMenu()
 :cOsdMenu(tr("Select RSS stream"))
 {
+  Setup();
+  SetHelp(NULL, "<<", ">>", NULL);
+}
+
+void cRssStreamsMenu::Setup(void)
+{
+  int current = Current();
+  Clear();
+
   for (cRssItem *rssItem = RssItems.First(); rssItem; rssItem = RssItems.Next(rssItem)) {
       cOsdItem *osdItem = new cOsdItem;
       if (!*rssItem->Url())
@@ -191,7 +213,8 @@ cRssStreamsMenu::cRssStreamsMenu()
       debug("StreamsMenu: '%s' : '%s'", rssItem->Title(), rssItem->Url());
       Add(osdItem);
     }
-  SetHelp(NULL, "<<", ">>", NULL);
+
+  SetCurrent(Get(current));
   Display();
 }
 
@@ -223,6 +246,10 @@ eOSState cRssStreamsMenu::Select(void)
 eOSState cRssStreamsMenu::ProcessKey(eKeys Key)
 {
   eOSState state = cOsdMenu::ProcessKey(Key);
+
+  if (RssItems.Updated())
+     Setup();
+
   if (state == osUnknown) {
      switch (Key) {
        case kGreen:

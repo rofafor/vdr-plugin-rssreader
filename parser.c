@@ -182,41 +182,36 @@ static int XMLCALL UnknownEncodingHandler(void *data, const XML_Char *encoding, 
 
 static inline bool IsItemTag(const char *tag)
 {
-  if (!strncmp(tag, "item", 4) || !strncmp(tag, "entry", 5)) {
+  if (!strncmp(tag, "item", 4) || !strncmp(tag, "entry", 5))
      return true;
-     }
   return false;
 }
 
 static inline bool IsTitleTag(const char *tag)
 {
-  if (!strncmp(tag, "title", 5)) {
+  if (!strncmp(tag, "title", 5))
      return true;
-     }
   return false;
 }
 
 static inline bool IsLinkTag(const char *tag)
 {
-  if (!strncmp(tag, "link", 4)) {
+  if (!strncmp(tag, "link", 4))
      return true;
-     }
   return false;
 }
 
 static inline bool IsDateTag(const char *tag)
 {
-  if (!strncmp(tag, "pub", 3)) {
+  if (!strncmp(tag, "pub", 3))
      return true;
-     }
   return false;
 }
 
 static inline bool IsDescriptionTag(const char *tag)
 {
-  if (!strncmp(tag, "description", 11) || !strncmp(tag, "content", 7)) {
+  if (!strncmp(tag, "description", 11) || !strncmp(tag, "content", 7))
      return true;
-     }
   return false;
 }
 
@@ -244,21 +239,16 @@ static void XMLCALL EndHandler(void *data, const char *el)
   if (nodestack.size() > 0) {
      strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
      // No need to free the node
-     if (IsItemTag(el) && item && *item->GetTitle()) {
+     if (IsItemTag(el) && item && *item->GetTitle())
         Parser.Items.Add(item); // End of the current item
-        }
-     else if (IsTitleTag(el) && IsItemTag(parent)) {
+     else if (IsTitleTag(el) && IsItemTag(parent))
         item->SetTitle(data_string);
-        }
-     else if (IsLinkTag(el) && IsItemTag(parent)) {
+     else if (IsLinkTag(el) && IsItemTag(parent))
         item->SetLink(data_string);
-        }
-     else if (IsDateTag(el) && IsItemTag(parent)) {
+     else if (IsDateTag(el) && IsItemTag(parent))
         item->SetDate(data_string);
-        }
-     else if (IsDescriptionTag(el) && IsItemTag(parent)) {
+     else if (IsDescriptionTag(el) && IsItemTag(parent))
         item->SetDescription(data_string);
-        }
      strcpy(data_string, "");
      }
   depth--;

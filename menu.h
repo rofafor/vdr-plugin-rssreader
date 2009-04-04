@@ -18,7 +18,7 @@ private:
   char *title;
   char *url;
 public:
-  cRssItem(void);
+  cRssItem();
   virtual ~cRssItem();
   bool Parse(const char *s);
   const char *Title(void) { return title; }
@@ -26,8 +26,12 @@ public:
 };
 
 class cRssItems : public cConfig<cRssItem> {
+private:
+  bool updated;
 public:
+  cRssItems();
   virtual bool Load(const char *filename);
+  bool Updated();
 };
 
 extern cRssItems RssItems;
@@ -58,17 +62,19 @@ class cRssItemsMenu: public cOsdMenu {
 private:
   eOSState ShowDetails(void);
 public:
-  cRssItemsMenu(void);
+  cRssItemsMenu();
   virtual eOSState ProcessKey(eKeys Key);
 };
 
 // --- cRssStreamsMenu -----------------------------------------------------
 
 class cRssStreamsMenu: public cOsdMenu {
+private:
+  void Setup(void);
+  eOSState Select(void);
 public:
   cRssStreamsMenu();
   virtual eOSState ProcessKey(eKeys Key);
-  virtual eOSState Select(void);
 };
 
 #endif // __RSSREADER_MENU_H
