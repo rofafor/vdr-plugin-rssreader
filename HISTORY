@@ -135,3 +135,8 @@ VDR Plugin 'rssreader' Revision History
   ISO-8859-2, ISO-8859-15 and CP1250.
 - Updated "example/rssreader.conf".
 - Added a new "LOAD" SVDRP command.
+
+2009-xx-xx: Version 1.6.4
+
+- Fixed RSS parsing.
+- Updated Italian translation (Thanks to Diego Pierotto).
