@@ -136,7 +136,8 @@ VDR Plugin 'rssreader' Revision History
 - Updated "example/rssreader.conf".
 - Added a new "LOAD" SVDRP command.
 
-2009-xx-xx: Version 1.6.4
+2009-04-14: Version 1.6.4
 
 - Fixed RSS parsing.
 - Updated Italian translation (Thanks to Diego Pierotto).
+- Fixed a crash bug in the SVDRP help.

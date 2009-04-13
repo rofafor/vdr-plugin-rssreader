@@ -141,7 +141,8 @@ const char **cPluginRssReader::SVDRPHelpPages(void)
 {
   static const char *HelpPages[] = {
     "LOAD\n"
-    "    Load RSS feed configuration file."
+    "    Load RSS feed configuration file.",
+    NULL
     };
   return HelpPages;
 }
