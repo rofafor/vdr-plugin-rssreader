@@ -104,10 +104,10 @@ static char *htmlcharconv(char *str, struct conv_table *conv, unsigned int elem)
      for (unsigned int i = 0; i < elem; ++i) {
         char *ptr = strstr(str, conv[i].from);
         while (ptr) {
-           int of = ptr - str;
-           int l  = strlen(str);
-           int l1 = strlen(conv[i].from);
-           int l2 = strlen(conv[i].to);
+           long of = ptr - str;
+           size_t l  = strlen(str);
+           size_t l1 = strlen(conv[i].from);
+           size_t l2 = strlen(conv[i].to);
            if (l2 > l1) {
               error("htmlcharconv(): cannot reallocate string");
               return str;

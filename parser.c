@@ -377,7 +377,7 @@ int cParser::DownloadAndParse(const char *url)
      XML_SetCharacterDataHandler(p, DataHandler);
      XML_SetUnknownEncodingHandler(p, UnknownEncodingHandler, NULL);
 
-     if (XML_Parse(p, data.memory, data.size, 1) == XML_STATUS_ERROR) {
+     if (XML_Parse(p, data.memory, (int)data.size, 1) == XML_STATUS_ERROR) {
         // Cleanup curl stuff
         curl_easy_cleanup(curl_handle);
         // Free allocated memory

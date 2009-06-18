@@ -34,7 +34,7 @@ bool cRssItem::Parse(const char *s)
 {
   const char *p = strchr(s, ':');
   if (p) {
-     int l = p - s;
+     long l = p - s;
      if (l > 0) {
         title = MALLOC(char, l + 1);
         stripspace(strn0cpy(title, s, l + 1));
