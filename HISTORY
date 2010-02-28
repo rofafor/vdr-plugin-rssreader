@@ -142,6 +142,7 @@ VDR Plugin 'rssreader' Revision History
 - Updated Italian translation (Thanks to Diego Pierotto).
 - Fixed a crash bug in the SVDRP help.
 
-2009-xx-xx: Version 1.6.5
+2010-xx-xx: Version 1.7.0
 
+- Updated for vdr-1.7.13.
 - Added Estonian translation (Thanks to Arthur Konovalov).
