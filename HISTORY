@@ -150,3 +150,4 @@ VDR Plugin 'rssreader' Revision History
 2010-xx-xx: Version 1.7.1
 
 - Added Makefile depencency for objects.
+- Added support for LDFLAGS.
