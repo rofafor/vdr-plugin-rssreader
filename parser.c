@@ -228,13 +228,14 @@ static void XMLCALL StartHandler(void *data, const char *el, const char **attr)
      item = tmpitem;
      item->Clear();
      }
+  strcpy(data_string, "");
   depth++;
 }
 
 static void XMLCALL EndHandler(void *data, const char *el)
 {
   char parent[SHORT_TEXT_LEN];
-  
+
   nodestack.pop();
   if (nodestack.size() > 0) {
      strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
@@ -249,7 +250,6 @@ static void XMLCALL EndHandler(void *data, const char *el)
         item->SetDate(data_string);
      else if (IsDescriptionTag(el) && IsItemTag(parent))
         item->SetDescription(data_string);
-     strcpy(data_string, "");
      }
   depth--;
 }
@@ -257,7 +257,7 @@ static void XMLCALL EndHandler(void *data, const char *el)
 static void DataHandler(void *user_data, const XML_Char *s, int len)
 {
   // Only until the maximum size of the buffer
-  if (strlen(data_string) + len <= LONG_TEXT_LEN)
+  if ((strlen(data_string) + len) <= LONG_TEXT_LEN)
      strncat(data_string, s, len);
 }
 
@@ -319,16 +319,19 @@ int cParser::DownloadAndParse(const char *url)
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 
   // Set maximum file size to get (bytes)
-  curl_easy_setopt(curl_handle, CURLOPT_MAXFILESIZE, 1048576);
+  curl_easy_setopt(curl_handle, CURLOPT_MAXFILESIZE, 1048576L);
 
   // No progress meter
-  curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1);
+  curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 
   // No signaling
-  curl_easy_setopt(curl_handle, CURLOPT_NOSIGNAL, 1);
+  curl_easy_setopt(curl_handle, CURLOPT_NOSIGNAL, 1L);
+
+  // Follow location
+  curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
 
   // Set timeout to 30 seconds
-  curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, 30);
+  curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, 30L);
 
   // Pass our 'data' struct to the callback function
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&data);

@@ -147,7 +147,10 @@ VDR Plugin 'rssreader' Revision History
 - Updated for vdr-1.7.13.
 - Added Estonian translation (Thanks to Arthur Konovalov).
 
-2010-xx-xx: Version 1.7.1
+2010-12-27: Version 1.7.1
 
 - Added Makefile depencency for objects.
 - Added support for LDFLAGS.
+- Updated "example/rssreader.conf".
+- Added URL redirection support.
+- Fixed RSS parsing.

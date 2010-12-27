@@ -1,7 +1,6 @@
 #
 # Makefile for RSS Reader plugin
 #
-# $Id$
 
 # Debugging on/off 
 #RSSREADER_DEBUG = 1
@@ -35,7 +34,7 @@ TMPDIR = /tmp
 
 ### Libraries
 
-LIBS = -lexpat -lcurl
+LIBS = -lexpat $(shell curl-config --libs)
 
 ### Make sure that necessary options are included:
 
@@ -98,7 +97,7 @@ I18Npot   = $(PODIR)/$(PLUGIN).pot
 	msgfmt -c -o $@ $<
 
 $(I18Npot): $(wildcard *.c)
-	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address='Rolf Ahrenberg' -o $@ $^
+	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address='<see README>' -o $@ $^
 
 %.po: $(I18Npot)
 	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
