@@ -23,7 +23,7 @@ VERSION = $(shell grep 'static const char VERSION\[\] *=' $(PLUGIN).c | awk '{ p
 ### The C++ compiler and options:
 
 CXX      ?= g++
-CXXFLAGS ?= -fPIC -g -O2 -Wall -Wextra -Wswitch-default -Wfloat-equal -Wundef -Wpointer-arith -Wconversion -Wcast-align -Wredundant-decls -Wno-unused-parameter -Woverloaded-virtual -Wno-parentheses
+CXXFLAGS ?= -fPIC -g -O3 -Wall -Wextra -Wswitch-default -Wfloat-equal -Wundef -Wpointer-arith -Wconversion -Wcast-align -Wredundant-decls -Wno-unused-parameter -Woverloaded-virtual -Wno-parentheses
 LDFLAGS  ?= -Wl,--as-needed
 
 ### The directory environment:
@@ -63,6 +63,9 @@ ifdef RSSREADER_DEBUG
 DEFINES += -DDEBUG
 endif
 
+.PHONY: all all-redirect
+all-redirect: all
+
 ### The object files (add further files here):
 
 OBJS = rssreader.o parser.o menu.o config.o tools.o
@@ -97,7 +100,7 @@ I18Npot   = $(PODIR)/$(PLUGIN).pot
 	msgfmt -c -o $@ $<
 
 $(I18Npot): $(wildcard *.c)
-	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address='<see README>' -o $@ $^
+	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --package-name='vdr-$(PLUGIN)' --package-version='$(VERSION)' --msgid-bugs-address='<see README>' -o $@ $^
 
 %.po: $(I18Npot)
 	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
@@ -119,7 +122,7 @@ ifndef RSSREADER_DEBUG
 endif
 	@cp --remove-destination $@ $(LIBDIR)/$@.$(APIVERSION)
 
-dist: clean
+dist: $(I18Npo) clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)
 	@mkdir $(TMPDIR)/$(ARCHIVE)
 	@cp -a * $(TMPDIR)/$(ARCHIVE)
