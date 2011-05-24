@@ -155,6 +155,8 @@ VDR Plugin 'rssreader' Revision History
 - Added URL redirection support.
 - Fixed RSS parsing.
 
-2011-03-13: Version 1.7.2
+2011-05-25: Version 1.7.2
 
 - Updated Makefile.
+- Updated "example/rssreader.conf".
+- Modified menu titles.

@@ -50,7 +50,7 @@ private:
   cString text;
   cString link;
 public:
-  cRssMenuItem(const char *Date, const char *Title, const char *Link, const char *Description);
+  cRssMenuItem(const char *Stream, const char *Date, const char *Title, const char *Link, const char *Description);
   virtual ~cRssMenuItem();
   virtual void Display(void);
   virtual eOSState ProcessKey(eKeys Key);
@@ -60,9 +60,10 @@ public:
 
 class cRssItemsMenu: public cOsdMenu {
 private:
+  cString stream;
   eOSState ShowDetails(void);
 public:
-  cRssItemsMenu();
+  cRssItemsMenu(const char *Stream);
   virtual eOSState ProcessKey(eKeys Key);
 };
 

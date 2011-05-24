@@ -70,8 +70,8 @@ bool cRssItems::Updated()
 
 // --- cRssMenuItem --------------------------------------------------------
 
-cRssMenuItem::cRssMenuItem(const char *Date, const char *Title, const char *Link, const char *Description)
-:cOsdMenu(tr("RSS item"))
+cRssMenuItem::cRssMenuItem(const char *Stream, const char *Date, const char *Title, const char *Link, const char *Description)
+:cOsdMenu(*cString::sprintf("%s - %s", tr("RSS item"), Stream))
 {
   text = cString::sprintf("\n%s%s%s%s%s%s%s",
            *Date         ? strdup(Date)          : RssConfig.hideelem ? "" : tr("<no date available>"),
@@ -155,8 +155,9 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
 
 // --- cRssItemsMenu --------------------------------------------------------
 
-cRssItemsMenu::cRssItemsMenu()
-:cOsdMenu(tr("Select RSS item"))
+cRssItemsMenu::cRssItemsMenu(const char *Stream)
+:cOsdMenu(*cString::sprintf("%s - %s", tr("Select RSS item"), Stream)),
+ stream(Stream)
 {
   for (cItem *rssItem = Parser.Items.First(); rssItem; rssItem = Parser.Items.Next(rssItem))
      Add(new cOsdItem(rssItem->GetTitle()));
@@ -186,7 +187,7 @@ eOSState cRssItemsMenu::ShowDetails(void)
 {
   cItem *rssItem = (cItem *)Parser.Items.Get(Current());
   if (rssItem) {
-     return AddSubMenu(new cRssMenuItem(rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
+     return AddSubMenu(new cRssMenuItem(*stream, rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
      }
   return osContinue;
 }
@@ -227,7 +228,7 @@ eOSState cRssStreamsMenu::Select(void)
      //Skins.Message(mtInfo, tr("Loading RSS stream..."));
      switch (Parser.DownloadAndParse(rssItem->Url())) {
        case (cParser::RSS_PARSING_OK):
-            return AddSubMenu(new cRssItemsMenu);
+            return AddSubMenu(new cRssItemsMenu(rssItem->Title()));
        case (cParser::RSS_PARSING_ERROR):
             Skins.Message(mtError, tr("Can't parse RSS stream!"));
             return osContinue;
