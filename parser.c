@@ -276,6 +276,7 @@ static size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *da
 }
 
 cParser::cParser()
+: Items()
 {
   data.memory = NULL;
   data.size = 0;

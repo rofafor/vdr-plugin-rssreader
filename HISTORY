@@ -160,3 +160,7 @@ VDR Plugin 'rssreader' Revision History
 - Updated Makefile.
 - Updated "example/rssreader.conf".
 - Modified menu titles.
+
+2011-xx-xx: Version 1.7.3
+
+- Added cppcheck target into Makefile.

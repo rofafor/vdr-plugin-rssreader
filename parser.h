@@ -40,6 +40,8 @@ public:
 class cItems : public cList<cItem> {
 private:
   cItem *current;
+public:
+  cItems(): current(NULL) {}
 };
 
 // --- cParser ----------------------------------------------------------
@@ -53,12 +55,12 @@ class cParser {
 private:
   struct MemoryStruct data;
 public:
-  enum {
+  enum eRssError {
     RSS_PARSING_OK     =  0,
     RSS_UNKNOWN_ERROR  = -1,
     RSS_DOWNLOAD_ERROR = -2,
     RSS_PARSING_ERROR  = -3
-  } eRssError;
+  };
   cParser();
   ~cParser();
   int DownloadAndParse(const char *url);
