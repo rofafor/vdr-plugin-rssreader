@@ -164,3 +164,4 @@ VDR Plugin 'rssreader' Revision History
 2011-xx-xx: Version 1.7.3
 
 - Added cppcheck target into Makefile.
+- Cleaned up CURL includes.
