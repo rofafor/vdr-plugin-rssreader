@@ -283,11 +283,16 @@ cParser::cParser()
 
 cParser::~cParser()
 {
-  if (data.memory) {
+  ResetMemory();
+}
+
+void cParser::ResetMemory(void)
+{
+  // free any allocated memory
+  if (data.memory)
      free(data.memory);
-     data.memory = NULL;
-     data.size = 0;
-     }
+  data.memory = NULL;
+  data.size = 0;
 }
 
 int cParser::DownloadAndParse(const char *url)
@@ -297,10 +302,7 @@ int cParser::DownloadAndParse(const char *url)
   // Clear Items list and initialize depth
   Items.Clear();
   depth = 0;
-  if (data.memory)
-     free(data.memory);
-  data.memory = NULL;
-  data.size = 0;
+  ResetMemory();
 
   // Init the curl session
   curl_global_init(CURL_GLOBAL_ALL);
@@ -330,8 +332,8 @@ int cParser::DownloadAndParse(const char *url)
   // Follow location
   curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
 
-  // Set timeout to 30 seconds
-  curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, 30L);
+  // Set timeout to 15 seconds
+  curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, 15L);
 
   // Pass our 'data' struct to the callback function
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&data);
@@ -343,12 +345,7 @@ int cParser::DownloadAndParse(const char *url)
   if (curl_easy_perform(curl_handle) != 0) {
      // Cleanup curl stuff
      curl_easy_cleanup(curl_handle);
-     // Free allocated memory
-     if (data.memory) {
-        free(data.memory);
-        data.memory = NULL;
-        data.size = 0;
-        }
+     ResetMemory();
      error("cParser::DownloadAndParse(): couldn't download the stream");
      return (RSS_DOWNLOAD_ERROR);
      }
@@ -358,7 +355,8 @@ int cParser::DownloadAndParse(const char *url)
      // Only for debug dump
      FILE *fp = fopen("/tmp/rssreader.vdr", "w");
      if (fp) {
-        fwrite(data.memory, 1, data.size, fp);
+        if (fwrite(data.memory, 1, data.size, fp) != data.size)
+           error("cParser::DownloadAndParse(): couldn't write debug dump");
         fclose(fp);
         }
 #endif
@@ -367,12 +365,7 @@ int cParser::DownloadAndParse(const char *url)
      if (!p) {
         // Cleanup curl stuff
         curl_easy_cleanup(curl_handle);
-        // Free allocated memory
-        if (data.memory) {
-           free(data.memory);
-           data.memory = NULL;
-           data.size = 0;
-           }
+        ResetMemory();
         error("cParser::DownloadAndParse(): couldn't allocate memory for parser");
         return (RSS_UNKNOWN_ERROR);
         }
@@ -380,15 +373,10 @@ int cParser::DownloadAndParse(const char *url)
      XML_SetCharacterDataHandler(p, DataHandler);
      XML_SetUnknownEncodingHandler(p, UnknownEncodingHandler, NULL);
 
-     if (XML_Parse(p, data.memory, (int)data.size, 1) == XML_STATUS_ERROR) {
+     if (XML_Parse(p, data.memory, (int)data.size, XML_TRUE) == XML_STATUS_ERROR) {
         // Cleanup curl stuff
         curl_easy_cleanup(curl_handle);
-        // Free allocated memory
-        if (data.memory) {
-           free(data.memory);
-           data.memory = NULL;
-           data.size = 0;
-           }
+        ResetMemory();
         error("cParser::DownloadAndParse(): Parse error at line %ld:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
         return (RSS_PARSING_ERROR);
         }
@@ -396,12 +384,7 @@ int cParser::DownloadAndParse(const char *url)
 
   // Cleanup curl stuff
   curl_easy_cleanup(curl_handle);
-  // Free allocated memory
-  if (data.memory) {
-     free(data.memory);
-     data.memory = NULL;
-     data.size = 0;
-     }
+  ResetMemory();
 
   return (RSS_PARSING_OK);
 }

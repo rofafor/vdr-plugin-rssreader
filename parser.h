@@ -54,6 +54,7 @@ struct MemoryStruct {
 class cParser {
 private:
   struct MemoryStruct data;
+  void ResetMemory(void);
 public:
   enum eRssError {
     RSS_PARSING_OK     =  0,
