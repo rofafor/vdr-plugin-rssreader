@@ -28,9 +28,9 @@ LDFLAGS  ?= -Wl,--as-needed
 
 ### The directory environment:
 
-VDRDIR = ../../..
-LIBDIR = ../../lib
-TMPDIR = /tmp
+VDRDIR ?= ../../..
+LIBDIR ?= ../../lib
+TMPDIR ?= /tmp
 
 ### Libraries
 
