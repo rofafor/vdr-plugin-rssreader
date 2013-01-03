@@ -40,10 +40,6 @@ export CXXFLAGS = $(call PKGCFG,cxxflags)
 
 APIVERSION = $(call PKGCFG,apiversion)
 
-### Libraries
-
-LIBS = -lexpat $(shell curl-config --libs)
-
 ### Allow user defined options to overwrite defaults:
 
 -include $(PLGCFG)
@@ -56,6 +52,10 @@ PACKAGE = vdr-$(ARCHIVE)
 ### The name of the shared object file:
 
 SOFILE = libvdr-$(PLUGIN).so
+
+### Libraries
+
+LIBS = $(shell pkg-config --libs expat) $(shell curl-config --libs)
 
 ### Includes and Defines (add further entries here):
 
