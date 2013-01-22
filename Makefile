@@ -147,5 +147,6 @@ clean:
 	@-rm -f $(PODIR)/*.mo $(PODIR)/*.pot
 	@-rm -f $(OBJS) $(DEPFILE) *.so *.tgz core* *~
 
-cppcheck: $(OBJS)
+.PHONY: cppcheck
+cppcheck:
 	@cppcheck --enable=all -v -f $(OBJS:%.o=%.c)
