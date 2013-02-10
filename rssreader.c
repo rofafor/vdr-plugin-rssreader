@@ -12,8 +12,8 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(APIVERSNUM) && APIVERSNUM < 10736
-#error "VDR-1.7.36 API version or greater is required!"
+#if defined(APIVERSNUM) && APIVERSNUM < 10737
+#error "VDR-1.7.37 API version or greater is required!"
 #endif
 
 #ifndef GITVERSION
