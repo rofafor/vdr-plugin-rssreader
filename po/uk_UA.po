@@ -1,0 +1,92 @@
+# VDR plugin language source file.
+# Copyright (C) 2007 Rolf Ahrenberg
+# This file is distributed under the same license as the rssreader package.
+# Yarema aka Knedlyk
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vdr-rssreader 1.7.3\n"
+"Report-Msgid-Bugs-To: <see README>\n"
+"POT-Creation-Date: 2010-12-27 12:27+0200\n"
+"PO-Revision-Date: 2010-12-27 12:27+0200\n"
+"Last-Translator: Yarema aka Knedlyk <yupadmin@gmail.com>\n"
+"Language-Team: Ukrainian <vdr@linuxtv.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "RSS item"
+msgstr "Потік RSS"
+
+msgid "<no date available>"
+msgstr "<немає доступних даних>"
+
+msgid "<no title available>"
+msgstr "<немає доступних заголовків>"
+
+msgid "<no description available>"
+msgstr "<немає доступного опису>"
+
+msgid "<no link available>"
+msgstr "<немає доступного посилання>"
+
+msgid "Select RSS item"
+msgstr "Вибрати пункт RSS"
+
+msgid "Select RSS stream"
+msgstr "Вибрати потік RSS"
+
+msgid "Button$Load"
+msgstr "Завантаження"
+
+msgid "Can't parse RSS stream!"
+msgstr "Не можливо обробити потік RSS!"
+
+msgid "Can't download RSS stream!"
+msgstr "Неможливо звантажити потік RSS!"
+
+msgid "Unknown error!"
+msgstr "Невідома помилка!"
+
+msgid "Loading configuration file..."
+msgstr "Завантаження файлу налаштування..."
+
+msgid "RSS Reader for OSD"
+msgstr "Читалка RSS на екрані"
+
+msgid "RSS Reader"
+msgstr "Читалка RSS"
+
+msgid "Hide main menu entry"
+msgstr "Сховати в головному меню"
+
+msgid "Define whether the main manu entry is hidden."
+msgstr "Вказати, чи ховати додаток в головному меню."
+
+msgid "Hide non-existent elements"
+msgstr "Приховати неіснуючі елементи"
+
+msgid "Define whether all non-existent RSS stream elements are hidden."
+msgstr "Вказати, чи ховати всі неіснуючі елементи потоку RSS."
+
+msgid "Use HTTP proxy server"
+msgstr "Використати HTTP проксі-сервер"
+
+msgid "Define whether a HTTP proxy server is used."
+msgstr "Вказати, чи використовувати HTTP проксі-сервер."
+
+msgid "HTTP proxy server"
+msgstr "HTTP проксі-сервер"
+
+msgid ""
+"Define an address and port of the HTTP proxy server:\n"
+"\n"
+"\"proxy.domain.com:8000\""
+msgstr ""
+"Вказати адрес і порт HTTP проксі-сервера:\n"
+"\n"
+"\"proxy.domain.com:8000\""
+
+msgid "Help"
+msgstr "Допомога"
