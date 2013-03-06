@@ -170,3 +170,5 @@ VDR Plugin 'rssreader' Revision History
 2013-xx-xx: Version 1.7.4
 
 - Added Ukrainian translation (Thanks to Yarema aka Knedlyk).
+- Updated "example/rssreader.conf".
+- Updated the character conversion table.

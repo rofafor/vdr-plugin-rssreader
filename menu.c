@@ -185,7 +185,7 @@ eOSState cRssItemsMenu::ProcessKey(eKeys Key)
 
 eOSState cRssItemsMenu::ShowDetails(void)
 {
-  cItem *rssItem = (cItem *)Parser.Items.Get(Current());
+  cItem *rssItem = reinterpret_cast<cItem *>(Parser.Items.Get(Current()));
   if (rssItem) {
      return AddSubMenu(new cRssMenuItem(*stream, rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
      }
@@ -221,7 +221,7 @@ void cRssStreamsMenu::Setup(void)
 
 eOSState cRssStreamsMenu::Select(void)
 {
-  cRssItem *rssItem = (cRssItem *)RssItems.Get(Current());
+  cRssItem *rssItem = reinterpret_cast<cRssItem *>(RssItems.Get(Current()));
   if (rssItem) {
      debug("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
      // the following message generates an annoying slowdown 

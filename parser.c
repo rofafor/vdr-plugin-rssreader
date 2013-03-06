@@ -233,10 +233,10 @@ static void XMLCALL StartHandler(void *data, const char *el, const char **attr)
 
 static void XMLCALL EndHandler(void *data, const char *el)
 {
-  char parent[SHORT_TEXT_LEN];
-
   nodestack.pop();
-  if (nodestack.size() > 0) {
+  if (!nodestack.empty()) {
+     char parent[SHORT_TEXT_LEN];
+
      strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
      // No need to free the node
      if (IsItemTag(el) && item && *item->GetTitle())
