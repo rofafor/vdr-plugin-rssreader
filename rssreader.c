@@ -166,6 +166,7 @@ cString cPluginRssReader::SVDRPCommand(const char *Command, const char *Option, 
 cPluginRssReaderSetup::cPluginRssReaderSetup(void)
 : data(RssConfig)
 {
+  SetMenuCategory(mcSetupPlugins);
   Setup();
   SetHelp(tr("Button$Load"), NULL, NULL, NULL);
 }
