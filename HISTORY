@@ -1,5 +1,6 @@
+=======================================
 VDR Plugin 'rssreader' Revision History
----------------------------------
+=======================================
 
 2005-12-18: Version 0.0.1
 
@@ -142,6 +143,11 @@ VDR Plugin 'rssreader' Revision History
 - Updated Italian translation (Thanks to Diego Pierotto).
 - Fixed a crash bug in the SVDRP help.
 
+
+=======================================
+VDR Plugin 'rssreader' Revision History
+=======================================
+
 2010-03-05: Version 1.7.0
 
 - Updated for vdr-1.7.13.
@@ -167,8 +173,14 @@ VDR Plugin 'rssreader' Revision History
 
 - Updated for vdr-1.7.37.
 
-2013-xx-xx: Version 1.7.4
 
+=======================================
+VDR Plugin 'rssreader' Revision History
+=======================================
+
+2013-04-01: Version 2.0.0
+
+- Updated for vdr-2.0.0.
 - Added Ukrainian translation (Thanks to Yarema aka Knedlyk).
 - Updated "example/rssreader.conf".
 - Updated the character conversion table.

@@ -12,15 +12,15 @@
 #include "config.h"
 #include "common.h"
 
-#if defined(APIVERSNUM) && APIVERSNUM < 10737
-#error "VDR-1.7.37 API version or greater is required!"
+#if defined(APIVERSNUM) && APIVERSNUM < 20000
+#error "VDR-2.0.0 API version or greater is required!"
 #endif
 
 #ifndef GITVERSION
 #define GITVERSION ""
 #endif
 
-static const char VERSION[]       = "1.7.4" GITVERSION;
+static const char VERSION[]       = "2.0.0" GITVERSION;
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
