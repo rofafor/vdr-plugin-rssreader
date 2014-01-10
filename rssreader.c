@@ -20,7 +20,7 @@
 #define GITVERSION ""
 #endif
 
-static const char VERSION[]       = "2.0.0" GITVERSION;
+static const char VERSION[]       = "2.0.1" GITVERSION;
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
