@@ -188,3 +188,12 @@ VDR Plugin 'rssreader' Revision History
 2014-01-10: Version 2.0.1
 
 - Updated Makefile.
+
+
+=======================================
+VDR Plugin 'rssreader' Revision History
+=======================================
+
+2015-02-19: Version 2.2.0
+
+- Updated for vdr-2.2.0.
