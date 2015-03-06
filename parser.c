@@ -9,8 +9,10 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <vdr/config.h>
+#include <vdr/tools.h>
 #include "common.h"
 #include "config.h"
+#include "log.h"
 #include "tools.h"
 #include "parser.h"
 
@@ -337,7 +339,7 @@ int cParser::DownloadAndParse(const char *urlP)
   curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&dataM);
 
   // Some servers don't like requests that are made without a user-agent field
-  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, RSSREADER_USERAGENT);
+  curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, *cString::sprintf("vdr-%s/%s", PLUGIN_NAME_I18N, VERSION));
 
   // Get it!
   if (curl_easy_perform(curl_handle) != 0) {

@@ -9,6 +9,7 @@
 #include <vdr/status.h>
 #include "parser.h"
 #include "config.h"
+#include "log.h"
 #include "menu.h"
 #include "tools.h"
 #include "common.h"
@@ -99,7 +100,7 @@ cRssMenuItem::~cRssMenuItem()
 void cRssMenuItem::Display(void)
 {
   cOsdMenu::Display();
-  debug("cRssMenuItem::Display(): '%s'\n", *textM);
+  debug1("cRssMenuItem::Display(): '%s'\n", *textM);
   DisplayMenu()->SetText(textM, false);
   cStatus::MsgOsdTextItem(textM);
 }
@@ -210,7 +211,7 @@ void cRssStreamsMenu::Setup(void)
       if (!*rssItem->Url())
          osdItem->SetSelectable(false);
       osdItem->SetText(rssItem->Title());
-      debug("StreamsMenu: '%s' : '%s'", rssItem->Title(), rssItem->Url());
+      debug1("StreamsMenu: '%s' : '%s'", rssItem->Title(), rssItem->Url());
       Add(osdItem);
     }
 
@@ -222,7 +223,7 @@ eOSState cRssStreamsMenu::Select(void)
 {
   cRssItem *rssItem = reinterpret_cast<cRssItem *>(RssItems.Get(Current()));
   if (rssItem) {
-     debug("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
+     debug1("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
      // the following message generates an annoying slowdown 
      //Skins.Message(mtInfo, tr("Loading RSS stream..."));
      switch (Parser.DownloadAndParse(rssItem->Url())) {

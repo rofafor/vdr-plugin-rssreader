@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "common.h"
+#include "log.h"
 #include "menu.h"
 #include "setup.h"
 
@@ -21,7 +22,7 @@
 #define GITVERSION ""
 #endif
 
-static const char VERSION[]       = "2.2.1" GITVERSION;
+       const char VERSION[]       = "2.2.1" GITVERSION;
 static const char DESCRIPTION[]   = trNOOP("RSS Reader for OSD");
 static const char MAINMENUENTRY[] = trNOOP("RSS Reader");
 
@@ -44,10 +45,10 @@ public:
   virtual const char *MainMenuEntry(void) { return (RssReaderConfig.IsHideMenu() ? NULL : tr(MAINMENUENTRY)); }
   virtual cOsdObject *MainMenuAction(void);
   virtual cMenuSetupPage *SetupMenu(void);
-  virtual bool SetupParse(const char *Name, const char *Value);
-  virtual bool Service(const char *Id, void *Data = NULL);
+  virtual bool SetupParse(const char *nameP, const char *valueP);
+  virtual bool Service(const char *idP, void *dataP = NULL);
   virtual const char **SVDRPHelpPages(void);
-  virtual cString SVDRPCommand(const char *Command, const char *Option, int &ReplyCode);
+  virtual cString SVDRPCommand(const char *commandP, const char *optionP, int &replyCodeP);
   };
 
 cPluginRssReader::cPluginRssReader(void)
@@ -65,12 +66,28 @@ cPluginRssReader::~cPluginRssReader()
 const char *cPluginRssReader::CommandLineHelp(void)
 {
   // Return a string that describes all known command line options.
-  return NULL;
+  return "  -t <mode>, --trace=<mode>  set the tracing mode\n";
 }
 
 bool cPluginRssReader::ProcessArgs(int argc, char *argv[])
 {
   // Implement command line argument processing here if applicable.
+  static const struct option long_options[] = {
+    { "trace",    required_argument, NULL, 't' },
+    { NULL,       no_argument,       NULL,  0  }
+    };
+
+  cString server;
+  int c;
+  while ((c = getopt_long(argc, argv, "t:", long_options, NULL)) != -1) {
+    switch (c) {
+      case 't':
+           RssReaderConfig.SetTraceMode(strtol(optarg, NULL, 0));
+           break;
+      default:
+           return false;
+      }
+    }
   return true;
 }
 
@@ -111,24 +128,24 @@ cMenuSetupPage *cPluginRssReader::SetupMenu(void)
   return new cPluginRssReaderSetup();
 }
 
-bool cPluginRssReader::SetupParse(const char *Name, const char *Value)
+bool cPluginRssReader::SetupParse(const char *nameP, const char *valueP)
 {
   // Parse your own setup parameters and store their values.
-  if (!strcasecmp(Name, "HideMenu"))
-     RssReaderConfig.SetHideMenu(atoi(Value));
-  else if (!strcasecmp(Name, "HideElem"))
-     RssReaderConfig.SetHideElem(atoi(Value));
-  else if (!strcasecmp(Name, "UseProxy"))
-     RssReaderConfig.SetUseProxy(atoi(Value));
-  else if (!strcasecmp(Name, "HttpProxy"))
-     RssReaderConfig.SetHttpProxy(Value);
+  if (!strcasecmp(nameP, "HideMenu"))
+     RssReaderConfig.SetHideMenu(atoi(valueP));
+  else if (!strcasecmp(nameP, "HideElem"))
+     RssReaderConfig.SetHideElem(atoi(valueP));
+  else if (!strcasecmp(nameP, "UseProxy"))
+     RssReaderConfig.SetUseProxy(atoi(valueP));
+  else if (!strcasecmp(nameP, "HttpProxy"))
+     RssReaderConfig.SetHttpProxy(valueP);
   else
      return false;
 
   return true;
 }
 
-bool cPluginRssReader::Service(const char *Id, void *Data)
+bool cPluginRssReader::Service(const char *idP, void *dataP)
 {
   // Handle custom service requests from other plugins
   return false;
@@ -139,19 +156,26 @@ const char **cPluginRssReader::SVDRPHelpPages(void)
   static const char *HelpPages[] = {
     "LOAD\n"
     "    Load RSS feed configuration file.",
+    "TRAC [ <mode> ]\n"
+    "    Gets and/or sets used tracing mode.\n",
     NULL
     };
   return HelpPages;
 }
 
-cString cPluginRssReader::SVDRPCommand(const char *Command, const char *Option, int &ReplyCode)
+cString cPluginRssReader::SVDRPCommand(const char *commandP, const char *optionP, int &replyCodeP)
 {
-  if (strcasecmp(Command, "LOAD") == 0) {
+  if (strcasecmp(commandP, "LOAD") == 0) {
      if (!RssItems.Load(RssReaderConfig.GetConfigFile())) {
-        ReplyCode = 550; // Requested action not taken
+        replyCodeP = 550; // Requested action not taken
         return cString("Configuration file not found!");
         }
      return cString("Configuration file loaded");
+     }
+  else if (strcasecmp(commandP, "TRAC") == 0) {
+     if (optionP && *optionP)
+        RssReaderConfig.SetTraceMode(strtol(optionP, NULL, 0));
+     return cString::sprintf("Tracing mode: 0x%04X\n", RssReaderConfig.GetTraceMode());
      }
   return NULL;
 }

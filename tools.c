@@ -5,6 +5,7 @@
  *
  */
 
+#include "log.h"
 #include "tools.h"
 #include "common.h"
 
