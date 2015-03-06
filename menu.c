@@ -76,10 +76,10 @@ cRssMenuItem::cRssMenuItem(const char *streamP, const char *dateP, const char *t
   linkM(linkP)
 {
   textM = cString::sprintf("\n%s%s%s%s%s%s%s",
-                           *dateP ? strdup(dateP) : RssConfig.hideElemM ? "" : tr("<no date available>"), (*dateP || !RssConfig.hideElemM) ? "\n\n" : "",
-                           *titleP ? strdup(titleP) : RssConfig.hideElemM ? "" : tr("<no title available>"), (*titleP || !RssConfig.hideElemM) ? "\n\n" : "",
-                           *descriptionP ? strdup(descriptionP) : RssConfig.hideElemM ? "" : tr("<no description available>"), (*descriptionP || !RssConfig.hideElemM) ? "\n\n" : "",
-                           *linkP ? strdup(linkP) : RssConfig.hideElemM ? "" : tr("<no link available>")
+                           *dateP ? strdup(dateP) : RssReaderConfig.IsHideElem() ? "" : tr("<no date available>"), (*dateP || !RssReaderConfig.IsHideElem()) ? "\n\n" : "",
+                           *titleP ? strdup(titleP) : RssReaderConfig.IsHideElem() ? "" : tr("<no title available>"), (*titleP || !RssReaderConfig.IsHideElem()) ? "\n\n" : "",
+                           *descriptionP ? strdup(descriptionP) : RssReaderConfig.IsHideElem() ? "" : tr("<no description available>"), (*descriptionP || !RssReaderConfig.IsHideElem()) ? "\n\n" : "",
+                           *linkP ? strdup(linkP) : RssReaderConfig.IsHideElem() ? "" : tr("<no link available>")
                           );
   if (isimage(*linkM))
      typeM = TYPE_IMAGE;
@@ -254,7 +254,7 @@ eOSState cRssStreamsMenu::ProcessKey(eKeys keyP)
      switch (keyP) {
        case kRed:
             Skins.Message(mtInfo, tr("Loading configuration file..."));
-            RssItems.Load(RssConfig.configFileM);
+            RssItems.Load(RssReaderConfig.GetConfigFile());
             Setup();
             Skins.Message(mtInfo, NULL);
             break;

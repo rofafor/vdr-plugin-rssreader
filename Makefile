@@ -77,7 +77,7 @@ all-redirect: all
 
 ### The object files (add further files here):
 
-OBJS = rssreader.o parser.o menu.o config.o tools.o
+OBJS = rssreader.o parser.o menu.o config.o setup.o tools.o
 
 ### The main target:
 

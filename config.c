@@ -9,11 +9,24 @@
 #include "config.h"
 #include "common.h"
 
-cRssReaderConfig RssConfig;
+cRssReaderConfig RssReaderConfig;
 
 cRssReaderConfig::cRssReaderConfig(void)
-: hideMenuM(0), hideElemM(0), useProxyM(0)
+: traceModeM(eTraceModeNormal),
+  hideMenuM(0),
+  hideElemM(0),
+  useProxyM(0)
 {
   strn0cpy(httpProxyM, "127.0.0.1:8000", sizeof(httpProxyM));
-  strn0cpy(configFileM, "/etc/vdr/plugins/rssreader/" RSSREADER_CONF, sizeof(configFileM));
+  strn0cpy(configFileM, RSSREADER_CONF, sizeof(configFileM));
+}
+
+void cRssReaderConfig::SetHttpProxy(const char *strP)
+{
+  strn0cpy(httpProxyM, strP, sizeof(httpProxyM));
+}
+
+void cRssReaderConfig::SetConfigFile(const char *strP)
+{
+  strn0cpy(configFileM, strP, sizeof(configFileM));
 }

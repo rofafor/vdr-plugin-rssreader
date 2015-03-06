@@ -310,9 +310,9 @@ int cParser::DownloadAndParse(const char *urlP)
   curl_easy_setopt(curl_handle, CURLOPT_URL, urlP);
 
   // Specify HTTP proxy: my.proxy.com:80
-  if (RssConfig.useProxyM) {
+  if (RssReaderConfig.IsUseProxy()) {
      curl_easy_setopt(curl_handle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-     curl_easy_setopt(curl_handle, CURLOPT_PROXY, RssConfig.httpProxyM);
+     curl_easy_setopt(curl_handle, CURLOPT_PROXY, RssReaderConfig.GetHttpProxy());
      }
 
   // Send all data to this function
