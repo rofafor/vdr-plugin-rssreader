@@ -40,7 +40,7 @@ public:
   virtual void Housekeeping(void);
   virtual void MainThreadHook(void) {}
   virtual cString Active(void) { return NULL; }
-  virtual const char *MainMenuEntry(void) { return (RssConfig.hidemenu ? NULL : tr(MAINMENUENTRY)); }
+  virtual const char *MainMenuEntry(void) { return (RssConfig.hideMenuM ? NULL : tr(MAINMENUENTRY)); }
   virtual cOsdObject *MainMenuAction(void);
   virtual cMenuSetupPage *SetupMenu(void);
   virtual bool SetupParse(const char *Name, const char *Value);
@@ -52,11 +52,11 @@ public:
 class cPluginRssReaderSetup : public cMenuSetupPage
 {
 private:
-  cRssReaderConfig data;
-  cVector<const char*> help;
+  cRssReaderConfig dataM;
+  cVector<const char*> helpM;
   void Setup(void);
 protected:
-  virtual eOSState ProcessKey(eKeys Key);
+  virtual eOSState ProcessKey(eKeys keyP);
   virtual void Store(void);
 public:
   cPluginRssReaderSetup(void);
@@ -89,14 +89,14 @@ bool cPluginRssReader::ProcessArgs(int argc, char *argv[])
 bool cPluginRssReader::Initialize(void)
 {
   // Initialize any background activities the plugin shall perform.
-  strn0cpy(RssConfig.configfile, AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), RSSREADER_CONF), sizeof(RssConfig.configfile));
+  strn0cpy(RssConfig.configFileM, AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), RSSREADER_CONF), sizeof(RssConfig.configFileM));
   return true;
 }
 
 bool cPluginRssReader::Start(void)
 {
   // Start any background activities the plugin shall perform.
-  if (!RssItems.Load(RssConfig.configfile))
+  if (!RssItems.Load(RssConfig.configFileM))
      error("configuration file '" RSSREADER_CONF "' not found!");
   return true;
 }
@@ -126,10 +126,10 @@ cMenuSetupPage *cPluginRssReader::SetupMenu(void)
 bool cPluginRssReader::SetupParse(const char *Name, const char *Value)
 {
   // Parse your own setup parameters and store their values.
-  if      (!strcasecmp(Name, "HideMenu"))  RssConfig.hidemenu = atoi(Value);
-  else if (!strcasecmp(Name, "HideElem"))  RssConfig.hideelem = atoi(Value);
-  else if (!strcasecmp(Name, "UseProxy"))  RssConfig.useproxy = atoi(Value);
-  else if (!strcasecmp(Name, "HttpProxy")) strn0cpy(RssConfig.httpproxy, Value, sizeof(RssConfig.httpproxy));
+  if      (!strcasecmp(Name, "HideMenu"))  RssConfig.hideMenuM = atoi(Value);
+  else if (!strcasecmp(Name, "HideElem"))  RssConfig.hideElemM = atoi(Value);
+  else if (!strcasecmp(Name, "UseProxy"))  RssConfig.useProxyM = atoi(Value);
+  else if (!strcasecmp(Name, "HttpProxy")) strn0cpy(RssConfig.httpProxyM, Value, sizeof(RssConfig.httpProxyM));
   else return false;
 
   return true;
@@ -154,7 +154,7 @@ const char **cPluginRssReader::SVDRPHelpPages(void)
 cString cPluginRssReader::SVDRPCommand(const char *Command, const char *Option, int &ReplyCode)
 {
   if (strcasecmp(Command, "LOAD") == 0) {
-     if (!RssItems.Load(RssConfig.configfile)) {
+     if (!RssItems.Load(RssConfig.configFileM)) {
         ReplyCode = 550; // Requested action not taken
         return cString("Configuration file not found!");
         }
@@ -164,7 +164,7 @@ cString cPluginRssReader::SVDRPCommand(const char *Command, const char *Option, 
 }
 
 cPluginRssReaderSetup::cPluginRssReaderSetup(void)
-: data(RssConfig)
+: dataM(RssConfig)
 {
   SetMenuCategory(mcSetupPlugins);
   Setup();
@@ -176,45 +176,45 @@ void cPluginRssReaderSetup::Setup(void)
   int current = Current();
 
   Clear();
-  help.Clear();
+  helpM.Clear();
 
-  Add(new cMenuEditBoolItem(tr("Hide main menu entry"), &data.hidemenu));
-  help.Append(tr("Define whether the main manu entry is hidden."));
+  Add(new cMenuEditBoolItem(tr("Hide main menu entry"), &dataM.hideMenuM));
+  helpM.Append(tr("Define whether the main manu entry is hidden."));
 
-  Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &data.hideelem));
-  help.Append(tr("Define whether all non-existent RSS stream elements are hidden."));
+  Add(new cMenuEditBoolItem(tr("Hide non-existent elements"), &dataM.hideElemM));
+  helpM.Append(tr("Define whether all non-existent RSS stream elements are hidden."));
 
-  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"), &data.useproxy));
-  help.Append(tr("Define whether a HTTP proxy server is used."));
+  Add(new cMenuEditBoolItem(tr("Use HTTP proxy server"), &dataM.useProxyM));
+  helpM.Append(tr("Define whether a HTTP proxy server is used."));
 
-  if (data.useproxy) {
-     Add(new cMenuEditStrItem( tr("HTTP proxy server"), data.httpproxy, sizeof(data.httpproxy), tr(FileNameChars)));
-     help.Append(tr("Define an address and port of the HTTP proxy server:\n\n\"proxy.domain.com:8000\""));
+  if (dataM.useProxyM) {
+     Add(new cMenuEditStrItem( tr("HTTP proxy server"), dataM.httpProxyM, sizeof(dataM.httpProxyM), tr(FileNameChars)));
+     helpM.Append(tr("Define an address and port of the HTTP proxy server:\n\n\"proxy.domain.com:8000\""));
      }
 
   SetCurrent(Get(current));
   Display();
 }
 
-eOSState cPluginRssReaderSetup::ProcessKey(eKeys Key)
+eOSState cPluginRssReaderSetup::ProcessKey(eKeys keyP)
 {
-  int olduseproxy = data.useproxy;
-  eOSState state = cMenuSetupPage::ProcessKey(Key);
+  int olduseproxy = dataM.useProxyM;
+  eOSState state = cMenuSetupPage::ProcessKey(keyP);
 
-  if (Key != kNone && (data.useproxy != olduseproxy))
+  if (keyP != kNone && (dataM.useProxyM != olduseproxy))
      Setup();
 
   if (state == osUnknown) {
-     switch (Key) {
+     switch (keyP) {
        case kRed:
             Skins.Message(mtInfo, tr("Loading configuration file..."));
-            RssItems.Load(RssConfig.configfile);
+            RssItems.Load(RssConfig.configFileM);
             Skins.Message(mtInfo, NULL);
             state = osContinue;
             break;
        case kInfo:
-            if (Current() < help.Size())
-               return AddSubMenu(new cMenuText(cString::sprintf("%s - %s '%s'", tr("Help"), trVDR("Plugin"), PLUGIN_NAME_I18N), help[Current()]));
+            if (Current() < helpM.Size())
+               return AddSubMenu(new cMenuText(cString::sprintf("%s - %s '%s'", tr("Help"), trVDR("Plugin"), PLUGIN_NAME_I18N), helpM[Current()]));
             break;
        default:
             break;
@@ -226,11 +226,11 @@ eOSState cPluginRssReaderSetup::ProcessKey(eKeys Key)
 
 void cPluginRssReaderSetup::Store(void)
 {
-  RssConfig = data;
-  SetupStore("HideMenu",  RssConfig.hidemenu);
-  SetupStore("HideElem",  RssConfig.hideelem);
-  SetupStore("UseProxy",  RssConfig.useproxy);
-  SetupStore("HttpProxy", RssConfig.httpproxy);
+  RssConfig = dataM;
+  SetupStore("HideMenu",  RssConfig.hideMenuM);
+  SetupStore("HideElem",  RssConfig.hideElemM);
+  SetupStore("UseProxy",  RssConfig.useProxyM);
+  SetupStore("HttpProxy", RssConfig.httpProxyM);
 }
 
 VDRPLUGINCREATOR(cPluginRssReader); // Don't touch this!

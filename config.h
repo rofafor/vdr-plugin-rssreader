@@ -12,11 +12,11 @@ struct cRssReaderConfig
 {
 public:
   cRssReaderConfig(void);
-  int hidemenu;
-  int hideelem;
-  int useproxy;
-  char httpproxy[256];
-  char configfile[256];
+  int hideMenuM;
+  int hideElemM;
+  int useProxyM;
+  char httpProxyM[256];
+  char configFileM[256];
 };
 
 extern cRssReaderConfig RssConfig;

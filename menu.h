@@ -15,23 +15,23 @@
 
 class cRssItem : public cListObject {
 private:
-  char *title;
-  char *url;
+  char *titleM;
+  char *urlM;
 public:
   cRssItem();
   virtual ~cRssItem();
-  bool Parse(const char *s);
-  const char *Title(void) { return title; }
-  const char *Url(void) { return url; }
+  bool Parse(const char *strP);
+  const char *Title(void) { return titleM; }
+  const char *Url(void) { return urlM; }
 };
 
 class cRssItems : public cConfig<cRssItem> {
 private:
-  bool updated;
+  bool updatedM;
 public:
   cRssItems();
-  virtual bool Load(const char *filename);
-  bool Updated();
+  virtual bool Load(const char *fileNameP);
+  bool Updated(void);
 };
 
 extern cRssItems RssItems;
@@ -46,25 +46,25 @@ private:
     TYPE_VIDEO,
     TYPE_MUSIC
   };
-  int type;
-  cString text;
-  cString link;
+  int typeM;
+  cString textM;
+  cString linkM;
 public:
-  cRssMenuItem(const char *Stream, const char *Date, const char *Title, const char *Link, const char *Description);
+  cRssMenuItem(const char *streamP, const char *dateP, const char *titleP, const char *linkP, const char *descriptionP);
   virtual ~cRssMenuItem();
   virtual void Display(void);
-  virtual eOSState ProcessKey(eKeys Key);
+  virtual eOSState ProcessKey(eKeys keyP);
   };
 
 // --- cRssItemsMenu -------------------------------------------------------
 
 class cRssItemsMenu: public cOsdMenu {
 private:
-  cString stream;
+  cString streamM;
   eOSState ShowDetails(void);
 public:
-  cRssItemsMenu(const char *Stream);
-  virtual eOSState ProcessKey(eKeys Key);
+  cRssItemsMenu(const char *streamP);
+  virtual eOSState ProcessKey(eKeys keyP);
 };
 
 // --- cRssStreamsMenu -----------------------------------------------------
@@ -75,7 +75,7 @@ private:
   eOSState Select(void);
 public:
   cRssStreamsMenu();
-  virtual eOSState ProcessKey(eKeys Key);
+  virtual eOSState ProcessKey(eKeys keyP);
 };
 
 #endif // __RSSREADER_MENU_H

@@ -10,14 +10,12 @@
 
 // --- Static -----------------------------------------------------------
 
-#define ELEMENTS(x) (sizeof(x) / sizeof(x[0]))
-
 struct conv_table {
   const char *from;
   const char *to;
 };
 
-static struct conv_table pre_conv_table[] =
+static struct conv_table preConversionTableS[] =
 {
   // 'to' field must be smaller than 'from'
   {"<br />",   "\n"}
@@ -25,7 +23,7 @@ static struct conv_table pre_conv_table[] =
 
 // Conversion page: http://www.ltg.ed.ac.uk/~richard/utf-8.cgi
 
-static struct conv_table post_conv_table[] =
+static struct conv_table postConversionTableS[] =
 {
   // 'to' field must be smaller than 'from'
   {"&quot;",   "\x22"},
@@ -99,82 +97,82 @@ static struct conv_table post_conv_table[] =
   {"\n\n",     "\n"}, // let's also strip multiple linefeeds
 };
 
-static char *htmlcharconv(char *str, struct conv_table *conv, unsigned int elem)
+static char *htmlcharconv(char *strP, struct conv_table *convP, unsigned int elemP)
 {
-  if (str && conv) {
-     for (unsigned int i = 0; i < elem; ++i) {
-        char *ptr = strstr(str, conv[i].from);
+  if (strP && convP) {
+     for (unsigned int i = 0; i < elemP; ++i) {
+        char *ptr = strstr(strP, convP[i].from);
         while (ptr) {
-           long of = ptr - str;
-           size_t l  = strlen(str);
-           size_t l1 = strlen(conv[i].from);
-           size_t l2 = strlen(conv[i].to);
+           long of = ptr - strP;
+           size_t l  = strlen(strP);
+           size_t l1 = strlen(convP[i].from);
+           size_t l2 = strlen(convP[i].to);
            if (l2 > l1) {
               error("htmlcharconv(): cannot reallocate string");
-              return str;
+              return strP;
               }
            if (l2 != l1)
-              memmove(str + of + l2, str + of + l1, l - of - l1 + 1);
-           strncpy(str + of, conv[i].to, l2);
-           ptr = strstr(str, conv[i].from);
+              memmove(strP + of + l2, strP + of + l1, l - of - l1 + 1);
+           strncpy(strP + of, convP[i].to, l2);
+           ptr = strstr(strP, convP[i].from);
            }
         }
-     return str;
+     return strP;
      }
   return NULL;
 }
 
 // --- General functions ------------------------------------------------
 
-char *striphtml(char *str)
+char *striphtml(char *strP)
 {
-  if (str) {
+  if (strP) {
      char *c, t = 0, *r;
-     str = htmlcharconv(str, pre_conv_table, ELEMENTS(pre_conv_table));
-     c = str;
-     r = str;
-     while (*str != '\0') {
-       if (*str == '<')
+     strP = htmlcharconv(strP, preConversionTableS, ELEMENTS(preConversionTableS));
+     c = strP;
+     r = strP;
+     while (*strP != '\0') {
+       if (*strP == '<')
           t++;
-       else if (*str == '>')
+       else if (*strP == '>')
           t--;
        else if (t < 1)
-          *(c++) = *str;
-       str++;
+          *(c++) = *strP;
+       strP++;
        }
      *c = '\0';
-     return htmlcharconv(r, post_conv_table, ELEMENTS(post_conv_table));
+     return htmlcharconv(r, postConversionTableS, ELEMENTS(postConversionTableS));
      }
   return NULL;
 }
 
-void *myrealloc(void *ptr, size_t size)
+void *myrealloc(void *ptrP, size_t sizeP)
 {
   /* There might be a realloc() out there that doesn't like reallocing
      NULL pointers, so we take care of it here */
-  if (ptr)
-     return realloc(ptr, size);
+  if (ptrP)
+     return realloc(ptrP, sizeP);
   else
-     return malloc(size);
+     return malloc(sizeP);
 }
 
-bool isimage(const char *text)
+bool isimage(const char *textP)
 {
-  if (endswith(text, ".jpg") || endswith(text, ".gif") || endswith(text, ".png"))
-     return true; 
-  return false;
-}
-
-bool isvideo(const char *text)
-{
-  if (endswith(text, ".mpg") || endswith(text, ".avi") ||  endswith(text, ".ts"))
+  if (endswith(textP, ".jpg") || endswith(textP, ".gif") || endswith(textP, ".png"))
      return true;
   return false;
 }
 
-bool ismusic(const char *text)
+bool isvideo(const char *textP)
 {
-  if (endswith(text, ".mp3") || endswith(text, ".wav") || endswith(text, ".ogg"))
+  if (endswith(textP, ".mpg") || endswith(textP, ".avi") ||  endswith(textP, ".ts"))
+     return true;
+  return false;
+}
+
+bool ismusic(const char *textP)
+{
+  if (endswith(textP, ".mp3") || endswith(textP, ".wav") || endswith(textP, ".ogg"))
      return true;
   return false;
 }

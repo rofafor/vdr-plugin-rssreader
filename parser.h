@@ -19,29 +19,25 @@
 
 class cItem : public cListObject {
 private:
-  cCharSetConv conv;
-  char date[SHORT_TEXT_LEN];
-  char title[SHORT_TEXT_LEN];
-  char link[SHORT_TEXT_LEN];
-  char description[LONG_TEXT_LEN];
+  cCharSetConv convM;
+  char dateM[SHORT_TEXT_LEN];
+  char titleM[SHORT_TEXT_LEN];
+  char linkM[SHORT_TEXT_LEN];
+  char descriptionM[LONG_TEXT_LEN];
 public:
   cItem();
   void Clear(void);
-  char *GetDate(void) { return date; }
-  char *GetTitle(void) { return title; }
-  char *GetLink(void) { return link; }
-  char *GetDescription(void)  { return description; }
-  void SetDate(const char *str);
-  void SetTitle(const char *str);
-  void SetLink(const char *str);
-  void SetDescription(const char *str);
+  char *GetDate(void) { return dateM; }
+  char *GetTitle(void) { return titleM; }
+  char *GetLink(void) { return linkM; }
+  char *GetDescription(void)  { return descriptionM; }
+  void SetDate(const char *strP);
+  void SetTitle(const char *strP);
+  void SetLink(const char *strP);
+  void SetDescription(const char *strP);
 };
 
 class cItems : public cList<cItem> {
-private:
-  cItem *current;
-public:
-  cItems(): current(NULL) {}
 };
 
 // --- cParser ----------------------------------------------------------
@@ -53,7 +49,7 @@ struct MemoryStruct {
 
 class cParser {
 private:
-  struct MemoryStruct data;
+  struct MemoryStruct dataM;
   void ResetMemory(void);
 public:
   enum eRssError {
@@ -64,7 +60,7 @@ public:
   };
   cParser();
   ~cParser();
-  int DownloadAndParse(const char *url);
+  int DownloadAndParse(const char *urlP);
   cItems Items;
   };
 

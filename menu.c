@@ -4,7 +4,7 @@
  * See the README file for copyright information and how to reach the author.
  *
  */
- 
+
 #include <vdr/plugin.h>
 #include <vdr/status.h>
 #include "parser.h"
@@ -20,26 +20,27 @@ cRssItems RssItems;
 // --- cRssItem(s) ------------------------------------------------------
 
 cRssItem::cRssItem()
-{ 
-  title = url = NULL;
+: titleM(NULL),
+  urlM(NULL)
+{
 }
 
 cRssItem::~cRssItem()
 {
-  free(title);
-  free(url);
+  FREE_POINTER(titleM);
+  FREE_POINTER(urlM);
 }
 
-bool cRssItem::Parse(const char *s)
+bool cRssItem::Parse(const char *strP)
 {
-  const char *p = strchr(s, ':');
+  const char *p = strchr(strP, ':');
   if (p) {
-     long l = p - s;
+     long l = p - strP;
      if (l > 0) {
-        title = MALLOC(char, l + 1);
-        stripspace(strn0cpy(title, s, l + 1));
-        if (!isempty(title)) {
-           url = stripspace(strdup(skipspace(p + 1)));
+        titleM = MALLOC(char, l + 1);
+        stripspace(strn0cpy(titleM, strP, l + 1));
+        if (!isempty(titleM)) {
+           urlM = stripspace(strdup(skipspace(p + 1)));
            return true;
            }
         }
@@ -48,14 +49,14 @@ bool cRssItem::Parse(const char *s)
 }
 
 cRssItems::cRssItems()
-:  updated(false)
+: updatedM(false)
 {
 }
 
-bool cRssItems::Load(const char *filename)
+bool cRssItems::Load(const char *fileNameP)
 {
-  if (cConfig<cRssItem>::Load(filename, true)) {
-     updated = true;
+  if (cConfig<cRssItem>::Load(fileNameP, true)) {
+     updatedM = true;
      return true;
      }
   return false;
@@ -63,34 +64,32 @@ bool cRssItems::Load(const char *filename)
 
 bool cRssItems::Updated()
 {
-  bool result = updated;
-  updated = false;
+  bool result = updatedM;
+  updatedM = false;
   return result;
 }
 
 // --- cRssMenuItem --------------------------------------------------------
 
-cRssMenuItem::cRssMenuItem(const char *Stream, const char *Date, const char *Title, const char *Link, const char *Description)
-:cOsdMenu(*cString::sprintf("%s - %s", tr("RSS item"), Stream))
+cRssMenuItem::cRssMenuItem(const char *streamP, const char *dateP, const char *titleP, const char *linkP, const char *descriptionP)
+: cOsdMenu(*cString::sprintf("%s - %s", tr("RSS item"), streamP)),
+  linkM(linkP)
 {
-  text = cString::sprintf("\n%s%s%s%s%s%s%s",
-           *Date         ? strdup(Date)          : RssConfig.hideelem ? "" : tr("<no date available>"),
-           (*Date        || !RssConfig.hideelem) ? "\n\n" : "",
-           *Title        ? strdup(Title)         : RssConfig.hideelem ? "" : tr("<no title available>"),
-           (*Title       || !RssConfig.hideelem) ? "\n\n" : "",
-           *Description  ? strdup(Description)   : RssConfig.hideelem ? "" : tr("<no description available>"),
-           (*Description || !RssConfig.hideelem) ? "\n\n" : "",
-           *Link         ? strdup(Link)          : RssConfig.hideelem ? "" : tr("<no link available>"));
-  link = cString(Link);
-  if (isimage(*link))
-     type = TYPE_IMAGE;
-  else if (ismusic(*link))
-     type = TYPE_MUSIC;
-  else if (isvideo(*link))
-     type = TYPE_VIDEO;
+  textM = cString::sprintf("\n%s%s%s%s%s%s%s",
+                           *dateP ? strdup(dateP) : RssConfig.hideElemM ? "" : tr("<no date available>"), (*dateP || !RssConfig.hideElemM) ? "\n\n" : "",
+                           *titleP ? strdup(titleP) : RssConfig.hideElemM ? "" : tr("<no title available>"), (*titleP || !RssConfig.hideElemM) ? "\n\n" : "",
+                           *descriptionP ? strdup(descriptionP) : RssConfig.hideElemM ? "" : tr("<no description available>"), (*descriptionP || !RssConfig.hideElemM) ? "\n\n" : "",
+                           *linkP ? strdup(linkP) : RssConfig.hideElemM ? "" : tr("<no link available>")
+                          );
+  if (isimage(*linkM))
+     typeM = TYPE_IMAGE;
+  else if (ismusic(*linkM))
+     typeM = TYPE_MUSIC;
+  else if (isvideo(*linkM))
+     typeM = TYPE_VIDEO;
   else
-     type = TYPE_NONE;
-  SetHelp(NULL, "<<", (type != TYPE_NONE) ? ">>" : NULL, NULL);
+     typeM = TYPE_NONE;
+  SetHelp(NULL, "<<", (typeM != TYPE_NONE) ? ">>" : NULL, NULL);
 }
 
 cRssMenuItem::~cRssMenuItem()
@@ -100,14 +99,14 @@ cRssMenuItem::~cRssMenuItem()
 void cRssMenuItem::Display(void)
 {
   cOsdMenu::Display();
-  debug("cRssMenuItem::Display(): '%s'\n", *text);
-  DisplayMenu()->SetText(text, false);
-  cStatus::MsgOsdTextItem(text);
+  debug("cRssMenuItem::Display(): '%s'\n", *textM);
+  DisplayMenu()->SetText(textM, false);
+  cStatus::MsgOsdTextItem(textM);
 }
 
-eOSState cRssMenuItem::ProcessKey(eKeys Key)
+eOSState cRssMenuItem::ProcessKey(eKeys keyP)
 {
-  switch (int(Key)) {
+  switch (int(keyP)) {
     case kUp|k_Repeat:
     case kUp:
     case kDown|k_Repeat:
@@ -116,30 +115,30 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
     case kLeft:
     case kRight|k_Repeat:
     case kRight:
-         DisplayMenu()->Scroll(NORMALKEY(Key) == kUp || NORMALKEY(Key) == kLeft, NORMALKEY(Key) == kLeft || NORMALKEY(Key) == kRight);
-         cStatus::MsgOsdTextItem(NULL, NORMALKEY(Key) == kUp);
+         DisplayMenu()->Scroll(NORMALKEY(keyP) == kUp || NORMALKEY(keyP) == kLeft, NORMALKEY(keyP) == kLeft || NORMALKEY(keyP) == kRight);
+         cStatus::MsgOsdTextItem(NULL, NORMALKEY(keyP) == kUp);
          return osContinue;
     default:
          break;
     }
 
-  eOSState state = cOsdMenu::ProcessKey(Key);
+  eOSState state = cOsdMenu::ProcessKey(keyP);
 
   if (state == osUnknown) {
-     switch (Key) {
+     switch (keyP) {
        case kGreen:
        case kOk:
             return osBack;
        case kYellow:
-            switch (type) {
+            switch (typeM) {
                case TYPE_IMAGE:
-                    cPluginManager::CallFirstService("ImagePlayer-1.0", (void *)*link);
+                    cPluginManager::CallFirstService("ImagePlayer-1.0", (void *)*linkM);
                     break;
                case TYPE_MUSIC:
-                    cPluginManager::CallFirstService("MusicPlayer-1.0", (void *)*link);
+                    cPluginManager::CallFirstService("MusicPlayer-1.0", (void *)*linkM);
                     break;
                case TYPE_VIDEO:
-                    cPluginManager::CallFirstService("MediaPlayer-1.0", (void *)*link);
+                    cPluginManager::CallFirstService("MediaPlayer-1.0", (void *)*linkM);
                     break;
                case TYPE_NONE:
                default:
@@ -155,9 +154,9 @@ eOSState cRssMenuItem::ProcessKey(eKeys Key)
 
 // --- cRssItemsMenu --------------------------------------------------------
 
-cRssItemsMenu::cRssItemsMenu(const char *Stream)
-:cOsdMenu(*cString::sprintf("%s - %s", tr("Select RSS item"), Stream)),
- stream(Stream)
+cRssItemsMenu::cRssItemsMenu(const char *streamP)
+: cOsdMenu(*cString::sprintf("%s - %s", tr("Select RSS item"), streamP)),
+  streamM(streamP)
 {
   for (cItem *rssItem = Parser.Items.First(); rssItem; rssItem = Parser.Items.Next(rssItem))
      Add(new cOsdItem(rssItem->GetTitle()));
@@ -165,11 +164,11 @@ cRssItemsMenu::cRssItemsMenu(const char *Stream)
   Display();
 }
 
-eOSState cRssItemsMenu::ProcessKey(eKeys Key)
+eOSState cRssItemsMenu::ProcessKey(eKeys keyP)
 {
-  eOSState state = cOsdMenu::ProcessKey(Key);
+  eOSState state = cOsdMenu::ProcessKey(keyP);
   if (state == osUnknown) {
-     switch (Key) {
+     switch (keyP) {
        case kGreen:
             return osBack;
        case kYellow:
@@ -187,7 +186,7 @@ eOSState cRssItemsMenu::ShowDetails(void)
 {
   cItem *rssItem = reinterpret_cast<cItem *>(Parser.Items.Get(Current()));
   if (rssItem) {
-     return AddSubMenu(new cRssMenuItem(*stream, rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
+     return AddSubMenu(new cRssMenuItem(*streamM, rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
      }
   return osContinue;
 }
@@ -244,18 +243,18 @@ eOSState cRssStreamsMenu::Select(void)
   return osEnd;
 }
 
-eOSState cRssStreamsMenu::ProcessKey(eKeys Key)
+eOSState cRssStreamsMenu::ProcessKey(eKeys keyP)
 {
-  eOSState state = cOsdMenu::ProcessKey(Key);
+  eOSState state = cOsdMenu::ProcessKey(keyP);
 
   if (RssItems.Updated())
      Setup();
 
   if (state == osUnknown) {
-     switch (Key) {
+     switch (keyP) {
        case kRed:
             Skins.Message(mtInfo, tr("Loading configuration file..."));
-            RssItems.Load(RssConfig.configfile);
+            RssItems.Load(RssConfig.configFileM);
             Setup();
             Skins.Message(mtInfo, NULL);
             break;

@@ -22,5 +22,25 @@
 // Configuration file
 #define RSSREADER_CONF      "rssreader.conf"
 
+#define DELETE_POINTER(ptr)      \
+  do {                           \
+     if (ptr) {                  \
+        typeof(*ptr) *tmp = ptr; \
+        ptr = NULL;              \
+        delete(tmp);             \
+        }                        \
+  } while (0)
+
+#define FREE_POINTER(ptr)        \
+  do {                           \
+     if (ptr) {                  \
+        typeof(*ptr) *tmp = ptr; \
+        ptr = NULL;              \
+        free(tmp);               \
+        }                        \
+  } while (0)
+
+#define ELEMENTS(x) (sizeof(x) / sizeof(x[0]))
+
 #endif // __RSSREADER_COMMON_H
 

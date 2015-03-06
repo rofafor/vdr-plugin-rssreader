@@ -10,11 +10,11 @@
 
 #include <vdr/tools.h>
 
-char *striphtml(char *str);
-void *myrealloc(void *ptr, size_t size);
-bool isimage(const char *text);
-bool isvideo(const char *text);
-bool ismusic(const char *text);
+char *striphtml(char *strP);
+void *myrealloc(void *ptrP, size_t sizeP);
+bool isimage(const char *textP);
+bool isvideo(const char *textP);
+bool ismusic(const char *textP);
 
 #endif // __RSSREADER_TOOLS_H
 

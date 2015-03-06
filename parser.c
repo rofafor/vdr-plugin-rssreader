@@ -27,51 +27,51 @@ cParser Parser;
 // --- cItem(s) ---------------------------------------------------------
 
 cItem::cItem()
-: conv("UTF-8", cCharSetConv::SystemCharacterTable())
+: convM("UTF-8", cCharSetConv::SystemCharacterTable())
 {
-  strcpy(date, "");
-  strcpy(title, "");
-  strcpy(link, "");
-  strcpy(description, "");
+  strcpy(dateM, "");
+  strcpy(titleM, "");
+  strcpy(linkM, "");
+  strcpy(descriptionM, "");
 }
 
 
 void cItem::Clear(void)
 {
-  strcpy(date, "");
-  strcpy(title, "");
-  strcpy(link, "");
-  strcpy(description, "");
+  strcpy(dateM, "");
+  strcpy(titleM, "");
+  strcpy(linkM, "");
+  strcpy(descriptionM, "");
 }
 
-void cItem::SetDate(const char *str)
+void cItem::SetDate(const char *strP)
 {
-  Utf8Strn0Cpy(date, str, sizeof(date));
-  compactspace(date);
-  Utf8Strn0Cpy(date, conv.Convert(date), sizeof(date));
+  Utf8Strn0Cpy(dateM, strP, sizeof(dateM));
+  compactspace(dateM);
+  Utf8Strn0Cpy(dateM, convM.Convert(dateM), sizeof(dateM));
 }
 
-void cItem::SetTitle(const char *str)
+void cItem::SetTitle(const char *strP)
 {
-  Utf8Strn0Cpy(title, str, sizeof(title));
-  compactspace(title);
-  striphtml(title);
-  Utf8Strn0Cpy(title, conv.Convert(title), sizeof(title));
+  Utf8Strn0Cpy(titleM, strP, sizeof(titleM));
+  compactspace(titleM);
+  striphtml(titleM);
+  Utf8Strn0Cpy(titleM, convM.Convert(titleM), sizeof(titleM));
 }
 
-void cItem::SetLink(const char *str)
+void cItem::SetLink(const char *strP)
 {
-  Utf8Strn0Cpy(link, str, sizeof(link));
-  compactspace(link);
-  Utf8Strn0Cpy(link, conv.Convert(link), sizeof(link));
+  Utf8Strn0Cpy(linkM, strP, sizeof(linkM));
+  compactspace(linkM);
+  Utf8Strn0Cpy(linkM, convM.Convert(linkM), sizeof(linkM));
 }
 
-void cItem::SetDescription(const char *str)
+void cItem::SetDescription(const char *strP)
 {
-  Utf8Strn0Cpy(description, str, sizeof(description));
-  compactspace(description);
-  striphtml(description);
-  Utf8Strn0Cpy(description, conv.Convert(description), sizeof(description));
+  Utf8Strn0Cpy(descriptionM, strP, sizeof(descriptionM));
+  compactspace(descriptionM);
+  striphtml(descriptionM);
+  Utf8Strn0Cpy(descriptionM, convM.Convert(descriptionM), sizeof(descriptionM));
 }
 
 // --- Parse RSS  -------------------------------------------------------
@@ -81,16 +81,16 @@ struct XmlNode {
   int  depth;
 };
 
-cItem *item = NULL;
-int depth = 0;
-char data_string[LONG_TEXT_LEN];
-std::stack<struct XmlNode> nodestack;
+cItem *itemS = NULL;
+int depthS = 0;
+char dataStringS[LONG_TEXT_LEN];
+std::stack<struct XmlNode> nodeStackS;
 
 // Character set mappings can be found at:
 // ftp://ftp.unicode.org/Public/MAPPINGS/
 
 // ISO-8859-15
-static int MapLatin9[0x80] = {
+static int MapLatin9S[0x80] = {
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
@@ -110,7 +110,7 @@ static int MapLatin9[0x80] = {
 };
 
 // ISO-8859-2
-static int MapLatin2[0x80] = {
+static int MapLatin2S[0x80] = {
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
       -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
@@ -130,7 +130,7 @@ static int MapLatin2[0x80] = {
 };
 
 // Windows CP1250
-static int MapCp1250[0x80] = {
+static int MapCp1250S[0x80] = {
   0x20ac,     -1, 0x201a,     -1, 0x201e, 0x2026, 0x2020, 0x2021,
       -1, 0x2030, 0x0160, 0x2039, 0x015a, 0x0164, 0x017d, 0x0179,
       -1, 0x2018, 0x2019, 0x201c, 0x201d, 0x2022, 0x2013, 0x2014,
@@ -149,125 +149,125 @@ static int MapCp1250[0x80] = {
   0x0159, 0x016f, 0x00fa, 0x0171, 0x00fc, 0x00fd, 0x0163, 0x02d9
 };
 
-static int XMLCALL UnknownEncodingHandler(void *data, const XML_Char *encoding, XML_Encoding *info)
+static int XMLCALL UnknownEncodingHandler(void *dataP, const XML_Char *encodingP, XML_Encoding *infoP)
 {
   int *map = NULL;
 
-  if (strcmp(encoding, "iso-8859-15") == 0) {
-     map = MapLatin9;
+  if (strcmp(encodingP, "iso-8859-15") == 0) {
+     map = MapLatin9S;
      }
-  if (strcmp(encoding, "iso-8859-2") == 0) {
-     map = MapLatin2;
+  if (strcmp(encodingP, "iso-8859-2") == 0) {
+     map = MapLatin2S;
      }
-  else if (strcmp(encoding, "windows-1250") == 0) {
-     map = MapCp1250;
+  else if (strcmp(encodingP, "windows-1250") == 0) {
+     map = MapCp1250S;
      }
 
   if (map) {
      int i;
      for (i = 0; i < 0x80; ++i) {
-         info->map[i] = i;
-         info->map[i + 0x80] = map[i];
+         infoP->map[i] = i;
+         infoP->map[i + 0x80] = map[i];
          }
-     info->map[0x7f] = -1;
-     info->data      = NULL;
-     info->convert   = NULL;
-     info->release   = NULL;
+     infoP->map[0x7f] = -1;
+     infoP->data      = NULL;
+     infoP->convert   = NULL;
+     infoP->release   = NULL;
      return XML_STATUS_OK;
      }
 
   return XML_STATUS_ERROR;
 }
 
-static inline bool IsItemTag(const char *tag)
+static inline bool IsItemTag(const char *tagP)
 {
-  if (!strncmp(tag, "item", 4) || !strncmp(tag, "entry", 5))
+  if (!strncmp(tagP, "item", 4) || !strncmp(tagP, "entry", 5))
      return true;
   return false;
 }
 
-static inline bool IsTitleTag(const char *tag)
+static inline bool IsTitleTag(const char *tagP)
 {
-  if (!strncmp(tag, "title", 5))
+  if (!strncmp(tagP, "title", 5))
      return true;
   return false;
 }
 
-static inline bool IsLinkTag(const char *tag)
+static inline bool IsLinkTag(const char *tagP)
 {
-  if (!strncmp(tag, "link", 4))
+  if (!strncmp(tagP, "link", 4))
      return true;
   return false;
 }
 
-static inline bool IsDateTag(const char *tag)
+static inline bool IsDateTag(const char *tagP)
 {
-  if (!strncmp(tag, "pub", 3))
+  if (!strncmp(tagP, "pub", 3))
      return true;
   return false;
 }
 
-static inline bool IsDescriptionTag(const char *tag)
+static inline bool IsDescriptionTag(const char *tagP)
 {
-  if (!strncmp(tag, "description", 11) || !strncmp(tag, "content", 7))
+  if (!strncmp(tagP, "description", 11) || !strncmp(tagP, "content", 7))
      return true;
   return false;
 }
 
-static void XMLCALL StartHandler(void *data, const char *el, const char **attr)
+static void XMLCALL StartHandler(void *dataP, const char *elemP, const char **attrP)
 {
   XmlNode node;
 
-  strn0cpy(node.nodename, el, sizeof(node.nodename));
-  node.depth = depth;
-  nodestack.push(node);
+  strn0cpy(node.nodename, elemP, sizeof(node.nodename));
+  node.depth = depthS;
+  nodeStackS.push(node);
 
-  if (IsItemTag(el)) {
+  if (IsItemTag(elemP)) {
      cItem *tmpitem = new cItem;
-     item = tmpitem;
-     item->Clear();
+     itemS = tmpitem;
+     itemS->Clear();
      }
-  strcpy(data_string, "");
-  depth++;
+  strcpy(dataStringS, "");
+  depthS++;
 }
 
-static void XMLCALL EndHandler(void *data, const char *el)
+static void XMLCALL EndHandler(void *dataP, const char *elemP)
 {
-  nodestack.pop();
-  if (!nodestack.empty()) {
+  nodeStackS.pop();
+  if (!nodeStackS.empty()) {
      char parent[SHORT_TEXT_LEN];
 
-     strn0cpy(parent, (nodestack.top()).nodename, sizeof((nodestack.top()).nodename));
+     strn0cpy(parent, (nodeStackS.top()).nodename, sizeof((nodeStackS.top()).nodename));
      // No need to free the node
-     if (IsItemTag(el) && item && *item->GetTitle())
-        Parser.Items.Add(item); // End of the current item
-     else if (IsTitleTag(el) && IsItemTag(parent))
-        item->SetTitle(data_string);
-     else if (IsLinkTag(el) && IsItemTag(parent))
-        item->SetLink(data_string);
-     else if (IsDateTag(el) && IsItemTag(parent))
-        item->SetDate(data_string);
-     else if (IsDescriptionTag(el) && IsItemTag(parent))
-        item->SetDescription(data_string);
+     if (IsItemTag(elemP) && itemS && *itemS->GetTitle())
+        Parser.Items.Add(itemS); // End of the current item
+     else if (IsTitleTag(elemP) && IsItemTag(parent))
+        itemS->SetTitle(dataStringS);
+     else if (IsLinkTag(elemP) && IsItemTag(parent))
+        itemS->SetLink(dataStringS);
+     else if (IsDateTag(elemP) && IsItemTag(parent))
+        itemS->SetDate(dataStringS);
+     else if (IsDescriptionTag(elemP) && IsItemTag(parent))
+        itemS->SetDescription(dataStringS);
      }
-  depth--;
+  --depthS;
 }
 
-static void DataHandler(void *user_data, const XML_Char *s, int len)
+static void DataHandler(void *dataP, const XML_Char *strP, int lenP)
 {
   // Only until the maximum size of the buffer
-  if ((strlen(data_string) + len) <= LONG_TEXT_LEN)
-     strncat(data_string, s, len);
+  if ((strlen(dataStringS) + lenP) <= LONG_TEXT_LEN)
+     strncat(dataStringS, strP, lenP);
 }
 
-static size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *data)
+static size_t WriteMemoryCallback(void *ptrP, size_t sizeP, size_t nmembP, void *dataP)
 {
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)data;
+  size_t realsize = sizeP * nmembP;
+  struct MemoryStruct *mem = (struct MemoryStruct *)dataP;
 
   mem->memory = (char *)myrealloc(mem->memory, mem->size + realsize + 1);
   if (mem->memory) {
-     memcpy(&(mem->memory[mem->size]), ptr, realsize);
+     memcpy(&(mem->memory[mem->size]), ptrP, realsize);
      mem->size += realsize;
      mem->memory[mem->size] = 0;
      }
@@ -277,8 +277,8 @@ static size_t WriteMemoryCallback(void *ptr, size_t size, size_t nmemb, void *da
 cParser::cParser()
 : Items()
 {
-  data.memory = NULL;
-  data.size = 0;
+  dataM.memory = NULL;
+  dataM.size = 0;
 }
 
 cParser::~cParser()
@@ -289,19 +289,17 @@ cParser::~cParser()
 void cParser::ResetMemory(void)
 {
   // free any allocated memory
-  if (data.memory)
-     free(data.memory);
-  data.memory = NULL;
-  data.size = 0;
+  FREE_POINTER(dataM.memory);
+  dataM.size = 0;
 }
 
-int cParser::DownloadAndParse(const char *url)
+int cParser::DownloadAndParse(const char *urlP)
 {
   CURL *curl_handle;
 
   // Clear Items list and initialize depth
   Items.Clear();
-  depth = 0;
+  depthS = 0;
   ResetMemory();
 
   // Init the curl session
@@ -309,12 +307,12 @@ int cParser::DownloadAndParse(const char *url)
   curl_handle = curl_easy_init();
 
   // Specify URL to get
-  curl_easy_setopt(curl_handle, CURLOPT_URL, url);
+  curl_easy_setopt(curl_handle, CURLOPT_URL, urlP);
 
   // Specify HTTP proxy: my.proxy.com:80
-  if (RssConfig.useproxy) {
+  if (RssConfig.useProxyM) {
      curl_easy_setopt(curl_handle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-     curl_easy_setopt(curl_handle, CURLOPT_PROXY, RssConfig.httpproxy);
+     curl_easy_setopt(curl_handle, CURLOPT_PROXY, RssConfig.httpProxyM);
      }
 
   // Send all data to this function
@@ -336,7 +334,7 @@ int cParser::DownloadAndParse(const char *url)
   curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, 15L);
 
   // Pass our 'data' struct to the callback function
-  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&data);
+  curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&dataM);
 
   // Some servers don't like requests that are made without a user-agent field
   curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, RSSREADER_USERAGENT);
@@ -350,12 +348,12 @@ int cParser::DownloadAndParse(const char *url)
      return (RSS_DOWNLOAD_ERROR);
      }
 
-  if (data.size) {
+  if (dataM.size) {
 #ifdef DEBUG
      // Only for debug dump
      FILE *fp = fopen("/tmp/rssreader.vdr", "w");
      if (fp) {
-        if (fwrite(data.memory, 1, data.size, fp) != data.size)
+        if (fwrite(dataM.memory, 1, dataM.size, fp) != dataM.size)
            error("cParser::DownloadAndParse(): couldn't write debug dump");
         fclose(fp);
         }
@@ -373,7 +371,7 @@ int cParser::DownloadAndParse(const char *url)
      XML_SetCharacterDataHandler(p, DataHandler);
      XML_SetUnknownEncodingHandler(p, UnknownEncodingHandler, NULL);
 
-     if (XML_Parse(p, data.memory, (int)data.size, XML_TRUE) == XML_STATUS_ERROR) {
+     if (XML_Parse(p, dataM.memory, (int)dataM.size, XML_TRUE) == XML_STATUS_ERROR) {
         // Cleanup curl stuff
         curl_easy_cleanup(curl_handle);
         ResetMemory();
@@ -388,4 +386,3 @@ int cParser::DownloadAndParse(const char *url)
 
   return (RSS_PARSING_OK);
 }
-
