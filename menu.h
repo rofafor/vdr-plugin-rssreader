@@ -11,12 +11,13 @@
 #include <vdr/osdbase.h>
 #include <vdr/tools.h>
 
-// --- cRssItem(s) ------------------------------------------------------
+// --- cRssItem(s) ------------------------------------------------------------
 
 class cRssItem : public cListObject {
 private:
   char *titleM;
   char *urlM;
+
 public:
   cRssItem();
   virtual ~cRssItem();
@@ -28,6 +29,7 @@ public:
 class cRssItems : public cConfig<cRssItem> {
 private:
   bool updatedM;
+
 public:
   cRssItems();
   virtual bool Load(const char *fileNameP);
@@ -36,7 +38,7 @@ public:
 
 extern cRssItems RssItems;
 
-// --- cRssMenuItem --------------------------------------------------------
+// --- cRssMenuItem -----------------------------------------------------------
 
 class cRssMenuItem : public cOsdMenu {
 private:
@@ -49,6 +51,7 @@ private:
   int typeM;
   cString textM;
   cString linkM;
+
 public:
   cRssMenuItem(const char *streamP, const char *dateP, const char *titleP, const char *linkP, const char *descriptionP);
   virtual ~cRssMenuItem();
@@ -56,23 +59,25 @@ public:
   virtual eOSState ProcessKey(eKeys keyP);
   };
 
-// --- cRssItemsMenu -------------------------------------------------------
+// --- cRssItemsMenu ----------------------------------------------------------
 
 class cRssItemsMenu: public cOsdMenu {
 private:
   cString streamM;
   eOSState ShowDetails(void);
+
 public:
   cRssItemsMenu(const char *streamP);
   virtual eOSState ProcessKey(eKeys keyP);
 };
 
-// --- cRssStreamsMenu -----------------------------------------------------
+// --- cRssStreamsMenu --------------------------------------------------------
 
 class cRssStreamsMenu: public cOsdMenu {
 private:
   void Setup(void);
   eOSState Select(void);
+
 public:
   cRssStreamsMenu();
   virtual eOSState ProcessKey(eKeys keyP);

@@ -5,7 +5,6 @@
  *
  */
 
-#include "tools.h"
 #include "config.h"
 #include "common.h"
 

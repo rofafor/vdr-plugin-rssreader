@@ -102,7 +102,7 @@ bool cPluginRssReader::Start(void)
 {
   // Start any background activities the plugin shall perform.
   if (!RssItems.Load(RssReaderConfig.GetConfigFile()))
-     error("configuration file '" RSSREADER_CONF "' not found!");
+     error("Configuration file '%s' not found!", RssReaderConfig.GetConfigFile());
   return true;
 }
 
@@ -125,7 +125,7 @@ cOsdObject *cPluginRssReader::MainMenuAction(void)
 cMenuSetupPage *cPluginRssReader::SetupMenu(void)
 {
   // Return a setup menu in case the plugin supports one.
-  return new cPluginRssReaderSetup();
+  return new cRssReaderSetup();
 }
 
 bool cPluginRssReader::SetupParse(const char *nameP, const char *valueP)

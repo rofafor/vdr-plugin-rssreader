@@ -11,7 +11,7 @@
 #include <vdr/menuitems.h>
 #include "common.h"
 
-class cPluginRssReaderSetup : public cMenuSetupPage
+class cRssReaderSetup : public cMenuSetupPage
 {
 private:
   int hideMenuM;
@@ -21,12 +21,14 @@ private:
   char configFileM[256];
   cVector<const char*> helpM;
   void Setup(void);
+
 protected:
   virtual eOSState ProcessKey(eKeys keyP);
   virtual void Store(void);
+
 public:
-  cPluginRssReaderSetup();
-  ~cPluginRssReaderSetup();
+  cRssReaderSetup();
+  ~cRssReaderSetup();
 };
 
 #endif // __RSSREADER_SETUP_H

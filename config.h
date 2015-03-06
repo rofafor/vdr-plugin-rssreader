@@ -8,6 +8,8 @@
 #ifndef __RSSREADER_CONFIG_H
 #define __RSSREADER_CONFIG_H
 
+#include "tools.h"
+
 class cRssReaderConfig
 {
 private:
@@ -15,8 +17,9 @@ private:
   int hideMenuM;
   int hideElemM;
   int useProxyM;
-  char httpProxyM[256];
-  char configFileM[256];
+  char httpProxyM[NAME_MAX];
+  char configFileM[NAME_MAX];
+
 public:
   enum eTraceMode {
     eTraceModeNormal  = 0x0000,

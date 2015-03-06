@@ -9,7 +9,7 @@
 #include "menu.h"
 #include "setup.h"
 
-cPluginRssReaderSetup::cPluginRssReaderSetup()
+cRssReaderSetup::cRssReaderSetup()
 : hideMenuM(RssReaderConfig.IsHideMenu()),
   hideElemM(RssReaderConfig.IsHideElem()),
   useProxyM(RssReaderConfig.IsUseProxy())
@@ -20,11 +20,11 @@ cPluginRssReaderSetup::cPluginRssReaderSetup()
   SetHelp(tr("Button$Load"), NULL, NULL, NULL);
 }
 
-cPluginRssReaderSetup::~cPluginRssReaderSetup()
+cRssReaderSetup::~cRssReaderSetup()
 {
 }
 
-void cPluginRssReaderSetup::Setup(void)
+void cRssReaderSetup::Setup(void)
 {
   int current = Current();
 
@@ -49,7 +49,7 @@ void cPluginRssReaderSetup::Setup(void)
   Display();
 }
 
-eOSState cPluginRssReaderSetup::ProcessKey(eKeys keyP)
+eOSState cRssReaderSetup::ProcessKey(eKeys keyP)
 {
   int oldUseProxy = useProxyM;
   eOSState state = cMenuSetupPage::ProcessKey(keyP);
@@ -77,7 +77,7 @@ eOSState cPluginRssReaderSetup::ProcessKey(eKeys keyP)
   return state;
 }
 
-void cPluginRssReaderSetup::Store(void)
+void cRssReaderSetup::Store(void)
 {
   // Store values into setup.conf
   SetupStore("HideMenu",  hideMenuM);

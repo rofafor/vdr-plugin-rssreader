@@ -10,22 +10,24 @@
 
 #include "common.h"
 
-// --- Defines ----------------------------------------------------------
+// --- Defines ----------------------------------------------------------------
 
 #define SHORT_TEXT_LEN 2048
 #define LONG_TEXT_LEN  16384
 
-// --- cItem(s) ---------------------------------------------------------
+// --- cRssParserItem(s) ------------------------------------------------------
 
-class cItem : public cListObject {
+class cRssParserItem : public cListObject {
 private:
   cCharSetConv convM;
   char dateM[SHORT_TEXT_LEN];
   char titleM[SHORT_TEXT_LEN];
   char linkM[SHORT_TEXT_LEN];
   char descriptionM[LONG_TEXT_LEN];
+
 public:
-  cItem();
+  cRssParserItem();
+  ~cRssParserItem();
   void Clear(void);
   char *GetDate(void) { return dateM; }
   char *GetTitle(void) { return titleM; }
@@ -37,19 +39,20 @@ public:
   void SetDescription(const char *strP);
 };
 
-class cItems : public cList<cItem> {
+class cRssParserItems : public cList<cRssParserItem> {
 };
 
-// --- cParser ----------------------------------------------------------
+// --- cRssParser -------------------------------------------------------------
 
 struct MemoryStruct {
   char   *memory;
   size_t size;
 };
 
-class cParser {
+class cRssParser {
 private:
   struct MemoryStruct dataM;
+  cRssParserItems itemsM;
   void ResetMemory(void);
 public:
   enum eRssError {
@@ -58,12 +61,12 @@ public:
     RSS_DOWNLOAD_ERROR = -2,
     RSS_PARSING_ERROR  = -3
   };
-  cParser();
-  ~cParser();
+  cRssParser();
+  ~cRssParser();
   int DownloadAndParse(const char *urlP);
-  cItems Items;
+  cRssParserItems *Items(void) { return &itemsM; }
   };
 
-extern cParser Parser;
+extern cRssParser RssParser;
 
 #endif // __RSSREADER_PARSER_H

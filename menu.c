@@ -14,11 +14,11 @@
 #include "tools.h"
 #include "common.h"
 
-// --- Globals ----------------------------------------------------------
+// --- Globals ----------------------------------------------------------------
 
 cRssItems RssItems;
 
-// --- cRssItem(s) ------------------------------------------------------
+// --- cRssItem(s) ------------------------------------------------------------
 
 cRssItem::cRssItem()
 : titleM(NULL),
@@ -70,7 +70,7 @@ bool cRssItems::Updated()
   return result;
 }
 
-// --- cRssMenuItem --------------------------------------------------------
+// --- cRssMenuItem -----------------------------------------------------------
 
 cRssMenuItem::cRssMenuItem(const char *streamP, const char *dateP, const char *titleP, const char *linkP, const char *descriptionP)
 : cOsdMenu(*cString::sprintf("%s - %s", tr("RSS item"), streamP)),
@@ -100,7 +100,7 @@ cRssMenuItem::~cRssMenuItem()
 void cRssMenuItem::Display(void)
 {
   cOsdMenu::Display();
-  debug1("cRssMenuItem::Display(): '%s'\n", *textM);
+  debug1("%s textM='%s'", __PRETTY_FUNCTION__, *textM);
   DisplayMenu()->SetText(textM, false);
   cStatus::MsgOsdTextItem(textM);
 }
@@ -153,13 +153,13 @@ eOSState cRssMenuItem::ProcessKey(eKeys keyP)
   return state;
 }
 
-// --- cRssItemsMenu --------------------------------------------------------
+// --- cRssItemsMenu ----------------------------------------------------------
 
 cRssItemsMenu::cRssItemsMenu(const char *streamP)
 : cOsdMenu(*cString::sprintf("%s - %s", tr("Select RSS item"), streamP)),
   streamM(streamP)
 {
-  for (cItem *rssItem = Parser.Items.First(); rssItem; rssItem = Parser.Items.Next(rssItem))
+  for (cRssParserItem *rssItem = RssParser.Items()->First(); rssItem; rssItem = RssParser.Items()->Next(rssItem))
      Add(new cOsdItem(rssItem->GetTitle()));
   SetHelp(NULL, "<<", ">>", NULL);
   Display();
@@ -185,14 +185,14 @@ eOSState cRssItemsMenu::ProcessKey(eKeys keyP)
 
 eOSState cRssItemsMenu::ShowDetails(void)
 {
-  cItem *rssItem = reinterpret_cast<cItem *>(Parser.Items.Get(Current()));
+  cRssParserItem *rssItem = reinterpret_cast<cRssParserItem *>(RssParser.Items()->Get(Current()));
   if (rssItem) {
      return AddSubMenu(new cRssMenuItem(*streamM, rssItem->GetDate(), rssItem->GetTitle(), rssItem->GetLink(), rssItem->GetDescription()));
      }
   return osContinue;
 }
 
-// --- cRssStreamsMenu -----------------------------------------------------
+// --- cRssStreamsMenu --------------------------------------------------------
 
 cRssStreamsMenu::cRssStreamsMenu()
 :cOsdMenu(tr("Select RSS stream"))
@@ -211,7 +211,7 @@ void cRssStreamsMenu::Setup(void)
       if (!*rssItem->Url())
          osdItem->SetSelectable(false);
       osdItem->SetText(rssItem->Title());
-      debug1("StreamsMenu: '%s' : '%s'", rssItem->Title(), rssItem->Url());
+      debug1("%s title='%s' url='%s'", __PRETTY_FUNCTION__, rssItem->Title(), rssItem->Url());
       Add(osdItem);
     }
 
@@ -223,19 +223,19 @@ eOSState cRssStreamsMenu::Select(void)
 {
   cRssItem *rssItem = reinterpret_cast<cRssItem *>(RssItems.Get(Current()));
   if (rssItem) {
-     debug1("cRssStreamsMenu::Select(): downloading and parsing '%s'", rssItem->Title());
-     // the following message generates an annoying slowdown 
+     debug1("%s title='%s'", __PRETTY_FUNCTION__, rssItem->Title());
+     // the following message generates an annoying slowdown
      //Skins.Message(mtInfo, tr("Loading RSS stream..."));
-     switch (Parser.DownloadAndParse(rssItem->Url())) {
-       case (cParser::RSS_PARSING_OK):
+     switch (RssParser.DownloadAndParse(rssItem->Url())) {
+       case (cRssParser::RSS_PARSING_OK):
             return AddSubMenu(new cRssItemsMenu(rssItem->Title()));
-       case (cParser::RSS_PARSING_ERROR):
+       case (cRssParser::RSS_PARSING_ERROR):
             Skins.Message(mtError, tr("Can't parse RSS stream!"));
             return osContinue;
-       case (cParser::RSS_DOWNLOAD_ERROR):
+       case (cRssParser::RSS_DOWNLOAD_ERROR):
             Skins.Message(mtError, tr("Can't download RSS stream!"));
             return osContinue;
-       case (cParser::RSS_UNKNOWN_ERROR):
+       case (cRssParser::RSS_UNKNOWN_ERROR):
        default:
             Skins.Message(mtError, tr("Unknown error!"));
             return osContinue;

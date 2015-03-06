@@ -17,4 +17,3 @@ bool isvideo(const char *textP);
 bool ismusic(const char *textP);
 
 #endif // __RSSREADER_TOOLS_H
-

@@ -9,7 +9,7 @@
 #include "tools.h"
 #include "common.h"
 
-// --- Static -----------------------------------------------------------
+// --- Static -----------------------------------------------------------------
 
 struct conv_table {
   const char *from;
@@ -109,7 +109,7 @@ static char *htmlcharconv(char *strP, struct conv_table *convP, unsigned int ele
            size_t l1 = strlen(convP[i].from);
            size_t l2 = strlen(convP[i].to);
            if (l2 > l1) {
-              error("htmlcharconv(): cannot reallocate string");
+              error("%s Cannot reallocate string", __PRETTY_FUNCTION__);
               return strP;
               }
            if (l2 != l1)
@@ -123,7 +123,7 @@ static char *htmlcharconv(char *strP, struct conv_table *convP, unsigned int ele
   return NULL;
 }
 
-// --- General functions ------------------------------------------------
+// --- General functions ------------------------------------------------------
 
 char *striphtml(char *strP)
 {

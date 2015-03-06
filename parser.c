@@ -22,13 +22,13 @@
 #warning "Expat XML parser library 1.95.8 or newer required!"
 #endif
 
-// --- Globals ----------------------------------------------------------
+// --- Globals ----------------------------------------------------------------
 
-cParser Parser;
+cRssParser RssParser;
 
-// --- cItem(s) ---------------------------------------------------------
+// --- cRssParserItem(s) ------------------------------------------------------
 
-cItem::cItem()
+cRssParserItem::cRssParserItem()
 : convM("UTF-8", cCharSetConv::SystemCharacterTable())
 {
   strcpy(dateM, "");
@@ -37,8 +37,11 @@ cItem::cItem()
   strcpy(descriptionM, "");
 }
 
+cRssParserItem::~cRssParserItem()
+{
+}
 
-void cItem::Clear(void)
+void cRssParserItem::Clear(void)
 {
   strcpy(dateM, "");
   strcpy(titleM, "");
@@ -46,14 +49,14 @@ void cItem::Clear(void)
   strcpy(descriptionM, "");
 }
 
-void cItem::SetDate(const char *strP)
+void cRssParserItem::SetDate(const char *strP)
 {
   Utf8Strn0Cpy(dateM, strP, sizeof(dateM));
   compactspace(dateM);
   Utf8Strn0Cpy(dateM, convM.Convert(dateM), sizeof(dateM));
 }
 
-void cItem::SetTitle(const char *strP)
+void cRssParserItem::SetTitle(const char *strP)
 {
   Utf8Strn0Cpy(titleM, strP, sizeof(titleM));
   compactspace(titleM);
@@ -61,14 +64,14 @@ void cItem::SetTitle(const char *strP)
   Utf8Strn0Cpy(titleM, convM.Convert(titleM), sizeof(titleM));
 }
 
-void cItem::SetLink(const char *strP)
+void cRssParserItem::SetLink(const char *strP)
 {
   Utf8Strn0Cpy(linkM, strP, sizeof(linkM));
   compactspace(linkM);
   Utf8Strn0Cpy(linkM, convM.Convert(linkM), sizeof(linkM));
 }
 
-void cItem::SetDescription(const char *strP)
+void cRssParserItem::SetDescription(const char *strP)
 {
   Utf8Strn0Cpy(descriptionM, strP, sizeof(descriptionM));
   compactspace(descriptionM);
@@ -76,14 +79,14 @@ void cItem::SetDescription(const char *strP)
   Utf8Strn0Cpy(descriptionM, convM.Convert(descriptionM), sizeof(descriptionM));
 }
 
-// --- Parse RSS  -------------------------------------------------------
+// --- Parse RSS  -------------------------------------------------------------
 
 struct XmlNode {
   char nodename[SHORT_TEXT_LEN];
   int  depth;
 };
 
-cItem *itemS = NULL;
+cRssParserItem *itemS = NULL;
 int depthS = 0;
 char dataStringS[LONG_TEXT_LEN];
 std::stack<struct XmlNode> nodeStackS;
@@ -225,7 +228,7 @@ static void XMLCALL StartHandler(void *dataP, const char *elemP, const char **at
   nodeStackS.push(node);
 
   if (IsItemTag(elemP)) {
-     cItem *tmpitem = new cItem;
+     cRssParserItem *tmpitem = new cRssParserItem;
      itemS = tmpitem;
      itemS->Clear();
      }
@@ -242,7 +245,7 @@ static void XMLCALL EndHandler(void *dataP, const char *elemP)
      strn0cpy(parent, (nodeStackS.top()).nodename, sizeof((nodeStackS.top()).nodename));
      // No need to free the node
      if (IsItemTag(elemP) && itemS && *itemS->GetTitle())
-        Parser.Items.Add(itemS); // End of the current item
+        RssParser.Items()->Add(itemS); // End of the current item
      else if (IsTitleTag(elemP) && IsItemTag(parent))
         itemS->SetTitle(dataStringS);
      else if (IsLinkTag(elemP) && IsItemTag(parent))
@@ -276,31 +279,31 @@ static size_t WriteMemoryCallback(void *ptrP, size_t sizeP, size_t nmembP, void 
   return realsize;
 }
 
-cParser::cParser()
-: Items()
+cRssParser::cRssParser()
+: itemsM()
 {
   dataM.memory = NULL;
   dataM.size = 0;
 }
 
-cParser::~cParser()
+cRssParser::~cRssParser()
 {
   ResetMemory();
 }
 
-void cParser::ResetMemory(void)
+void cRssParser::ResetMemory(void)
 {
   // free any allocated memory
   FREE_POINTER(dataM.memory);
   dataM.size = 0;
 }
 
-int cParser::DownloadAndParse(const char *urlP)
+int cRssParser::DownloadAndParse(const char *urlP)
 {
   CURL *curl_handle;
 
-  // Clear Items list and initialize depth
-  Items.Clear();
+  // Clear items list and initialize depth
+  itemsM.Clear();
   depthS = 0;
   ResetMemory();
 
@@ -346,7 +349,7 @@ int cParser::DownloadAndParse(const char *urlP)
      // Cleanup curl stuff
      curl_easy_cleanup(curl_handle);
      ResetMemory();
-     error("cParser::DownloadAndParse(): couldn't download the stream");
+     error("%s (%s) Couldn't download the stream", __PRETTY_FUNCTION__, urlP);
      return (RSS_DOWNLOAD_ERROR);
      }
 
@@ -356,7 +359,7 @@ int cParser::DownloadAndParse(const char *urlP)
      FILE *fp = fopen("/tmp/rssreader.vdr", "w");
      if (fp) {
         if (fwrite(dataM.memory, 1, dataM.size, fp) != dataM.size)
-           error("cParser::DownloadAndParse(): couldn't write debug dump");
+           error("%s (%s) Couldn't write debug dump into /tmp/rssreader.vdr", __PRETTY_FUNCTION__, urlP);
         fclose(fp);
         }
 #endif
@@ -366,7 +369,7 @@ int cParser::DownloadAndParse(const char *urlP)
         // Cleanup curl stuff
         curl_easy_cleanup(curl_handle);
         ResetMemory();
-        error("cParser::DownloadAndParse(): couldn't allocate memory for parser");
+        error("%s (%s) Couldn't allocate memory for parser", __PRETTY_FUNCTION__, urlP);
         return (RSS_UNKNOWN_ERROR);
         }
      XML_SetElementHandler(p, StartHandler, EndHandler);
@@ -377,7 +380,7 @@ int cParser::DownloadAndParse(const char *urlP)
         // Cleanup curl stuff
         curl_easy_cleanup(curl_handle);
         ResetMemory();
-        error("cParser::DownloadAndParse(): Parse error at line %ld:\n%s\n", XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
+        error("%s (%s) Parse error at line %ld: %s", __PRETTY_FUNCTION__, urlP, XML_GetCurrentLineNumber(p), XML_ErrorString(XML_GetErrorCode(p)));
         return (RSS_PARSING_ERROR);
         }
      }
