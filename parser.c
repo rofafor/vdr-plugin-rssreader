@@ -358,7 +358,7 @@ int cRssParser::DownloadAndParse(const char *urlP)
      if (RssReaderConfig.IsTraceMode(cRssReaderConfig::eTraceModeDebug15)) {
         int fd;
         char tmpname[NAME_MAX];
-        strn0cpy(tmpname, "/tmp/vdr-" PLUGIN_NAME_I18N ".XXXXXX", sizeof(tmpname));
+        strn0cpy(tmpname, TMPDIR "/vdr-" PLUGIN_NAME_I18N ".XXXXXX", sizeof(tmpname));
         fd = mkstemp(tmpname);
         if (fd >= 0) {
            if (write(fd, dataM.memory, dataM.size) != (ssize_t)dataM.size)

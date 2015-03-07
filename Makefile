@@ -2,14 +2,6 @@
 # Makefile for RSS Reader plugin
 #
 
-# Debugging on/off
-
-#RSSREADER_DEBUG = 1
-
-# Strip debug symbols?  Set eg. to /bin/true if not
-
-STRIP = strip
-
 # The official name of this plugin.
 # This name will be used in the '-P...' option of VDR to load the plugin.
 # By default the main source file also carries this name.
@@ -36,6 +28,7 @@ TMPDIR ?= /tmp
 
 export CFLAGS   = $(call PKGCFG,cflags)
 export CXXFLAGS = $(call PKGCFG,cxxflags)
+STRIP           ?= /bin/true
 
 ### The version number of VDR's plugin API:
 
@@ -62,11 +55,7 @@ LIBS = $(shell pkg-config --libs expat) $(shell curl-config --libs)
 
 INCLUDES +=
 
-DEFINES += -DPLUGIN_NAME_I18N='"$(PLUGIN)"'
-
-ifdef RSSREADER_DEBUG
-DEFINES += -DDEBUG
-endif
+DEFINES += -DPLUGIN_NAME_I18N='"$(PLUGIN)"' -DTMPDIR='"$(TMPDIR)"'
 
 ifneq ($(strip $(GITTAG)),)
 DEFINES += -DGITVERSION='"-GIT-$(GITTAG)"'
@@ -127,9 +116,7 @@ install-i18n: $(I18Nmsgs)
 
 $(SOFILE): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) $(LIBS) -o $@
-ifndef RSSREADER_DEBUG
 	@$(STRIP) $@
-endif
 
 install-lib: $(SOFILE)
 	install -D $^ $(DESTDIR)$(LIBDIR)/$^.$(APIVERSION)
