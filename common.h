@@ -8,8 +8,21 @@
 #ifndef __RSSREADER_COMMON_H
 #define __RSSREADER_COMMON_H
 
-// Configuration file
-#define RSSREADER_CONF      "rssreader.conf"
+#define ERROR_IF_FUNC(exp, errstr, func, ret)              \
+  do {                                                     \
+     if (exp) {                                            \
+        char tmp[64];                                      \
+        esyslog("[%s,%d]: "errstr": %s", __FILE__, __LINE__, \
+              strerror_r(errno, tmp, sizeof(tmp)));        \
+        func;                                              \
+        ret;                                               \
+        }                                                  \
+  } while (0)
+
+
+#define ERROR_IF_RET(exp, errstr, ret) ERROR_IF_FUNC(exp, errstr, ,ret);
+
+#define ERROR_IF(exp, errstr) ERROR_IF_FUNC(exp, errstr, , );
 
 #define DELETE_POINTER(ptr)      \
   do {                           \

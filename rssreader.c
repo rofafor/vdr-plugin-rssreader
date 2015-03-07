@@ -94,7 +94,7 @@ bool cPluginRssReader::ProcessArgs(int argc, char *argv[])
 bool cPluginRssReader::Initialize(void)
 {
   // Initialize any background activities the plugin shall perform.
-  RssReaderConfig.SetConfigFile(*AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), RSSREADER_CONF));
+  RssReaderConfig.SetConfigFile(*AddDirectory(ConfigDirectory(PLUGIN_NAME_I18N), PLUGIN_NAME_I18N ".conf"));
   return true;
 }
 

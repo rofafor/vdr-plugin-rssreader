@@ -40,7 +40,7 @@
 #define debug13(x...) void( RssReaderConfig.IsTraceMode(cRssReaderConfig::eTraceModeDebug13) ? dsyslog("RSSREADER13: " x) : void() )
 // 0x2000: TBD
 #define debug14(x...) void( RssReaderConfig.IsTraceMode(cRssReaderConfig::eTraceModeDebug14) ? dsyslog("RSSREADER14: " x) : void() )
-// 0x4000: TBD
+// 0x4000: CURL debug file
 #define debug15(x...) void( RssReaderConfig.IsTraceMode(cRssReaderConfig::eTraceModeDebug15) ? dsyslog("RSSREADER15: " x) : void() )
 // 0x8000; Extra call stack
 #define debug16(x...) void( RssReaderConfig.IsTraceMode(cRssReaderConfig::eTraceModeDebug16) ? dsyslog("RSSREADER16: " x) : void() )

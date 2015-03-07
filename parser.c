@@ -354,15 +354,23 @@ int cRssParser::DownloadAndParse(const char *urlP)
      }
 
   if (dataM.size) {
-#ifdef DEBUG
      // Only for debug dump
-     FILE *fp = fopen("/tmp/rssreader.vdr", "w");
-     if (fp) {
-        if (fwrite(dataM.memory, 1, dataM.size, fp) != dataM.size)
-           error("%s (%s) Couldn't write debug dump into /tmp/rssreader.vdr", __PRETTY_FUNCTION__, urlP);
-        fclose(fp);
+     if (RssReaderConfig.IsTraceMode(cRssReaderConfig::eTraceModeDebug15)) {
+        int fd;
+        char tmpname[NAME_MAX];
+        strn0cpy(tmpname, "/tmp/vdr-" PLUGIN_NAME_I18N ".XXXXXX", sizeof(tmpname));
+        fd = mkstemp(tmpname);
+        if (fd >= 0) {
+           if (write(fd, dataM.memory, dataM.size) != (ssize_t)dataM.size)
+              error("%s (%s) Couldn't write debug dump correctly into '%s'", __PRETTY_FUNCTION__, urlP, tmpname);
+           else
+              debug15("%s (%s) Wrote debug dump into '%s'", __PRETTY_FUNCTION__, urlP, tmpname);
+           close(fd);
+           }
+        else
+           error("%s (%s) Couldn't open file '%s'", __PRETTY_FUNCTION__, urlP, tmpname);
         }
-#endif
+
      // Setup expat
      XML_Parser p = XML_ParserCreate(NULL);
      if (!p) {

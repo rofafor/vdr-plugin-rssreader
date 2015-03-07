@@ -17,7 +17,7 @@ cRssReaderConfig::cRssReaderConfig(void)
   useProxyM(0)
 {
   strn0cpy(httpProxyM, "127.0.0.1:8000", sizeof(httpProxyM));
-  strn0cpy(configFileM, RSSREADER_CONF, sizeof(configFileM));
+  strn0cpy(configFileM, PLUGIN_NAME_I18N ".conf", sizeof(configFileM));
 }
 
 void cRssReaderConfig::SetHttpProxy(const char *strP)
