@@ -197,3 +197,8 @@ VDR Plugin 'rssreader' Revision History
 2015-02-19: Version 2.2.0
 
 - Updated for vdr-2.2.0.
+
+2015-04-04: Version 2.2.1
+
+- Got rid of RSSREADER_DEBUG.
+- Added support for tracing modes.
