@@ -5,6 +5,9 @@
  *
  */
 
+#if __GNUC__ >= 6
+#define __STL_CONFIG_H
+#endif
 #include <stack>
 #include <curl/curl.h>
 #include <curl/easy.h>
