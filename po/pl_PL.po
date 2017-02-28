@@ -1,0 +1,93 @@
+# VDR plugin language source file.
+# Copyright (C) 2007-2017 Rolf Ahrenberg
+# This file is distributed under the same license as the vdr-rssreader package.
+# Tomasz Maciej Nowak, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: vdr-rssreader 2.2.1\n"
+"Report-Msgid-Bugs-To: <see README>\n"
+"POT-Creation-Date: 2017-02-27 23:41+0100\n"
+"PO-Revision-Date: 2017-02-28 14:21+0100\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Tomasz Maciej Nowak <tomek_n@o2.pl>\n"
+"Language-Team: Polish <vdr@linuxtv.org>\n"
+"X-Generator: Poedit 1.8.11\n"
+
+msgid "RSS item"
+msgstr "Artykuł RSS"
+
+msgid "<no date available>"
+msgstr "<brak daty>"
+
+msgid "<no title available>"
+msgstr "<brak tytułu>"
+
+msgid "<no description available>"
+msgstr "<brak opisu>"
+
+msgid "<no link available>"
+msgstr "<brak odnośników>"
+
+msgid "Select RSS item"
+msgstr "Wybierz artykuł RSS"
+
+msgid "Select RSS stream"
+msgstr "Wybierz strumień RSS"
+
+msgid "Button$Load"
+msgstr "Wczytaj"
+
+msgid "Can't parse RSS stream!"
+msgstr "Nie można odczytać strumienia RSS!"
+
+msgid "Can't download RSS stream!"
+msgstr "Nie można pobrać strumienia RSS!"
+
+msgid "Unknown error!"
+msgstr "Nieznany błąd!"
+
+msgid "Loading configuration file..."
+msgstr "Wczytywanie pliku konfiguracyjnego..."
+
+msgid "RSS Reader for OSD"
+msgstr "Czytnik RSS dla OSD"
+
+msgid "RSS Reader"
+msgstr "Czytnik RSS"
+
+msgid "Hide main menu entry"
+msgstr "Ukryj pozycję w głównym menu"
+
+msgid "Define whether the main manu entry is hidden."
+msgstr "Określa czy pozycja w głównym menu jest ukryta."
+
+msgid "Hide non-existent elements"
+msgstr "Ukryj nieistniejące elementy"
+
+msgid "Define whether all non-existent RSS stream elements are hidden."
+msgstr "Określa czy wszystkie nieistniejące elementy strumienia RSS są ukryte."
+
+msgid "Use HTTP proxy server"
+msgstr "Użyj serwera HTTP proxy"
+
+msgid "Define whether a HTTP proxy server is used."
+msgstr "Określa czy korzystać z serwera HTTP proxy."
+
+msgid "HTTP proxy server"
+msgstr "Serwer HTTP proxy"
+
+msgid ""
+"Define an address and port of the HTTP proxy server:\n"
+"\n"
+"\"proxy.domain.com:8000\""
+msgstr ""
+"Określa adres i port serwera HTTP proxy:\n"
+"\n"
+"\"proxy.domena.com:8000\""
+
+msgid "Help"
+msgstr "Pomoc"
