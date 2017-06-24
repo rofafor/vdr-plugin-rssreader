@@ -202,3 +202,12 @@ VDR Plugin 'rssreader' Revision History
 
 - Got rid of RSSREADER_DEBUG.
 - Added support for tracing modes.
+
+
+=======================================
+VDR Plugin 'rssreader' Revision History
+=======================================
+
+2017-06-24: Version 2.3.0
+
+- Updated for vdr-2.3.7.
